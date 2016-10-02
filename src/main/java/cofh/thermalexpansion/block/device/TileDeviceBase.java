@@ -4,7 +4,7 @@ import cofh.lib.util.TimeTracker;
 import cofh.thermalexpansion.block.TileAugmentable;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
@@ -63,6 +63,7 @@ public abstract class TileDeviceBase extends TileAugmentable {
 		return true;
 	}
 
+	//TODO remove?
 	public void onEntityCollidedWithBlock() {
 
 	}

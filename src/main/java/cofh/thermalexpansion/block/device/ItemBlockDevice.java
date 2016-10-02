@@ -2,6 +2,7 @@ package cofh.thermalexpansion.block.device;
 
 import cofh.api.tileentity.IRedstoneControl.ControlMode;
 import cofh.core.item.ItemBlockCoFHBase;
+import cofh.lib.util.helpers.AugmentHelper;
 import cofh.lib.util.helpers.EnergyHelper;
 import cofh.lib.util.helpers.ItemHelper;
 import cofh.lib.util.helpers.RedstoneControlHelper;

@@ -11,7 +11,7 @@ import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.gui.container.ISchematicContainer;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class PacketTEBase extends PacketCoFHBase {

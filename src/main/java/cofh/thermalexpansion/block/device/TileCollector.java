@@ -19,12 +19,13 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
@@ -32,7 +33,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class TileCollector extends TileDeviceBase implements IInventoryConnection, ITickable {
 
-	static final float[] DEFAULT_DROP_CHANCES = new float[] { 1.0F, 1.0F, 1.0F, 1.0F, 1.0F };
+	static final float[] DEFAULT_ARMOR_DROP_CHANCES = new float[] { 1.0F, 1.0F, 1.0F, 1.0F };
+	static final float[] DEFAULT_HANDS_DROP_CHANCES = new float[] { 1.0F, 1.0F };
 
 	public static void initialize() {
 
@@ -139,16 +141,16 @@ public class TileCollector extends TileDeviceBase implements IInventoryConnectio
 		case 0:
 		case 1:
 			result = worldObj.getEntitiesWithinAABB(EntityItem.class,
-					AxisAlignedBB.fromBounds(x - areaMajor, y, z - areaMajor, x + areaMajor2, y + areaMinor, z + areaMajor2));
+					new AxisAlignedBB(x - areaMajor, y, z - areaMajor, x + areaMajor2, y + areaMinor, z + areaMajor2));
 			break;
 		case 2:
 		case 3:
 			result = worldObj.getEntitiesWithinAABB(EntityItem.class,
-					AxisAlignedBB.fromBounds(x - areaMajor, y - areaMajor, z, x + areaMajor2, y + areaMajor2, z + areaMinor));
+					new AxisAlignedBB(x - areaMajor, y - areaMajor, z, x + areaMajor2, y + areaMajor2, z + areaMinor));
 			break;
 		default:
 			result = worldObj.getEntitiesWithinAABB(EntityItem.class,
-					AxisAlignedBB.fromBounds(x, y - areaMajor, z - areaMajor, x + areaMinor, y + areaMajor2, z + areaMajor2));
+					new AxisAlignedBB(x, y - areaMajor, z - areaMajor, x + areaMinor, y + areaMajor2, z + areaMajor2));
 			break;
 		}
 		for (int i = 0; i < result.size(); i++) {
@@ -176,34 +178,40 @@ public class TileCollector extends TileDeviceBase implements IInventoryConnectio
 		case 0:
 		case 1:
 			result = worldObj.getEntitiesWithinAABB(EntityLivingBase.class,
-					AxisAlignedBB.fromBounds(x - areaMajor, y, z - areaMajor, x + areaMajor2, y + areaMinor, z + areaMajor2));
+					new AxisAlignedBB(x - areaMajor, y, z - areaMajor, x + areaMajor2, y + areaMinor, z + areaMajor2));
 			break;
 		case 2:
 		case 3:
 			result = worldObj.getEntitiesWithinAABB(EntityLivingBase.class,
-					AxisAlignedBB.fromBounds(x - areaMajor, y - areaMajor, z, x + areaMajor2, y + areaMajor2, z + areaMinor));
+					new AxisAlignedBB(x - areaMajor, y - areaMajor, z, x + areaMajor2, y + areaMajor2, z + areaMinor));
 			break;
 		default:
 			result = worldObj.getEntitiesWithinAABB(EntityLivingBase.class,
-					AxisAlignedBB.fromBounds(x, y - areaMajor, z - areaMajor, x + areaMinor, y + areaMajor2, z + areaMajor2));
+					new AxisAlignedBB(x, y - areaMajor, z - areaMajor, x + areaMinor, y + areaMajor2, z + areaMajor2));
 			break;
 		}
 		for (int i = 0; i < result.size(); i++) {
 			EntityLivingBase entity = result.get(i);
-			float[] dropChances = DEFAULT_DROP_CHANCES;
+			float[] armorDropChances = DEFAULT_ARMOR_DROP_CHANCES;
+			float[] handsDropChances = DEFAULT_HANDS_DROP_CHANCES;
 
 			if (entity instanceof EntityLiving) {
-				dropChances = ((EntityLiving) entity).equipmentDropChances;
+				armorDropChances = ((EntityLiving) entity).inventoryArmorDropChances;
+				handsDropChances = ((EntityLiving) entity).inventoryHandsDropChances;
 			} else if (isSecured() && entity instanceof EntityPlayer) {
 				if (doNotCollectItemsFrom((EntityPlayer) entity)) {
 					continue;
 				}
 			}
-			for (int j = 0; j < 5; j++) {
-				ItemStack equipmentInSlot = entity.getEquipmentInSlot(j);
-				if (equipmentInSlot != null && dropChances[j] >= 1) {
-					stacks.add(equipmentInSlot);
-					entity.setCurrentItemOrArmor(j, null);
+			for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
+				ItemStack equipmentInSlot = entity.getItemStackFromSlot(slot);
+
+				if (equipmentInSlot != null) {
+					if ((slot.getSlotType() == EntityEquipmentSlot.Type.ARMOR && armorDropChances[slot.getIndex()] >= 1f)
+							|| (slot.getSlotType() == EntityEquipmentSlot.Type.HAND && handsDropChances[slot.getIndex()] >= 1f)) {
+						stacks.add(equipmentInSlot);
+						entity.setItemStackToSlot(slot, null);
+					}
 				}
 			}
 		}
@@ -255,7 +263,7 @@ public class TileCollector extends TileDeviceBase implements IInventoryConnectio
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
@@ -269,6 +277,8 @@ public class TileCollector extends TileDeviceBase implements IInventoryConnectio
 			}
 		}
 		nbt.setTag("StuffedInv", list);
+
+		return nbt;
 	}
 
 	/* IInventoryConnection */

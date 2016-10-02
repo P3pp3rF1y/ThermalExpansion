@@ -75,11 +75,13 @@ public abstract class TilePowered extends TileRSControl implements IEnergyReceiv
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
 		energyStorage.writeToNBT(nbt);
+
+		return nbt;
 	}
 
 	/* NETWORK METHODS */

@@ -68,7 +68,7 @@ public class TileActivator extends TileDeviceBase implements ITickable {
 		@Override
 		public boolean apply(Entity e) {
 
-			return e.canAttackWithItem();
+			return e.canBeAttackedWithItem();
 		}
 	};
 
@@ -499,7 +499,7 @@ public class TileActivator extends TileDeviceBase implements ITickable {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
@@ -507,6 +507,8 @@ public class TileActivator extends TileDeviceBase implements ITickable {
 		nbt.setBoolean("LeftClick", leftClick);
 		nbt.setByte("TickSlot", tickSlot);
 		nbt.setByte("Angle", angle);
+
+		return nbt;
 	}
 
 	/* NETWORK METHODS */

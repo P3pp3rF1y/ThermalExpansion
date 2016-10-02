@@ -4,19 +4,19 @@ import cofh.thermalexpansion.block.BlockTEBase;
 
 import java.util.List;
 
+import cofh.thermalexpansion.util.RegistryHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -26,7 +26,7 @@ public class BlockDevice extends BlockTEBase {
 
 	public BlockDevice() {
 
-		super(Material.iron);
+		super(Material.IRON);
 
 		setUnlocalizedName("device");
 
@@ -35,9 +35,9 @@ public class BlockDevice extends BlockTEBase {
 	}
 
 	@Override
-	protected BlockState createBlockState() {
+	protected BlockStateContainer createBlockState() {
 
-		return new BlockState(this, new IProperty[] { VARIANT });
+		return new BlockStateContainer(this, new IProperty[] { VARIANT });
 	}
 
 	@Override
@@ -47,13 +47,6 @@ public class BlockDevice extends BlockTEBase {
 		for (int i = 0; i < BlockDevice.Type.METADATA_LOOKUP.length; i++) {
 			list.add(new ItemStack(item, 1, i));
 		}
-	}
-
-	@Override
-	public int getDamageValue(World world, BlockPos pos) {
-
-		IBlockState state = world.getBlockState(pos);
-		return state.getBlock() != this ? 0 : state.getValue(VARIANT).getMetadata();
 	}
 
 	@Override
@@ -75,17 +68,19 @@ public class BlockDevice extends BlockTEBase {
 	}
 
 	/* ITileEntityProvider */
-	@Override
-	public TileEntity createNewTileEntity(World world, int metadata) {
 
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
+
+		int metadata = getMetaFromState(state);
 		if (metadata >= BlockDevice.Type.values().length) {
 			return null;
 		}
 		switch (BlockDevice.Type.values()[metadata]) {
-		case ACTIVATOR:
-			return null;
-		default:
-			return null;
+			case ACTIVATOR:
+				return null;
+			default:
+				return null;
 		}
 	}
 
@@ -93,7 +88,12 @@ public class BlockDevice extends BlockTEBase {
 	@Override
 	public boolean preInit() {
 
-		GameRegistry.registerBlock(this, ItemBlockDevice.class, "device");
+		RegistryHelper.registerBlockAndItem(this, new ResourceLocation(modName, "device"), ItemBlockDevice::new);
+
+		TileActivator.initialize();
+		TileBuffer.initialize();
+		TileCollector.initialize();
+		TileNullifier.initialize();
 
 		return true;
 	}

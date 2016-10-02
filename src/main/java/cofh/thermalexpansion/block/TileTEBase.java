@@ -12,7 +12,7 @@ import cofh.thermalexpansion.gui.GuiHandler;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -58,12 +58,12 @@ public abstract class TileTEBase extends TileCoFHBase implements ITilePacketHand
 	}
 
 	@Override
-	public void sendGuiNetworkData(Container container, ICrafting iCrafting) {
+	public void sendGuiNetworkData(Container container, IContainerListener listener) {
 
-		if (iCrafting instanceof EntityPlayer) {
+		if (listener instanceof EntityPlayer) {
 			PacketCoFHBase guiPacket = getGuiPacket();
 			if (guiPacket != null) {
-				PacketHandler.sendTo(guiPacket, (EntityPlayer) iCrafting);
+				PacketHandler.sendTo(guiPacket, (EntityPlayer) listener);
 			}
 		}
 	}
@@ -80,7 +80,7 @@ public abstract class TileTEBase extends TileCoFHBase implements ITilePacketHand
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 		nbt.setString("Version", ThermalExpansion.version);
@@ -88,6 +88,8 @@ public abstract class TileTEBase extends TileCoFHBase implements ITilePacketHand
 		if (!tileName.isEmpty()) {
 			nbt.setString("Name", tileName);
 		}
+
+		return nbt;
 	}
 
 	/* NETWORK METHODS */

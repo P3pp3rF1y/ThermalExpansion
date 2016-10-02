@@ -137,7 +137,7 @@ public class TileBuffer extends TileDeviceBase implements ITickable {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
@@ -147,6 +147,8 @@ public class TileBuffer extends TileDeviceBase implements ITickable {
 		nbt.setInteger("Output", quantityOutput);
 		nbt.setBoolean("EnableIn", enableInput);
 		nbt.setBoolean("EnableOut", enableOutput);
+
+		return nbt;
 	}
 
 	/* NETWORK METHODS */

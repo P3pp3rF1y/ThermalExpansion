@@ -59,12 +59,14 @@ public abstract class TileReconfigurable extends TilePowered implements IReconfi
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
 		nbt.setByte("Facing", facing);
 		nbt.setByteArray("SideCache", sideCache);
+
+		return nbt;
 	}
 
 	/* NETWORK METHODS */

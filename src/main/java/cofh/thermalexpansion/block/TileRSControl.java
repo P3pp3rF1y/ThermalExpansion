@@ -11,8 +11,10 @@ import cofh.lib.util.helpers.ServerHelper;
 import cofh.lib.util.helpers.SoundHelper;
 import cofh.thermalexpansion.network.PacketTEBase;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -70,7 +72,7 @@ public abstract class TileRSControl extends TileInventorySecure implements IReds
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
@@ -81,6 +83,8 @@ public abstract class TileRSControl extends TileInventorySecure implements IReds
 		rsTag.setByte("Level", (byte) powerLevel);
 		rsTag.setByte("Mode", (byte) rsMode.ordinal());
 		nbt.setTag("RS", rsTag);
+
+		return nbt;
 	}
 
 	/* NETWORK METHODS */
@@ -126,7 +130,8 @@ public abstract class TileRSControl extends TileInventorySecure implements IReds
 		wasPowered = this.isPowered;
 		this.isPowered = isPowered;
 		if (ServerHelper.isClientWorld(worldObj)) {
-			worldObj.markBlockForUpdate(pos);
+			IBlockState state = worldObj.getBlockState(pos);
+			worldObj.notifyBlockUpdate(pos, state, state, 3);
 		}
 	}
 
@@ -158,7 +163,11 @@ public abstract class TileRSControl extends TileInventorySecure implements IReds
 	@SideOnly(Side.CLIENT)
 	public ISound getSound() {
 
-		return new SoundLocation(this, getSoundName(), 1.0F, 1.0F, true, 0, pos.getX(), pos.getY(), pos.getZ());
+		return new SoundLocation(this, getSoundName(), getSoundCategory(), 1.0F, 1.0F, true, 0, pos.getX(), pos.getY(), pos.getZ());
+	}
+
+	private SoundCategory getSoundCategory() {
+		return SoundCategory.BLOCKS;
 	}
 
 	public String getSoundName() {

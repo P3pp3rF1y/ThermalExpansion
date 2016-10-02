@@ -18,7 +18,7 @@ import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -27,10 +27,11 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 public abstract class TileInventorySecure extends TileTEBase implements IInventory, ISecurable {
@@ -218,7 +219,7 @@ public abstract class TileInventorySecure extends TileTEBase implements IInvento
 			return hasGui();
 		}
 		if (ServerHelper.isServerWorld(worldObj)) {
-			player.addChatMessage(new ChatComponentTranslation("chat.cofh.secure", getOwnerName()));
+			player.addChatMessage(new TextComponentTranslation("chat.cofh.secure", getOwnerName()));
 		}
 		return false;
 	}
@@ -234,11 +235,11 @@ public abstract class TileInventorySecure extends TileTEBase implements IInvento
 	}
 
 	@Override
-	public void sendGuiNetworkData(Container container, ICrafting iCrafting) {
+	public void sendGuiNetworkData(Container container, IContainerListener listener) {
 
-		super.sendGuiNetworkData(container, iCrafting);
+		super.sendGuiNetworkData(container, listener);
 
-		iCrafting.sendProgressBarUpdate(container, 0, canPlayerAccess(((EntityPlayer) iCrafting)) ? 1 : 0);
+		listener.sendProgressBarUpdate(container, 0, canPlayerAccess(((EntityPlayer) listener)) ? 1 : 0);
 	}
 
 	/* NBT METHODS */
@@ -265,7 +266,7 @@ public abstract class TileInventorySecure extends TileTEBase implements IInvento
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
@@ -274,6 +275,8 @@ public abstract class TileInventorySecure extends TileTEBase implements IInvento
 		nbt.setString("Owner", owner.getName());
 
 		writeInventoryToNBT(nbt);
+
+		return nbt;
 	}
 
 	public void readInventoryFromNBT(NBTTagCompound nbt) {
@@ -443,9 +446,9 @@ public abstract class TileInventorySecure extends TileTEBase implements IInvento
 
 	/* IWorldNameable */
 	@Override
-	public IChatComponent getDisplayName() {
+	public ITextComponent getDisplayName() {
 
-		return tileName.isEmpty() ? new ChatComponentText(getName()) : new ChatComponentText(tileName);
+		return tileName.isEmpty() ? new TextComponentString(getName()) : new TextComponentString(tileName);
 	}
 
 	@Override
@@ -466,13 +469,15 @@ public abstract class TileInventorySecure extends TileTEBase implements IInvento
 	@Override
 	public boolean setOwnerName(String name) {
 
-		if (MinecraftServer.getServer() == null) {
+		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+
+		if (server == null) {
 			return false;
 		}
 		if (Strings.isNullOrEmpty(name) || CoFHProps.DEFAULT_OWNER.getName().equalsIgnoreCase(name)) {
 			return false;
 		}
-		String uuid = PreYggdrasilConverter.getStringUUIDFromName(name);
+		String uuid = PreYggdrasilConverter.convertMobOwnerIfNeeded(server, name);
 		if (Strings.isNullOrEmpty(uuid)) {
 			return false;
 		}
@@ -485,7 +490,7 @@ public abstract class TileInventorySecure extends TileTEBase implements IInvento
 		if (SecurityHelper.isDefaultUUID(owner.getId())) {
 			owner = profile;
 			if (!SecurityHelper.isDefaultUUID(owner.getId())) {
-				if (MinecraftServer.getServer() != null) {
+				if (FMLCommonHandler.instance().getMinecraftServerInstance() != null) {
 					new Thread("CoFH User Loader") {
 
 						@Override

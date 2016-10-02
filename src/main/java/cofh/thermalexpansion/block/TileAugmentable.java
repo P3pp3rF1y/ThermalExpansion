@@ -107,11 +107,13 @@ public abstract class TileAugmentable extends TileReconfigurable implements IAug
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
 		writeAugmentsToNBT(nbt);
+
+		return nbt;
 	}
 
 	public void readAugmentsFromNBT(NBTTagCompound nbt) {
