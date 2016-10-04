@@ -1,5 +1,6 @@
 package cofh.thermalexpansion.block;
 
+import cofh.api.core.IInitializer;
 import cofh.api.tileentity.IRedstoneControl;
 import cofh.api.tileentity.ISecurable;
 import cofh.core.block.BlockCoFHBase;
@@ -37,7 +38,7 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 import javax.annotation.Nullable;
 
-public abstract class BlockTEBase extends BlockCoFHTile {
+public abstract class BlockTEBase extends BlockCoFHTile implements IInitializer {
 
 	protected boolean basicGui = true;
 

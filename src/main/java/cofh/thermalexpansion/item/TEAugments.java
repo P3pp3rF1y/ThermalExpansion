@@ -8,6 +8,7 @@ public class TEAugments {
 
 	}
 
+	//TODO FIX
 	//	public static void preInit() {
 	//
 	//		itemAugment = (ItemAugment) new ItemAugment().setUnlocalizedName("augment");

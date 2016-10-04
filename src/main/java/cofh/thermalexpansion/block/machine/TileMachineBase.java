@@ -13,12 +13,14 @@ import cofh.thermalexpansion.core.TEProps;
 import cofh.thermalexpansion.item.TEAugments;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.audio.ISound;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.relauncher.Side;
@@ -29,7 +31,7 @@ public abstract class TileMachineBase extends TileAugmentable implements ITickab
 	protected static final EnergyConfig[] DEFAULT_ENERGY_CONFIG = new EnergyConfig[BlockMachine.Type.values().length];
 	public static final boolean[] SECURITY = new boolean[BlockMachine.Type.values().length];
 
-	protected static final String[] SOUNDS = new String[BlockMachine.Type.values().length];
+	protected static final SoundEvent[] SOUNDS = new SoundEvent[BlockMachine.Type.values().length];
 	protected static final boolean[] ENABLE_SOUND = new boolean[BlockMachine.Type.values().length];
 
 	protected static final int RATE = 500;
@@ -40,6 +42,12 @@ public abstract class TileMachineBase extends TileAugmentable implements ITickab
 	protected static final int FLUID_CAPACITY[] = new int[] { 1, 2, 4, 8 };
 
 	int processMax;
+
+	@Override
+	public ISound getSound() {
+		return super.getSound();
+	}
+
 	int processRem;
 	boolean wasActive;
 
@@ -259,12 +267,14 @@ public abstract class TileMachineBase extends TileAugmentable implements ITickab
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
 		nbt.setInteger("ProcMax", processMax);
 		nbt.setInteger("ProcRem", processRem);
+
+		return nbt;
 	}
 
 	@Override
@@ -532,7 +542,7 @@ public abstract class TileMachineBase extends TileAugmentable implements ITickab
 
 	/* ISoundSource */
 	@Override
-	public String getSoundName() {
+	public SoundEvent getSoundEvent() {
 
 		return ENABLE_SOUND[type] ? SOUNDS[type] : null;
 	}

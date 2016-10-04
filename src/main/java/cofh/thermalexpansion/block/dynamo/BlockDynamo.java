@@ -1,7 +1,9 @@
 package cofh.thermalexpansion.block.dynamo;
 
+import cofh.core.util.RegistryHelper;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.FluidHelper;
+import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.block.BlockTEBase;
 
 import java.util.List;
@@ -11,7 +13,7 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,7 +22,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.IBlockAccess;
@@ -40,7 +44,7 @@ public class BlockDynamo extends BlockTEBase {
 
 	public BlockDynamo() {
 
-		super(Material.iron);
+		super(Material.IRON);
 
 		setUnlocalizedName("dynamo");
 
@@ -49,9 +53,9 @@ public class BlockDynamo extends BlockTEBase {
 	}
 
 	@Override
-	protected BlockState createBlockState() {
+	protected BlockStateContainer createBlockState() {
 
-		return new BlockState(this, new IProperty[] { VARIANT });
+		return new BlockStateContainer(this, new IProperty[] { VARIANT });
 	}
 
 	@Override
@@ -61,13 +65,6 @@ public class BlockDynamo extends BlockTEBase {
 		for (int i = 0; i < BlockDynamo.Type.METADATA_LOOKUP.length; i++) {
 			list.add(new ItemStack(item, 1, i));
 		}
-	}
-
-	@Override
-	public int getDamageValue(World world, BlockPos pos) {
-
-		IBlockState state = world.getBlockState(pos);
-		return state.getBlock() != this ? 0 : state.getValue(VARIANT).getMetadata();
 	}
 
 	@Override
@@ -102,7 +99,7 @@ public class BlockDynamo extends BlockTEBase {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 
 		TileDynamoBase tile = (TileDynamoBase) world.getTileEntity(pos);
 
@@ -111,17 +108,17 @@ public class BlockDynamo extends BlockTEBase {
 				return true;
 			}
 		}
-		return super.onBlockActivated(world, pos, state, player, side, hitX, hitY, hitZ);
+		return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride() {
+	public boolean hasComparatorInputOverride(IBlockState state) {
 
 		return true;
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side) {
+	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 
 		TileEntity tile = world.getTileEntity(pos);
 
@@ -132,26 +129,22 @@ public class BlockDynamo extends BlockTEBase {
 		return theTile.facing == BlockHelper.SIDE_OPPOSITE[side.ordinal()];
 	}
 
-	/* ITileEntityProvider */
 	@Override
-	public TileEntity createNewTileEntity(World world, int metadata) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 
-		if (metadata >= BlockDynamo.Type.values().length) {
-			return null;
-		}
-		switch (BlockDynamo.Type.values()[metadata]) {
-		case STEAM:
-			return new TileDynamoSteam();
-		case MAGMATIC:
-			return new TileDynamoMagmatic();
-		case COMPRESSION:
-			return new TileDynamoCompression();
-		case REACTANT:
-			return new TileDynamoReactant();
-		case ENERVATION:
-			return new TileDynamoEnervation();
-		default:
-			return null;
+		switch (state.getValue(VARIANT)) {
+			case STEAM:
+				return new TileDynamoSteam();
+			case MAGMATIC:
+				return new TileDynamoMagmatic();
+			case COMPRESSION:
+				return new TileDynamoCompression();
+			case REACTANT:
+				return new TileDynamoReactant();
+			case ENERVATION:
+				return new TileDynamoEnervation();
+			default:
+				return null;
 		}
 	}
 
@@ -176,7 +169,7 @@ public class BlockDynamo extends BlockTEBase {
 	@Override
 	public boolean preInit() {
 
-		GameRegistry.registerBlock(this, ItemBlockDynamo.class, "dynamo");
+		RegistryHelper.registerBlockAndItem(this, new ResourceLocation(ThermalExpansion.modId, "dynamo"), ItemBlockDynamo::new);
 
 		return true;
 	}

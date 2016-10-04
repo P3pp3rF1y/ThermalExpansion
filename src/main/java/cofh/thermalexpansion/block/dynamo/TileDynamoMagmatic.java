@@ -88,11 +88,13 @@ public class TileDynamoMagmatic extends TileDynamoBase implements IFluidHandler 
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
 		tank.writeToNBT(nbt);
+
+		return nbt;
 	}
 
 	/* NETWORK METHODS */

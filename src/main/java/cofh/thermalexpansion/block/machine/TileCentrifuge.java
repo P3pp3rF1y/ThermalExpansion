@@ -5,9 +5,12 @@ import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.helpers.MathHelper;
 import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.core.TEProps;
+import cofh.thermalexpansion.gui.client.machine.GuiCentrifuge;
+import cofh.thermalexpansion.gui.container.machine.ContainerCentrifuge;
 import cofh.thermalexpansion.util.crafting.CentrifugeManager;
 import cofh.thermalexpansion.util.crafting.CentrifugeManager.RecipeCentrifuge;
 
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -36,8 +39,9 @@ public class TileCentrifuge extends TileMachineBase {
 		DEFAULT_ENERGY_CONFIG[type] = new EnergyConfig();
 		DEFAULT_ENERGY_CONFIG[type].setParamsPower(basePower);
 
-		SOUNDS[type] = CoreUtils.getSoundName(ThermalExpansion.modId, "blockMachineCentrifuge");
+		SOUNDS[type] = CoreUtils.getSoundEvent(ThermalExpansion.modId, "blockMachineCentrifuge");
 
+		GameRegistry.register(SOUNDS[type].setRegistryName(ThermalExpansion.modId, "blockMachineCentrifuge"));
 		GameRegistry.registerTileEntity(TileCentrifuge.class, "thermalexpansion.machineCentrifuge");
 	}
 
@@ -93,17 +97,17 @@ public class TileCentrifuge extends TileMachineBase {
 	}
 
 	/* GUI METHODS */
-	//	@Override
-	//	public Object getGuiClient(InventoryPlayer inventory) {
-	//
-	//		return new GuiCentrifuge(inventory, this);
-	//	}
-	//
-	//	@Override
-	//	public Object getGuiServer(InventoryPlayer inventory) {
-	//
-	//		return new ContainerCentrifuge(inventory, this);
-	//	}
+	@Override
+	public Object getGuiClient(InventoryPlayer inventory) {
+
+		return new GuiCentrifuge(inventory, this);
+	}
+
+	@Override
+	public Object getGuiServer(InventoryPlayer inventory) {
+
+		return new ContainerCentrifuge(inventory, this);
+	}
 
 	@Override
 	public FluidTankAdv getTank() {
@@ -131,7 +135,7 @@ public class TileCentrifuge extends TileMachineBase {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
@@ -139,6 +143,8 @@ public class TileCentrifuge extends TileMachineBase {
 		nbt.setInteger("TrackOut1", outputTrackerPrimary);
 		nbt.setInteger("TrackOut2", outputTrackerSecondary);
 		tank.writeToNBT(nbt);
+
+		return nbt;
 	}
 
 	/* IInventory */

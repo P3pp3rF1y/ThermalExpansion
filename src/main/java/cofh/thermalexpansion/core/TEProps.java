@@ -4,6 +4,7 @@ import cofh.thermalexpansion.block.BlockTEBase;
 import cofh.thermalexpansion.block.BlockTEBase.EnumSideConfig;
 
 import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -61,14 +62,14 @@ public class TEProps {
 	public static int renderIdTank = -1;
 	public static int renderIdEnder = -1;
 
-	/* Common Unlisted Block Properties */
+	/* Common Block Properties */
 	public static final IUnlistedProperty<Boolean> ACTIVE = Properties.toUnlisted(PropertyBool.create("active"));
-	public static final IUnlistedProperty<EnumFacing> FACING = Properties.toUnlisted(PropertyEnum.<EnumFacing> create("facing", EnumFacing.class));
-	public static final IUnlistedProperty<BlockTEBase.EnumSideConfig>[] SIDE_CONFIG = new IUnlistedProperty[6];
+	public static final IUnlistedProperty<EnumFacing> FACING = Properties.toUnlisted(PropertyDirection.create("facing"));
+	public static final IUnlistedProperty<EnumSideConfig>[] SIDE_CONFIG = new IUnlistedProperty[6];
 
 	static {
 		for (int i = 0; i < 6; i++) {
-			TEProps.SIDE_CONFIG[i] = Properties.toUnlisted(PropertyEnum.<EnumSideConfig> create("config_" + EnumFacing.VALUES[i].name(), EnumSideConfig.class));
+			TEProps.SIDE_CONFIG[i] = Properties.toUnlisted(PropertyEnum.create("config_" + EnumFacing.VALUES[i].name(), EnumSideConfig.class));
 		}
 	}
 

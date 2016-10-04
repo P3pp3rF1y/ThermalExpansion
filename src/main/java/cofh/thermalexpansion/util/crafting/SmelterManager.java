@@ -26,8 +26,8 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class SmelterManager {
 
-	public static ItemStack blockSand = new ItemStack(Blocks.sand);
-	public static ItemStack blockSoulSand = new ItemStack(Blocks.soul_sand);
+	public static ItemStack blockSand = new ItemStack(Blocks.SAND);
+	public static ItemStack blockSoulSand = new ItemStack(Blocks.SOUL_SAND);
 
 	private static Map<List<ComparableItemStackSmelter>, RecipeSmelter> recipeMap = new THashMap<List<ComparableItemStackSmelter>, RecipeSmelter>();
 	private static Set<ComparableItemStackSmelter> validationSet = new THashSet<ComparableItemStackSmelter>();
@@ -126,9 +126,9 @@ public class SmelterManager {
 		addFlux(ItemMaterial.crystalCinnabar);
 		addFlux(ItemMaterial.dustPyrotheum);
 
-		addTERecipe(4000, new ItemStack(Blocks.cobblestone, 2), blockSand, new ItemStack(Blocks.stonebrick, 1), ItemMaterial.crystalSlag, 100);
-		addTERecipe(4000, new ItemStack(Blocks.redstone_ore), blockSand, new ItemStack(Blocks.redstone_block), ItemMaterial.crystalSlagRich, 50);
-		addTERecipe(4000, new ItemStack(Blocks.netherrack, 4), blockSoulSand, new ItemStack(Blocks.nether_brick, 2), ItemMaterial.dustSulfur, 25);
+		addTERecipe(4000, new ItemStack(Blocks.COBBLESTONE, 2), blockSand, new ItemStack(Blocks.STONEBRICK, 1), ItemMaterial.crystalSlag, 100);
+		addTERecipe(4000, new ItemStack(Blocks.REDSTONE_ORE), blockSand, new ItemStack(Blocks.REDSTONE_BLOCK), ItemMaterial.crystalSlagRich, 50);
+		addTERecipe(4000, new ItemStack(Blocks.NETHERRACK, 4), blockSoulSand, new ItemStack(Blocks.NETHER_BRICK, 2), ItemMaterial.dustSulfur, 25);
 
 		ItemStack blockGlass = ItemHelper.cloneStack(BlockGlass.glassLead, 2);
 		addAlloyRecipe(4000, "dustLead", 1, "dustObsidian", 4, blockGlass);

@@ -15,6 +15,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class TileFurnace extends TileMachineBase {
@@ -39,8 +40,9 @@ public class TileFurnace extends TileMachineBase {
 		DEFAULT_ENERGY_CONFIG[type] = new EnergyConfig();
 		DEFAULT_ENERGY_CONFIG[type].setParamsPower(basePower);
 
-		SOUNDS[type] = CoreUtils.getSoundName(ThermalExpansion.modId, "blockMachineFurnace");
+		SOUNDS[type] = CoreUtils.getSoundEvent(ThermalExpansion.modId, "blockMachineFurnace");
 
+		GameRegistry.register(SOUNDS[type].setRegistryName(new ResourceLocation(ThermalExpansion.modId, "blockMachineFurnace")));
 		GameRegistry.registerTileEntity(TileFurnace.class, "thermalexpansion.machineFurnace");
 	}
 
@@ -193,12 +195,14 @@ public class TileFurnace extends TileMachineBase {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
 		nbt.setInteger("TrackIn", inputTracker);
 		nbt.setInteger("TrackOut", outputTracker);
+
+		return nbt;
 	}
 
 	/* AUGMENT HELPERS */

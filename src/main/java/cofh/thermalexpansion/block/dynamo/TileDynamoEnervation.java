@@ -107,11 +107,13 @@ public class TileDynamoEnervation extends TileDynamoBase {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
 		nbt.setInteger("FuelMax", currentFuelRF);
+
+		return nbt;
 	}
 
 	/* NETWORK METHODS */
@@ -158,8 +160,8 @@ public class TileDynamoEnervation extends TileDynamoBase {
 	static int redstoneRF = 64000;
 	static int blockRedstoneRF = redstoneRF * 10;
 
-	static ItemStack redstone = new ItemStack(Items.redstone);
-	static ItemStack blockRedstone = new ItemStack(Blocks.redstone_block);
+	static ItemStack redstone = new ItemStack(Items.REDSTONE);
+	static ItemStack blockRedstone = new ItemStack(Blocks.REDSTONE_BLOCK);
 
 	static Map<ComparableItemStack, Integer> fuels = new THashMap<ComparableItemStack, Integer>();
 

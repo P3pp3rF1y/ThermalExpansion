@@ -103,12 +103,14 @@ public class TileDynamoCompression extends TileDynamoBase implements IFluidHandl
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 		nbt.setInteger("Coolant", coolantRF);
 		nbt.setTag("FuelTank", fuelTank.writeToNBT(new NBTTagCompound()));
 		nbt.setTag("CoolantTank", coolantTank.writeToNBT(new NBTTagCompound()));
+
+		return nbt;
 	}
 
 	/* NETWORK METHODS */

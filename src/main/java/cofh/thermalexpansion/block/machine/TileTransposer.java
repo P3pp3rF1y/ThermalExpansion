@@ -14,10 +14,12 @@ import cofh.thermalexpansion.gui.container.machine.ContainerTransposer;
 import cofh.thermalexpansion.util.crafting.TransposerManager;
 import cofh.thermalexpansion.util.crafting.TransposerManager.RecipeTransposer;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -48,8 +50,9 @@ public class TileTransposer extends TileMachineBase implements IFluidHandler {
 		DEFAULT_ENERGY_CONFIG[type] = new EnergyConfig();
 		DEFAULT_ENERGY_CONFIG[type].setParamsPower(basePower);
 
-		SOUNDS[type] = CoreUtils.getSoundName(ThermalExpansion.modId, "blockMachineTransposer");
+		SOUNDS[type] = CoreUtils.getSoundEvent(ThermalExpansion.modId, "blockMachineTransposer");
 
+		GameRegistry.register(SOUNDS[type].setRegistryName(new ResourceLocation(ThermalExpansion.modId, "blockMachineTransposer")));
 		GameRegistry.registerTileEntity(TileTransposer.class, "thermalexpansion.machineTransposer");
 	}
 
@@ -532,7 +535,7 @@ public class TileTransposer extends TileMachineBase implements IFluidHandler {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
@@ -541,6 +544,8 @@ public class TileTransposer extends TileMachineBase implements IFluidHandler {
 		nbt.setInteger("TrackOut2", outputTrackerFluid);
 		nbt.setBoolean("Rev", reverse);
 		tank.writeToNBT(nbt);
+
+		return nbt;
 	}
 
 	/* NETWORK METHODS */
@@ -605,7 +610,8 @@ public class TileTransposer extends TileMachineBase implements IFluidHandler {
 		super.handleFluidPacket(payload);
 
 		renderFluid = payload.getFluidStack();
-		worldObj.markBlockForUpdate(pos);
+		IBlockState state = worldObj.getBlockState(pos);
+		worldObj.notifyBlockUpdate(pos, state, state, 3);
 	}
 
 	@Override

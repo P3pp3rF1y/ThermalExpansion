@@ -14,6 +14,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class TileSawmill extends TileMachineBase {
@@ -38,8 +39,9 @@ public class TileSawmill extends TileMachineBase {
 		DEFAULT_ENERGY_CONFIG[type] = new EnergyConfig();
 		DEFAULT_ENERGY_CONFIG[type].setParamsPower(basePower);
 
-		SOUNDS[type] = CoreUtils.getSoundName(ThermalExpansion.modId, "blockMachineSawmill");
+		SOUNDS[type] = CoreUtils.getSoundEvent(ThermalExpansion.modId, "blockMachineSawmill");
 
+		GameRegistry.register(SOUNDS[type].setRegistryName(new ResourceLocation(ThermalExpansion.modId, "blockMachineSawmill")));
 		GameRegistry.registerTileEntity(TileSawmill.class, "thermalexpansion.machineSawmill");
 	}
 
@@ -252,13 +254,15 @@ public class TileSawmill extends TileMachineBase {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
 		nbt.setInteger("TrackIn", inputTracker);
 		nbt.setInteger("TrackOut1", outputTrackerPrimary);
 		nbt.setInteger("TrackOut2", outputTrackerSecondary);
+
+		return nbt;
 	}
 
 	/* IInventory */

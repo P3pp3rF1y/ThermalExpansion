@@ -1,10 +1,10 @@
 package cofh.thermalexpansion.block.device;
 
+import cofh.core.util.RegistryHelper;
 import cofh.thermalexpansion.block.BlockTEBase;
 
 import java.util.List;
 
-import cofh.thermalexpansion.util.RegistryHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
@@ -67,16 +67,10 @@ public class BlockDevice extends BlockTEBase {
 		return state.getValue(VARIANT).getMetadata();
 	}
 
-	/* ITileEntityProvider */
-
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 
-		int metadata = getMetaFromState(state);
-		if (metadata >= BlockDevice.Type.values().length) {
-			return null;
-		}
-		switch (BlockDevice.Type.values()[metadata]) {
+		switch (state.getValue(VARIANT)) {
 			case ACTIVATOR:
 				return null;
 			default:

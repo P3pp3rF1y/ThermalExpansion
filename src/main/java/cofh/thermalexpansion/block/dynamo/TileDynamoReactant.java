@@ -127,13 +127,15 @@ public class TileDynamoReactant extends TileDynamoBase implements IFluidHandler 
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
 		nbt.setInteger("ReactMax", currentReactantRF);
 		nbt.setInteger("React", reactantRF);
 		tank.writeToNBT(nbt);
+
+		return nbt;
 	}
 
 	/* NETWORK METHODS */
@@ -246,11 +248,11 @@ public class TileDynamoReactant extends TileDynamoBase implements IFluidHandler 
 	static TObjectIntHashMap<ComparableItemStack> reactants = new TObjectIntHashMap<ComparableItemStack>();
 
 	static {
-		addReactant(new ItemStack(Items.sugar, 1, 0), 16000);
-		addReactant(new ItemStack(Items.gunpowder, 1, 0), 160000);
-		addReactant(new ItemStack(Items.blaze_powder, 1, 0), 640000);
-		addReactant(new ItemStack(Items.ghast_tear, 1, 0), 1600000);
-		addReactant(new ItemStack(Items.nether_star, 1, 0), 6400000);
+		addReactant(new ItemStack(Items.SUGAR, 1, 0), sugarRF);
+		addReactant(new ItemStack(Items.GUNPOWDER, 1, 0), gunpowderRF);
+		addReactant(new ItemStack(Items.BLAZE_POWDER, 1, 0), blazePowderRF);
+		addReactant(new ItemStack(Items.GHAST_TEAR, 1, 0), ghastTearRF);
+		addReactant(new ItemStack(Items.NETHER_STAR, 1, 0), netherStarRF);
 	}
 
 	public static boolean isValidFuel(FluidStack stack) {

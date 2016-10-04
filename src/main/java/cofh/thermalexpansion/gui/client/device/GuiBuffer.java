@@ -8,6 +8,7 @@ import cofh.thermalexpansion.gui.container.device.ContainerBuffer;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
@@ -138,7 +139,7 @@ public class GuiBuffer extends GuiAugmentableBase {
 				pitch += 0.1F;
 			}
 		}
-		playSound("random.click", 1.0F, pitch);
+		playSound(SoundEvents.UI_BUTTON_CLICK, pitch);
 
 		myTile.sendModePacket();
 

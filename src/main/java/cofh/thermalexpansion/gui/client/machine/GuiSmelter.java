@@ -11,6 +11,7 @@ import cofh.thermalexpansion.gui.container.machine.ContainerSmelter;
 import cofh.thermalexpansion.gui.element.ElementSlotOverlay;
 
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
@@ -114,9 +115,9 @@ public class GuiSmelter extends GuiAugmentableBase {
 
 		if (buttonName.equals("Mode")) {
 			if (myTile.lockPrimary) {
-				playSound("random.click", 1.0F, 0.6F);
+				playSound(SoundEvents.UI_BUTTON_CLICK, 0.6F);
 			} else {
-				playSound("random.click", 1.0F, 0.8F);
+				playSound(SoundEvents.UI_BUTTON_CLICK, 0.8F);
 			}
 			myTile.setMode(!myTile.lockPrimary);
 		}

@@ -163,13 +163,15 @@ public class TileDynamoSteam extends TileDynamoBase implements IFluidHandler {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
 		nbt.setInteger("FuelMax", currentFuelRF);
 		nbt.setTag("SteamTank", steamTank.writeToNBT(new NBTTagCompound()));
 		nbt.setTag("WaterTank", waterTank.writeToNBT(new NBTTagCompound()));
+
+		return nbt;
 	}
 
 	/* NETWORK METHODS */
@@ -281,9 +283,9 @@ public class TileDynamoSteam extends TileDynamoBase implements IFluidHandler {
 	static int blockCoalRF = coalRF * 10;
 	static int otherRF = woodRF / 3;
 
-	static ItemStack coal = new ItemStack(Items.coal, 1, 0);
-	static ItemStack charcoal = new ItemStack(Items.coal, 1, 1);
-	static ItemStack blockCoal = new ItemStack(Blocks.coal_block);
+	static ItemStack coal = new ItemStack(Items.COAL, 1, 0);
+	static ItemStack charcoal = new ItemStack(Items.COAL, 1, 1);
+	static ItemStack blockCoal = new ItemStack(Blocks.COAL_BLOCK);
 
 	static TObjectIntHashMap<ComparableItemStack> fuels = new TObjectIntHashMap<ComparableItemStack>();
 
@@ -323,10 +325,10 @@ public class TileDynamoSteam extends TileDynamoBase implements IFluidHandler {
 		}
 		Item item = stack.getItem();
 
-		if (stack.getItem() instanceof ItemBlock && ((ItemBlock) item).getBlock().getMaterial() == Material.wood) {
+		if (stack.getItem() instanceof ItemBlock && ((ItemBlock) item).getBlock().getDefaultState().getMaterial() == Material.WOOD) {
 			return woodRF;
 		}
-		if (item == Items.stick || item instanceof ItemBlock && ((ItemBlock) item).getBlock() == Blocks.sapling) {
+		if (item == Items.STICK || item instanceof ItemBlock && ((ItemBlock) item).getBlock() == Blocks.SAPLING) {
 			return otherRF;
 		}
 		return GameRegistry.getFuelValue(stack) * CoFHProps.RF_PER_MJ * 3 / 2;

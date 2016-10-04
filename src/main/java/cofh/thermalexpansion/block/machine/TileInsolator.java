@@ -16,10 +16,11 @@ import cofh.thermalexpansion.util.crafting.InsolatorManager.RecipeInsolator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -49,8 +50,9 @@ public class TileInsolator extends TileMachineBase implements IFluidHandler {
 		DEFAULT_ENERGY_CONFIG[type] = new EnergyConfig();
 		DEFAULT_ENERGY_CONFIG[type].setParamsPower(basePower);
 
-		SOUNDS[type] = CoreUtils.getSoundName(ThermalExpansion.modId, "blockMachineInsolator");
+		SOUNDS[type] = CoreUtils.getSoundEvent(ThermalExpansion.modId, "blockMachineInsolator");
 
+		GameRegistry.register(SOUNDS[type].setRegistryName(new ResourceLocation(ThermalExpansion.modId, "blockMachineInsolator")));
 		GameRegistry.registerTileEntity(TileInsolator.class, "thermalexpansion.machineInsolator");
 	}
 
@@ -353,7 +355,7 @@ public class TileInsolator extends TileMachineBase implements IFluidHandler {
 	}
 
 	@Override
-	public void sendGuiNetworkData(Container container, ICrafting player) {
+	public void sendGuiNetworkData(Container container, IContainerListener player) {
 
 		super.sendGuiNetworkData(container, player);
 
@@ -387,7 +389,7 @@ public class TileInsolator extends TileMachineBase implements IFluidHandler {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
@@ -397,6 +399,8 @@ public class TileInsolator extends TileMachineBase implements IFluidHandler {
 		nbt.setInteger("Tracker2", outputTrackerSecondary);
 		nbt.setBoolean("SlotLock", lockPrimary);
 		tank.writeToNBT(nbt);
+
+		return nbt;
 	}
 
 	/* NETWORK METHODS */

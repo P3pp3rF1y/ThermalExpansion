@@ -29,7 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.IBlockAccess;
@@ -350,7 +350,7 @@ ITickable {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
@@ -360,6 +360,8 @@ ITickable {
 		nbt.setByte("Facing", facing);
 		nbt.setBoolean("Active", isActive);
 		nbt.setInteger("Fuel", fuelRF);
+
+		return nbt;
 	}
 
 	public void readAugmentsFromNBT(NBTTagCompound nbt) {

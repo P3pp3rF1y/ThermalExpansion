@@ -13,10 +13,12 @@ import cofh.thermalexpansion.gui.container.machine.ContainerCrucible;
 import cofh.thermalexpansion.util.crafting.CrucibleManager;
 import cofh.thermalexpansion.util.crafting.CrucibleManager.RecipeCrucible;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -46,8 +48,9 @@ public class TileCrucible extends TileMachineBase implements IFluidHandler {
 		DEFAULT_ENERGY_CONFIG[type] = new EnergyConfig();
 		DEFAULT_ENERGY_CONFIG[type].setParams(basePower / 10, basePower, Math.max(400000, basePower * 1000));
 
-		SOUNDS[type] = CoreUtils.getSoundName(ThermalExpansion.modId, "blockMachineCrucible");
+		SOUNDS[type] = CoreUtils.getSoundEvent(ThermalExpansion.modId, "blockMachineCrucible");
 
+		GameRegistry.register(SOUNDS[type].setRegistryName(new ResourceLocation(ThermalExpansion.modId, "blockMachineCrucible")));
 		GameRegistry.registerTileEntity(TileCrucible.class, "thermalexpansion.machineCrucible");
 	}
 
@@ -229,13 +232,15 @@ public class TileCrucible extends TileMachineBase implements IFluidHandler {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
 		nbt.setInteger("TrackIn", inputTracker);
 		nbt.setInteger("TrackOut", outputTrackerFluid);
 		tank.writeToNBT(nbt);
+
+		return nbt;
 	}
 
 	/* NETWORK METHODS */
@@ -279,7 +284,8 @@ public class TileCrucible extends TileMachineBase implements IFluidHandler {
 
 		super.handleFluidPacket(payload);
 		renderFluid = payload.getFluidStack();
-		worldObj.markBlockForUpdate(pos);
+		IBlockState state = worldObj.getBlockState(pos);
+		worldObj.notifyBlockUpdate(pos, state, state, 3);
 	}
 
 	/* IInventory */

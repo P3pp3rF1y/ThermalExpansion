@@ -2,7 +2,10 @@ package cofh.thermalexpansion.block.machine;
 
 import cofh.api.core.IInitializer;
 import cofh.api.core.IModelRegister;
+import cofh.core.util.RegistryHelper;
+import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.block.BlockTEBase;
+import cofh.thermalexpansion.block.TileReconfigurable;
 import cofh.thermalexpansion.core.TEProps;
 
 import java.util.List;
@@ -10,20 +13,23 @@ import java.util.List;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -33,7 +39,7 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 
 	public BlockMachine() {
 
-		super(Material.iron);
+		super(Material.IRON);
 
 		setUnlocalizedName("machine");
 
@@ -42,13 +48,30 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	}
 
 	@Override
-	protected BlockState createBlockState() {
+	protected BlockStateContainer createBlockState() {
 
-		IProperty[] listed = new IProperty[] { VARIANT };
-		IUnlistedProperty[] unlisted = new IUnlistedProperty[] { TEProps.ACTIVE, TEProps.FACING, TEProps.SIDE_CONFIG[0], TEProps.SIDE_CONFIG[1],
-				TEProps.SIDE_CONFIG[2], TEProps.SIDE_CONFIG[3], TEProps.SIDE_CONFIG[4], TEProps.SIDE_CONFIG[5] };
+		return new ExtendedBlockState(this,
+				new IProperty[] {VARIANT},
+				new IUnlistedProperty[] {TEProps.ACTIVE, TEProps.FACING, TEProps.SIDE_CONFIG[0], TEProps.SIDE_CONFIG[1],
+					TEProps.SIDE_CONFIG[2], TEProps.SIDE_CONFIG[3], TEProps.SIDE_CONFIG[4], TEProps.SIDE_CONFIG[5]}
+				);
+	}
 
-		return new ExtendedBlockState(this, listed, unlisted);
+	@Override
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+
+		IExtendedBlockState extState = (IExtendedBlockState) state;
+		if (world.getTileEntity(pos) instanceof TileReconfigurable) {
+
+			TileReconfigurable tile = (TileReconfigurable) world.getTileEntity(pos);
+			extState.withProperty(TEProps.ACTIVE, tile.isActive);
+			extState.withProperty(TEProps.FACING, EnumFacing.values()[tile.getFacing()]);
+			for (int side = 0; side < 6 ; side++) {
+				extState.withProperty(TEProps.SIDE_CONFIG[side], EnumSideConfig.values()[tile.sideCache[side]]);
+			}
+		}
+
+		return extState;
 	}
 
 	@Override
@@ -58,13 +81,6 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		for (int i = 0; i < BlockMachine.Type.METADATA_LOOKUP.length; i++) {
 			list.add(new ItemStack(item, 1, i));
 		}
-	}
-
-	@Override
-	public int getDamageValue(World world, BlockPos pos) {
-
-		IBlockState state = world.getBlockState(pos);
-		return state.getBlock() != this ? 0 : state.getValue(VARIANT).getMetadata();
 	}
 
 	@Override
@@ -85,32 +101,28 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		return state.getValue(VARIANT).getMetadata();
 	}
 
-	/* ITileEntityProvider */
 	@Override
-	public TileEntity createNewTileEntity(World world, int metadata) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 
-		if (metadata >= BlockMachine.Type.values().length) {
-			return null;
-		}
-		switch (BlockMachine.Type.values()[metadata]) {
-		case FURNACE:
-			return new TileFurnace();
-		case PULVERIZER:
-			return new TilePulverizer();
-		case SAWMILL:
-			return new TileSawmill();
-		case SMELTER:
-			return new TileSmelter();
-		case INSOLATOR:
-			return new TileInsolator();
-		case CHARGER:
-			return new TileCharger();
-		case CRUCIBLE:
-			return new TileCrucible();
-		case TRANSPOSER:
-			return new TileTransposer();
-		default:
-			return null;
+		switch (state.getValue(VARIANT)) {
+			case FURNACE:
+				return new TileFurnace();
+			case PULVERIZER:
+				return new TilePulverizer();
+			case SAWMILL:
+				return new TileSawmill();
+			case SMELTER:
+				return new TileSmelter();
+			case INSOLATOR:
+				return new TileInsolator();
+			case CHARGER:
+				return new TileCharger();
+			case CRUCIBLE:
+				return new TileCrucible();
+			case TRANSPOSER:
+				return new TileTransposer();
+			default:
+				return null;
 		}
 	}
 
@@ -129,7 +141,7 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	@Override
 	public boolean preInit() {
 
-		GameRegistry.registerBlock(this, ItemBlockMachine.class, "machine");
+		RegistryHelper.registerBlockAndItem(this, new ResourceLocation(ThermalExpansion.modId, "machine"), ItemBlockMachine::new);
 
 		return true;
 	}

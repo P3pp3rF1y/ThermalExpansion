@@ -15,6 +15,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -114,7 +115,7 @@ public abstract class TileRSControl extends TileInventorySecure implements IReds
 			isActive = payload.getBool();
 
 			if (isActive && !prevActive) {
-				if (getSoundName() != null && !getSoundName().isEmpty()) {
+				if (getSoundEvent() != null) {
 					SoundHelper.playSound(getSound());
 				}
 			}
@@ -163,16 +164,16 @@ public abstract class TileRSControl extends TileInventorySecure implements IReds
 	@SideOnly(Side.CLIENT)
 	public ISound getSound() {
 
-		return new SoundLocation(this, getSoundName(), getSoundCategory(), 1.0F, 1.0F, true, 0, pos.getX(), pos.getY(), pos.getZ());
+		return new SoundLocation(this, getSoundEvent(), getSoundCategory(), 1.0F, 1.0F, true, 0, pos.getX(), pos.getY(), pos.getZ());
 	}
 
 	private SoundCategory getSoundCategory() {
 		return SoundCategory.BLOCKS;
 	}
 
-	public String getSoundName() {
+	public SoundEvent getSoundEvent() {
 
-		return "";
+		return null;
 	}
 
 	@Override

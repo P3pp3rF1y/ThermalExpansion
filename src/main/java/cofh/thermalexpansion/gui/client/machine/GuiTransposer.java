@@ -14,6 +14,7 @@ import cofh.thermalexpansion.gui.container.machine.ContainerTransposer;
 import cofh.thermalexpansion.gui.element.ElementSlotOverlay;
 
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -132,9 +133,9 @@ public class GuiTransposer extends GuiAugmentableBase {
 		if (buttonName.equals("Mode")) {
 			if (myTile.reverse == myTile.reverseFlag) {
 				if (myTile.reverse) {
-					playSound("random.click", 1.0F, 0.8F);
+					playSound(SoundEvents.UI_BUTTON_CLICK, 0.8F);
 				} else {
-					playSound("random.click", 1.0F, 0.6F);
+					playSound(SoundEvents.UI_BUTTON_CLICK, 0.6F);
 				}
 				myTile.setMode(!myTile.reverse);
 			}

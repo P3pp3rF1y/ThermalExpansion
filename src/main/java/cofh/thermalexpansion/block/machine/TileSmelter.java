@@ -15,6 +15,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class TileSmelter extends TileMachineBase {
@@ -39,8 +40,9 @@ public class TileSmelter extends TileMachineBase {
 		DEFAULT_ENERGY_CONFIG[type] = new EnergyConfig();
 		DEFAULT_ENERGY_CONFIG[type].setParamsPower(basePower);
 
-		SOUNDS[type] = CoreUtils.getSoundName(ThermalExpansion.modId, "blockMachineSmelter");
+		SOUNDS[type] = CoreUtils.getSoundEvent(ThermalExpansion.modId, "blockMachineSmelter");
 
+		GameRegistry.register(SOUNDS[type].setRegistryName(new ResourceLocation(ThermalExpansion.modId, "blockMachineSmelter")));
 		GameRegistry.registerTileEntity(TileSmelter.class, "thermalexpansion.machineSmelter");
 	}
 
@@ -321,7 +323,7 @@ public class TileSmelter extends TileMachineBase {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 
@@ -330,6 +332,8 @@ public class TileSmelter extends TileMachineBase {
 		nbt.setInteger("TrackOut1", outputTrackerPrimary);
 		nbt.setInteger("TrackOut2", outputTrackerSecondary);
 		nbt.setBoolean("SlotLock", lockPrimary);
+
+		return nbt;
 	}
 
 	/* NETWORK METHODS */

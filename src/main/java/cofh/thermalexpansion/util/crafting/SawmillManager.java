@@ -70,44 +70,44 @@ public class SawmillManager {
 
 	public static void addDefaultRecipes() {
 
-		addRecipe(2400, new ItemStack(Blocks.noteblock), new ItemStack(Blocks.planks, 8), new ItemStack(Items.redstone, 1));
-		addRecipe(2400, new ItemStack(Items.bed), new ItemStack(Blocks.planks, 3), new ItemStack(Blocks.wool, 3));
-		addRecipe(2400, new ItemStack(Blocks.bookshelf), new ItemStack(Blocks.planks, 6), new ItemStack(Items.book, 3));
-		addRecipe(2400, new ItemStack(Blocks.chest), new ItemStack(Blocks.planks, 8));
-		addRecipe(2400, new ItemStack(Blocks.crafting_table), new ItemStack(Blocks.planks, 4));
-		addRecipe(2400, new ItemStack(Items.sign), new ItemStack(Blocks.planks, 2));
-		addRecipe(2400, new ItemStack(Blocks.wooden_pressure_plate), new ItemStack(Blocks.planks, 2));
-		addRecipe(2400, new ItemStack(Blocks.jukebox), new ItemStack(Blocks.planks, 8), new ItemStack(Items.diamond, 1));
-		addRecipe(2400, new ItemStack(Blocks.trapdoor), new ItemStack(Blocks.planks, 3));
-		addRecipe(800, new ItemStack(Blocks.melon_block), new ItemStack(Items.melon, 8));
+		addRecipe(2400, new ItemStack(Blocks.NOTEBLOCK), new ItemStack(Blocks.PLANKS, 8), new ItemStack(Items.REDSTONE, 1));
+		addRecipe(2400, new ItemStack(Items.BED), new ItemStack(Blocks.PLANKS, 3), new ItemStack(Blocks.WOOL, 3));
+		addRecipe(2400, new ItemStack(Blocks.BOOKSHELF), new ItemStack(Blocks.PLANKS, 6), new ItemStack(Items.BOOK, 3));
+		addRecipe(2400, new ItemStack(Blocks.CHEST), new ItemStack(Blocks.PLANKS, 8));
+		addRecipe(2400, new ItemStack(Blocks.CRAFTING_TABLE), new ItemStack(Blocks.PLANKS, 4));
+		addRecipe(2400, new ItemStack(Items.SIGN), new ItemStack(Blocks.PLANKS, 2));
+		addRecipe(2400, new ItemStack(Blocks.WOODEN_PRESSURE_PLATE), new ItemStack(Blocks.PLANKS, 2));
+		addRecipe(2400, new ItemStack(Blocks.JUKEBOX), new ItemStack(Blocks.PLANKS, 8), new ItemStack(Items.DIAMOND, 1));
+		addRecipe(2400, new ItemStack(Blocks.TRAPDOOR), new ItemStack(Blocks.PLANKS, 3));
+		addRecipe(800, new ItemStack(Blocks.MELON_BLOCK), new ItemStack(Items.MELON, 8));
 
-		addRecipe(2400, new ItemStack(Items.oak_door), new ItemStack(Blocks.planks, 6, 0));
-		addRecipe(2400, new ItemStack(Items.spruce_door), new ItemStack(Blocks.planks, 6, 1));
-		addRecipe(2400, new ItemStack(Items.birch_door), new ItemStack(Blocks.planks, 6, 2));
-		addRecipe(2400, new ItemStack(Items.jungle_door), new ItemStack(Blocks.planks, 6, 3));
-		addRecipe(2400, new ItemStack(Items.acacia_door), new ItemStack(Blocks.planks, 6, 4));
-		addRecipe(2400, new ItemStack(Items.dark_oak_door), new ItemStack(Blocks.planks, 6, 5));
+		addRecipe(2400, new ItemStack(Items.OAK_DOOR), new ItemStack(Blocks.PLANKS, 6, 0));
+		addRecipe(2400, new ItemStack(Items.SPRUCE_DOOR), new ItemStack(Blocks.PLANKS, 6, 1));
+		addRecipe(2400, new ItemStack(Items.BIRCH_DOOR), new ItemStack(Blocks.PLANKS, 6, 2));
+		addRecipe(2400, new ItemStack(Items.JUNGLE_DOOR), new ItemStack(Blocks.PLANKS, 6, 3));
+		addRecipe(2400, new ItemStack(Items.ACACIA_DOOR), new ItemStack(Blocks.PLANKS, 6, 4));
+		addRecipe(2400, new ItemStack(Items.DARK_OAK_DOOR), new ItemStack(Blocks.PLANKS, 6, 5));
 
-		addRecipe(1600, new ItemStack(Blocks.oak_fence), new ItemStack(Blocks.planks, 1, 0), ItemMaterial.dustWood);
-		addRecipe(1600, new ItemStack(Blocks.spruce_fence), new ItemStack(Blocks.planks, 1, 1), ItemMaterial.dustWood);
-		addRecipe(1600, new ItemStack(Blocks.birch_fence), new ItemStack(Blocks.planks, 1, 2), ItemMaterial.dustWood);
-		addRecipe(1600, new ItemStack(Blocks.jungle_fence), new ItemStack(Blocks.planks, 1, 3), ItemMaterial.dustWood);
-		addRecipe(1600, new ItemStack(Blocks.acacia_fence), new ItemStack(Blocks.planks, 1, 4), ItemMaterial.dustWood);
-		addRecipe(1600, new ItemStack(Blocks.dark_oak_fence), new ItemStack(Blocks.planks, 1, 5), ItemMaterial.dustWood);
+		addRecipe(1600, new ItemStack(Blocks.OAK_FENCE), new ItemStack(Blocks.PLANKS, 1, 0), ItemMaterial.dustWood);
+		addRecipe(1600, new ItemStack(Blocks.SPRUCE_FENCE), new ItemStack(Blocks.PLANKS, 1, 1), ItemMaterial.dustWood);
+		addRecipe(1600, new ItemStack(Blocks.BIRCH_FENCE), new ItemStack(Blocks.PLANKS, 1, 2), ItemMaterial.dustWood);
+		addRecipe(1600, new ItemStack(Blocks.JUNGLE_FENCE), new ItemStack(Blocks.PLANKS, 1, 3), ItemMaterial.dustWood);
+		addRecipe(1600, new ItemStack(Blocks.ACACIA_FENCE), new ItemStack(Blocks.PLANKS, 1, 4), ItemMaterial.dustWood);
+		addRecipe(1600, new ItemStack(Blocks.DARK_OAK_FENCE), new ItemStack(Blocks.PLANKS, 1, 5), ItemMaterial.dustWood);
 
-		addRecipe(2400, new ItemStack(Blocks.oak_fence_gate), new ItemStack(Blocks.planks, 2, 0), ItemMaterial.dustWood);
-		addRecipe(2400, new ItemStack(Blocks.spruce_fence_gate), new ItemStack(Blocks.planks, 2, 1), ItemMaterial.dustWood);
-		addRecipe(2400, new ItemStack(Blocks.birch_fence_gate), new ItemStack(Blocks.planks, 2, 2), ItemMaterial.dustWood);
-		addRecipe(2400, new ItemStack(Blocks.jungle_fence_gate), new ItemStack(Blocks.planks, 2, 3), ItemMaterial.dustWood);
-		addRecipe(2400, new ItemStack(Blocks.acacia_fence_gate), new ItemStack(Blocks.planks, 2, 4), ItemMaterial.dustWood);
-		addRecipe(2400, new ItemStack(Blocks.dark_oak_fence_gate), new ItemStack(Blocks.planks, 2, 5), ItemMaterial.dustWood);
+		addRecipe(2400, new ItemStack(Blocks.OAK_FENCE_GATE), new ItemStack(Blocks.PLANKS, 2, 0), ItemMaterial.dustWood);
+		addRecipe(2400, new ItemStack(Blocks.SPRUCE_FENCE_GATE), new ItemStack(Blocks.PLANKS, 2, 1), ItemMaterial.dustWood);
+		addRecipe(2400, new ItemStack(Blocks.BIRCH_FENCE_GATE), new ItemStack(Blocks.PLANKS, 2, 2), ItemMaterial.dustWood);
+		addRecipe(2400, new ItemStack(Blocks.JUNGLE_FENCE_GATE), new ItemStack(Blocks.PLANKS, 2, 3), ItemMaterial.dustWood);
+		addRecipe(2400, new ItemStack(Blocks.ACACIA_FENCE_GATE), new ItemStack(Blocks.PLANKS, 2, 4), ItemMaterial.dustWood);
+		addRecipe(2400, new ItemStack(Blocks.DARK_OAK_FENCE_GATE), new ItemStack(Blocks.PLANKS, 2, 5), ItemMaterial.dustWood);
 
-		addRecipe(2400, new ItemStack(Items.boat), new ItemStack(Blocks.planks, 5));
-		addRecipe(1600, new ItemStack(Items.wooden_sword), new ItemStack(Blocks.planks, 2), ItemMaterial.dustWood);
-		addRecipe(1600, new ItemStack(Items.wooden_shovel), new ItemStack(Blocks.planks, 1), ItemMaterial.dustWood);
-		addRecipe(1600, new ItemStack(Items.wooden_pickaxe), new ItemStack(Blocks.planks, 3), ItemMaterial.dustWood);
-		addRecipe(1600, new ItemStack(Items.wooden_axe), new ItemStack(Blocks.planks, 3), ItemMaterial.dustWood);
-		addRecipe(1600, new ItemStack(Items.wooden_hoe), new ItemStack(Blocks.planks, 2), ItemMaterial.dustWood);
+		addRecipe(2400, new ItemStack(Items.BOAT), new ItemStack(Blocks.PLANKS, 5));
+		addRecipe(1600, new ItemStack(Items.WOODEN_SWORD), new ItemStack(Blocks.PLANKS, 2), ItemMaterial.dustWood);
+		addRecipe(1600, new ItemStack(Items.WOODEN_SHOVEL), new ItemStack(Blocks.PLANKS, 1), ItemMaterial.dustWood);
+		addRecipe(1600, new ItemStack(Items.WOODEN_PICKAXE), new ItemStack(Blocks.PLANKS, 3), ItemMaterial.dustWood);
+		addRecipe(1600, new ItemStack(Items.WOODEN_AXE), new ItemStack(Blocks.PLANKS, 3), ItemMaterial.dustWood);
+		addRecipe(1600, new ItemStack(Items.WOODEN_HOE), new ItemStack(Blocks.PLANKS, 2), ItemMaterial.dustWood);
 	}
 
 	public static void loadRecipes() {
@@ -116,12 +116,12 @@ public class SawmillManager {
 
 		if (ItemHelper.oreNameExists("woodRubber")) {
 			if (ItemHelper.oreNameExists("itemRawRubber")) {
-				addRecipe(1200, OreDictionary.getOres("woodRubber").get(0), new ItemStack(Blocks.planks, 5, 3), OreDictionary.getOres("itemRawRubber").get(0),
+				addRecipe(1200, OreDictionary.getOres("woodRubber").get(0), new ItemStack(Blocks.PLANKS, 5, 3), OreDictionary.getOres("itemRawRubber").get(0),
 						50);
 			} else if (ItemHelper.oreNameExists("itemRubber")) {
-				addRecipe(1200, OreDictionary.getOres("woodRubber").get(0), new ItemStack(Blocks.planks, 5, 3), OreDictionary.getOres("itemRubber").get(0), 50);
+				addRecipe(1200, OreDictionary.getOres("woodRubber").get(0), new ItemStack(Blocks.PLANKS, 5, 3), OreDictionary.getOres("itemRubber").get(0), 50);
 			} else {
-				addRecipe(1200, OreDictionary.getOres("woodRubber").get(0), new ItemStack(Blocks.planks, 5, 3));
+				addRecipe(1200, OreDictionary.getOres("woodRubber").get(0), new ItemStack(Blocks.PLANKS, 5, 3));
 			}
 		}
 	}
