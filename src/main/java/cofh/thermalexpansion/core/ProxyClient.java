@@ -4,6 +4,8 @@ import cofh.api.core.IModelRegister;
 
 import java.util.ArrayList;
 
+import cofh.thermalexpansion.model.BakedModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -16,9 +18,12 @@ public class ProxyClient extends Proxy {
 
 		super.preInit(event);
 
+		ModelLoaderRegistry.registerLoader(new BakedModelLoader());
+
 		for (int i = 0; i < modelList.size(); i++) {
 			modelList.get(i).registerModels();
 		}
+
 	}
 
 	@Override

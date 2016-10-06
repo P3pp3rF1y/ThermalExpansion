@@ -51,8 +51,8 @@ public class ThermalExpansion {
 
 	public static final String modId = "thermalexpansion";
 	public static final String modName = "Thermal Expansion";
-	public static final String version = "1.8.9R4.2.0";
-	public static final String version_max = "1.8.9R4.3.0";
+	public static final String version = "1.10.2A0.0.1";
+	public static final String version_max = "1.10.2A0.0.1";
 	public static final String dependencies = ThermalFoundation.version_group;
 	public static final String modGuiFactory = "cofh.thermalexpansion.gui.GuiConfigTEFactory";
 

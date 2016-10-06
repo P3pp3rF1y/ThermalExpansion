@@ -115,7 +115,7 @@ public class SmelterManager {
 
 	public static boolean isStandardOre(String oreName) {
 
-		return ItemHelper.oreNameExists(oreName) && FurnaceManager.recipeExists(OreDictionary.getOres(oreName).get(0));
+		return ItemHelper.oreNameExists(oreName) && OreDictionary.getOres(oreName).size() > 0 && FurnaceManager.recipeExists(OreDictionary.getOres(oreName).get(0));
 	}
 
 	public static void addDefaultRecipes() {

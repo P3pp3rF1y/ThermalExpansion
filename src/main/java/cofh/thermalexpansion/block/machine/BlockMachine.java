@@ -10,12 +10,15 @@ import cofh.thermalexpansion.core.TEProps;
 
 import java.util.List;
 
+import cofh.thermalexpansion.model.BakedModelLoader;
+import cofh.thermalexpansion.model.ModelMachine;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -35,7 +38,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockMachine extends BlockTEBase implements IInitializer, IModelRegister {
 
-	public static final PropertyEnum<BlockMachine.Type> VARIANT = PropertyEnum.<BlockMachine.Type> create("type", BlockMachine.Type.class);
+	public static final PropertyEnum<BlockMachine.Type> TYPE = PropertyEnum.create("type", BlockMachine.Type.class);
 
 	public BlockMachine() {
 
@@ -51,7 +54,7 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	protected BlockStateContainer createBlockState() {
 
 		return new ExtendedBlockState(this,
-				new IProperty[] {VARIANT},
+				new IProperty[] {TYPE},
 				new IUnlistedProperty[] {TEProps.ACTIVE, TEProps.FACING, TEProps.SIDE_CONFIG[0], TEProps.SIDE_CONFIG[1],
 					TEProps.SIDE_CONFIG[2], TEProps.SIDE_CONFIG[3], TEProps.SIDE_CONFIG[4], TEProps.SIDE_CONFIG[5]}
 				);
@@ -86,25 +89,25 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
 
-		return this.getDefaultState().withProperty(VARIANT, BlockMachine.Type.byMetadata(meta));
+		return this.getDefaultState().withProperty(TYPE, BlockMachine.Type.byMetadata(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state) {
 
-		return state.getValue(VARIANT).getMetadata();
+		return state.getValue(TYPE).getMetadata();
 	}
 
 	@Override
 	public int damageDropped(IBlockState state) {
 
-		return state.getValue(VARIANT).getMetadata();
+		return state.getValue(TYPE).getMetadata();
 	}
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 
-		switch (state.getValue(VARIANT)) {
+		switch (state.getValue(TYPE)) {
 			case FURNACE:
 				return new TileFurnace();
 			case PULVERIZER:
@@ -131,9 +134,17 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	@SideOnly(Side.CLIENT)
 	public void registerModels() {
 
-		for (int i = 0; i < Type.values().length; i++) {
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), i, new ModelResourceLocation(modName + ":" + name, "type="
-					+ Type.byMetadata(i).getName()));
+		StateMapperBase ignoreState = new StateMapperBase() {
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState iBlockState) {
+				return ModelMachine.MODEL_LOCATION;
+			}
+		};
+
+
+		ModelLoader.setCustomStateMapper(this, ignoreState);for (int i = 0; i < Type.values().length; i++) {
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), i,
+					new ModelResourceLocation(modName + ":" + name, "type="	+ Type.byMetadata(i).getName()));
 		}
 	}
 
