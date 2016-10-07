@@ -41,29 +41,32 @@ public class BakedModelMachine implements IBakedModel{
 	private TextureAtlasSprite spriteConfigRed;
 	private TextureAtlasSprite spriteConfigYellow;
 
+	private TextureAtlasSprite spriteMissing;
 
 	private VertexFormat format;
 
 	public BakedModelMachine(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
 
-		spriteSide = bakedTextureGetter.apply(ModelMachine.TEXTURE_LOCATION_SIDE);
-		spriteTop = bakedTextureGetter.apply(ModelMachine.TEXTURE_LOCATION_TOP);
-		spriteBottom = bakedTextureGetter.apply(ModelMachine.TEXTURE_LOCATION_BOTTOM);
-		spriteFurnace = bakedTextureGetter.apply(ModelMachine.TEXTURE_LOCATION_FURNACE);
-		spriteFurnaceActive = bakedTextureGetter.apply(ModelMachine.TEXTURE_LOCATION_FURNACE_ACTIVE);
-		spritePulverizer = bakedTextureGetter.apply(ModelMachine.TEXTURE_LOCATION_PULVERIZER);
-		spritePulverizerActive = bakedTextureGetter.apply(ModelMachine.TEXTURE_LOCATION_PULVERIZER_ACTIVE);
-		spriteFrameTop = bakedTextureGetter.apply(ModelMachine.TEXTURE_LOCATION_FRAME_TOP);
-		spriteFrameBottom = bakedTextureGetter.apply(ModelMachine.TEXTURE_LOCATION_FRAME_BOTTOM);
-		spriteFrameSide = bakedTextureGetter.apply(ModelMachine.TEXTURE_LOCATION_FRAME_SIDE);
+		spriteSide = bakedTextureGetter.apply(TextureLocations.Machine.SIDE);
+		spriteTop = bakedTextureGetter.apply(TextureLocations.Machine.TOP);
+		spriteBottom = bakedTextureGetter.apply(TextureLocations.Machine.BOTTOM);
+		spriteFurnace = bakedTextureGetter.apply(TextureLocations.Machine.FURNACE);
+		spriteFurnaceActive = bakedTextureGetter.apply(TextureLocations.Machine.FURNACE_ACTIVE);
+		spritePulverizer = bakedTextureGetter.apply(TextureLocations.Machine.PULVERIZER);
+		spritePulverizerActive = bakedTextureGetter.apply(TextureLocations.Machine.PULVERIZER_ACTIVE);
+		spriteFrameTop = bakedTextureGetter.apply(TextureLocations.Machine.FRAME_TOP);
+		spriteFrameBottom = bakedTextureGetter.apply(TextureLocations.Machine.FRAME_BOTTOM);
+		spriteFrameSide = bakedTextureGetter.apply(TextureLocations.Machine.FRAME_SIDE);
 
-		spriteConfigBlue = bakedTextureGetter.apply(ModelMachine.TEXTURE_LOCATION_CONFIG_BLUE);
-		spriteConfigGreen = bakedTextureGetter.apply(ModelMachine.TEXTURE_LOCATION_CONFIG_GREEN);
-		spriteConfigOpen = bakedTextureGetter.apply(ModelMachine.TEXTURE_LOCATION_CONFIG_OPEN);
-		spriteConfigOrange = bakedTextureGetter.apply(ModelMachine.TEXTURE_LOCATION_CONFIG_ORANGE);
-		spriteConfigPurple = bakedTextureGetter.apply(ModelMachine.TEXTURE_LOCATION_CONFIG_PURPLE);
-		spriteConfigRed = bakedTextureGetter.apply(ModelMachine.TEXTURE_LOCATION_CONFIG_RED);
-		spriteConfigYellow = bakedTextureGetter.apply(ModelMachine.TEXTURE_LOCATION_CONFIG_YELLOW);
+		spriteConfigBlue = bakedTextureGetter.apply(TextureLocations.Config.BLUE);
+		spriteConfigGreen = bakedTextureGetter.apply(TextureLocations.Config.GREEN);
+		spriteConfigOpen = bakedTextureGetter.apply(TextureLocations.Config.OPEN);
+		spriteConfigOrange = bakedTextureGetter.apply(TextureLocations.Config.ORANGE);
+		spriteConfigPurple = bakedTextureGetter.apply(TextureLocations.Config.PURPLE);
+		spriteConfigRed = bakedTextureGetter.apply(TextureLocations.Config.RED);
+		spriteConfigYellow = bakedTextureGetter.apply(TextureLocations.Config.YELLOW);
+
+		spriteMissing = bakedTextureGetter.apply(TextureLocations.MISSING);
 
 		this.format = format;
 	}
@@ -147,7 +150,7 @@ public class BakedModelMachine implements IBakedModel{
 				return active ? spritePulverizerActive : spritePulverizer;
 		}
 
-		return null;
+		return spriteMissing;
 	}
 
 	private BakedQuad createFullFaceQuad(EnumFacing facing, TextureAtlasSprite sprite) {
