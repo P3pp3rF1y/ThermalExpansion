@@ -17,6 +17,9 @@ import net.minecraft.client.audio.ISound;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.EnumPacketDirection;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -292,6 +295,33 @@ public abstract class TileMachineBase extends TileAugmentable implements ITickab
 		nbt.setByte("Level", level);
 
 		super.writeAugmentsToNBT(nbt);
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag() {
+
+		NBTTagCompound nbt = super.getUpdateTag();
+
+		nbt.setByte("level", level);
+
+		return nbt;
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+
+		super.onDataPacket(net, pkt);
+
+		if (net.getDirection() == EnumPacketDirection.CLIENTBOUND) {
+			NBTTagCompound nbt = pkt.getNbtCompound();
+
+			byte curLevel = level;
+			level = nbt.getByte("level");
+
+			if (curLevel != level) {
+				onLevelChange();
+			}
+		}
 	}
 
 	/* NETWORK METHODS */

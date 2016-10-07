@@ -8,7 +8,10 @@ import cofh.thermalexpansion.gui.container.ContainerTEBase;
 import gnu.trove.map.hash.TObjectIntHashMap;
 
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -111,6 +114,29 @@ public class TileDynamoCompression extends TileDynamoBase implements IFluidHandl
 		nbt.setTag("CoolantTank", coolantTank.writeToNBT(new NBTTagCompound()));
 
 		return nbt;
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag() {
+
+		NBTTagCompound nbt = super.getUpdateTag();
+
+		nbt.setTag("fuelTank", fuelTank.getFluid().writeToNBT(new NBTTagCompound()));
+
+		return nbt;
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+
+		super.onDataPacket(net, pkt);
+
+		NBTTagCompound nbt = pkt.getNbtCompound();
+
+		renderFluid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fuelTank"));
+		if (renderFluid == null) {
+			renderFluid = new FluidStack(FluidRegistry.LAVA, FluidContainerRegistry.BUCKET_VOLUME);
+		}
 	}
 
 	/* NETWORK METHODS */

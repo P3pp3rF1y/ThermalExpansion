@@ -14,6 +14,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.WorldServer;
@@ -509,6 +511,32 @@ public class TileActivator extends TileDeviceBase implements ITickable {
 		nbt.setByte("Angle", angle);
 
 		return nbt;
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag() {
+
+		NBTTagCompound nbt = super.getUpdateTag();
+
+		nbt.setBoolean("leftClick", leftClick);
+		nbt.setBoolean("actsSneaking", actsSneaking);
+		nbt.setByte("tickSlot", tickSlot);
+		nbt.setByte("angle", angle);
+
+		return nbt;
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+
+		super.onDataPacket(net, pkt);
+
+		NBTTagCompound nbt = pkt.getNbtCompound();
+
+		leftClick = nbt.getBoolean("leftClick");
+		actsSneaking = nbt.getBoolean("actsSneaking");
+		tickSlot = nbt.getByte("tickSlot");
+		angle = nbt.getByte("angle");
 	}
 
 	/* NETWORK METHODS */

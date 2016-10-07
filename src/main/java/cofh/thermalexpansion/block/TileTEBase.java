@@ -14,6 +14,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 
 public abstract class TileTEBase extends TileCoFHBase implements ITilePacketHandler, ITileInfoPacketHandler, IPortableData {
@@ -93,6 +95,32 @@ public abstract class TileTEBase extends TileCoFHBase implements ITilePacketHand
 	}
 
 	/* NETWORK METHODS */
+
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag) {
+		super.handleUpdateTag(tag);
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag() {
+
+		NBTTagCompound nbt = super.getUpdateTag();
+
+		nbt.setString("tileName", tileName);
+
+		return nbt;
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+
+		super.onDataPacket(net, pkt);
+
+		if (ServerHelper.isClientWorld(worldObj)) {
+			tileName = pkt.getNbtCompound().getString("tileName");
+		}
+	}
+
 	@Override
 	public PacketCoFHBase getPacket() {
 

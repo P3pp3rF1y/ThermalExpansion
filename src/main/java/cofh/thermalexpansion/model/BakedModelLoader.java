@@ -8,13 +8,11 @@ import net.minecraftforge.client.model.IModel;
 
 public class BakedModelLoader implements ICustomModelLoader {
 
-	public static final ResourceLocation MACHINE_MODEL_LOCATION = new ResourceLocation(ThermalExpansion.modId, "machine");
-
 	public static final ModelMachine MACHINE_MODEL = new ModelMachine();
 
 	@Override
 	public boolean accepts(ResourceLocation modelLocation) {
-		return MACHINE_MODEL_LOCATION.equals(modelLocation);
+		return ThermalExpansion.modId.equals(modelLocation.getResourceDomain()) && ModelMachine.MODEL_LOCATION.getResourcePath().equals(modelLocation.getResourcePath());
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package cofh.thermalexpansion.block;
 
 import cofh.api.core.IInitializer;
+import cofh.thermalexpansion.block.device.BlockDevice;
+import cofh.thermalexpansion.block.dynamo.BlockDynamo;
 import cofh.thermalexpansion.block.machine.BlockMachine;
 import cofh.thermalexpansion.core.ProxyClient;
 
@@ -15,8 +17,12 @@ public class TEBlocks {
 	public static void preInit() {
 
 		blockMachine = new BlockMachine();
+		blockDynamo = new BlockDynamo();
+		blockDevice = new BlockDevice();
 
 		initList.add(blockMachine);
+		initList.add(blockDynamo);
+		initList.add(blockDevice);
 
 		ProxyClient.modelList.add(blockMachine);
 
@@ -43,5 +49,7 @@ public class TEBlocks {
 
 	/* REFERENCES */
 	public static BlockMachine blockMachine;
+	public static BlockDynamo blockDynamo;
+	public static BlockDevice blockDevice;
 
 }

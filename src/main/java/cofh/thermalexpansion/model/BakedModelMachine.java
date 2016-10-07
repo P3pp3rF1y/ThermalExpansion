@@ -155,47 +155,47 @@ public class BakedModelMachine implements IBakedModel{
 
 		switch (facing) {
 			case UP:
-				vec1 = new Vec3d(1, 0, 0);
-				vec2 = new Vec3d(0, 0, 0);
-				vec3 = new Vec3d(0, 0, 1);
-				vec4 = new Vec3d(1, 0, 1);
+				vec1 = new Vec3d(1, 1, 1);
+				vec2 = new Vec3d(1, 1, 0);
+				vec3 = new Vec3d(0, 1, 0);
+				vec4 = new Vec3d(0, 1, 1);
 				break;
 			case DOWN:
-				vec1 = new Vec3d(1, 1, 1);
-				vec2 = new Vec3d(0, 1, 1);
-				vec3 = new Vec3d(0, 1, 0);
-				vec4 = new Vec3d(1, 1, 0);
+				vec1 = new Vec3d(1, 0, 1);
+				vec2 = new Vec3d(0, 0, 1);
+				vec3 = new Vec3d(0, 0, 0);
+				vec4 = new Vec3d(1, 0, 0);
 				break;
 			case EAST:
-				vec1 = new Vec3d(0, 1, 1);
-				vec2 = new Vec3d(0, 0, 1);
+				vec1 = new Vec3d(1, 1, 1);
+				vec2 = new Vec3d(1, 0, 1);
+				vec3 = new Vec3d(1, 0, 0);
+				vec4 = new Vec3d(1, 1, 0);
+				break;
+			case WEST:
+				vec1 = new Vec3d(0, 1, 0);
+				vec2 = new Vec3d(0, 0, 0);
+				vec3 = new Vec3d(0, 0, 1);
+				vec4 = new Vec3d(0, 1, 1);
+				break;
+			case NORTH:
+				vec1 = new Vec3d(1, 1, 0);
+				vec2 = new Vec3d(1, 0, 0);
 				vec3 = new Vec3d(0, 0, 0);
 				vec4 = new Vec3d(0, 1, 0);
 				break;
-			case WEST:
-				vec1 = new Vec3d(1, 1, 0);
-				vec2 = new Vec3d(1, 0, 0);
+			default:
+				vec1 = new Vec3d(0, 1, 1);
+				vec2 = new Vec3d(0, 0, 1);
 				vec3 = new Vec3d(1, 0, 1);
 				vec4 = new Vec3d(1, 1, 1);
-				break;
-			case NORTH:
-				vec1 = new Vec3d(1, 0, 1);
-				vec2 = new Vec3d(0, 0, 1);
-				vec3 = new Vec3d(0, 1, 1);
-				vec4 = new Vec3d(1, 1, 1);
-				break;
-			default:
-				vec1 = new Vec3d(1, 1, 0);
-				vec2 = new Vec3d(0, 1, 0);
-				vec3 = new Vec3d(0, 0, 0);
-				vec4 = new Vec3d(1, 0, 0);
 		}
 
-		return createQuad(vec1, vec2, vec3, vec4, sprite);
+		return createQuad(vec1, vec2, vec3, vec4, facing, sprite);
 	}
 
-	private BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite) {
-		Vec3d normal = v1.subtract(v2).crossProduct(v3.subtract(v2));
+	private BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, EnumFacing facing, TextureAtlasSprite sprite) {
+		Vec3d normal = new Vec3d(facing.getDirectionVec());
 
 		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(format);
 		builder.setTexture(sprite);
@@ -226,8 +226,8 @@ public class BakedModelMachine implements IBakedModel{
 					builder.put(e, (float) normal.xCoord, (float) normal.yCoord, (float) normal.zCoord, 0f);
 					break;
 				default:
-					builder.put(e);
-					break;
+				builder.put(e);
+				break;
 			}
 		}
 	}

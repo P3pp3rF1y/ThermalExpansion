@@ -8,6 +8,9 @@ import cofh.thermalexpansion.util.ReconfigurableHelper;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.EnumPacketDirection;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -70,6 +73,38 @@ public abstract class TileReconfigurable extends TilePowered implements IReconfi
 	}
 
 	/* NETWORK METHODS */
+	@Override
+	public NBTTagCompound getUpdateTag() {
+
+		NBTTagCompound nbt = super.getUpdateTag();
+
+		nbt.setByteArray("sideCache", sideCache);
+		nbt.setByte("facing", facing);
+
+		return nbt;
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+
+		super.onDataPacket(net, pkt);
+
+		NBTTagCompound nbt = pkt.getNbtCompound();
+
+		sideCache = nbt.getByteArray("sideCache");
+
+		for (int i = 0; i < 6; i++) {
+			if (sideCache[i] >= getNumConfig(EnumFacing.VALUES[i])) {
+				sideCache[i] = 0;
+			}
+		}
+		if (net.getDirection() == EnumPacketDirection.CLIENTBOUND) {
+			facing = nbt.getByte("facing");
+		}
+
+		callNeighborTileChange();
+	}
+
 	@Override
 	public PacketCoFHBase getPacket() {
 

@@ -17,6 +17,9 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.EnumPacketDirection;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -144,6 +147,30 @@ public abstract class TileAugmentable extends TileReconfigurable implements IAug
 			}
 		}
 		nbt.setTag("Augments", list);
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag() {
+
+		NBTTagCompound nbt = super.getUpdateTag();
+
+		nbt.setBoolean("augmentReconfigSides", augmentReconfigSides);
+		nbt.setBoolean("augmentRedstoneControl", augmentRedstoneControl);
+
+		return nbt;
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+
+		super.onDataPacket(net, pkt);
+
+		if (net.getDirection() == EnumPacketDirection.CLIENTBOUND) {
+			NBTTagCompound nbt = pkt.getNbtCompound();
+
+			augmentReconfigSides = nbt.getBoolean("augmentReconfigSides");
+			augmentRedstoneControl = nbt.getBoolean("augmentRedstoneControl");
+		}
 	}
 
 	/* NETWORK METHODS */

@@ -3,6 +3,7 @@ package cofh.thermalexpansion.block.machine;
 import cofh.api.core.IInitializer;
 import cofh.api.core.IModelRegister;
 import cofh.core.util.RegistryHelper;
+import cofh.lib.util.helpers.BlockHelper;
 import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.block.BlockTEBase;
 import cofh.thermalexpansion.block.TileReconfigurable;
@@ -10,19 +11,22 @@ import cofh.thermalexpansion.core.TEProps;
 
 import java.util.List;
 
-import cofh.thermalexpansion.model.BakedModelLoader;
 import cofh.thermalexpansion.model.ModelMachine;
+import cofh.thermalexpansion.util.ReconfigurableHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -64,14 +68,12 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
 
 		IExtendedBlockState extState = (IExtendedBlockState) state;
-		if (world.getTileEntity(pos) instanceof TileReconfigurable) {
 
-			TileReconfigurable tile = (TileReconfigurable) world.getTileEntity(pos);
-			extState.withProperty(TEProps.ACTIVE, tile.isActive);
-			extState.withProperty(TEProps.FACING, EnumFacing.values()[tile.getFacing()]);
-			for (int side = 0; side < 6 ; side++) {
-				extState.withProperty(TEProps.SIDE_CONFIG[side], EnumSideConfig.values()[tile.sideCache[side]]);
-			}
+		TileReconfigurable tile = (TileReconfigurable) world.getTileEntity(pos);
+		extState = extState.withProperty(TEProps.ACTIVE, tile.isActive);
+		extState = extState.withProperty(TEProps.FACING, EnumFacing.values()[tile.getFacing()]);
+		for (int side = 0; side < 6 ; side++) {
+			extState = extState.withProperty(TEProps.SIDE_CONFIG[side], EnumSideConfig.values()[tile.sideCache[side]]);
 		}
 
 		return extState;
@@ -84,6 +86,34 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		for (int i = 0; i < BlockMachine.Type.METADATA_LOOKUP.length; i++) {
 			list.add(new ItemStack(item, 1, i));
 		}
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		if (stack.getTagCompound() != null) {
+			TileMachineBase tile = (TileMachineBase) world.getTileEntity(pos);
+
+			tile.readAugmentsFromNBT(stack.getTagCompound());
+			tile.installAugments();
+			tile.setEnergyStored(stack.getTagCompound().getInteger("Energy"));
+
+			int facing = BlockHelper.determineXZPlaceFacing(placer);
+			int storedFacing = ReconfigurableHelper.getFacing(stack);
+			byte[] sideCache = ReconfigurableHelper.getSideCache(stack, tile.getDefaultSides());
+
+			tile.sideCache[0] = sideCache[0];
+			tile.sideCache[1] = sideCache[1];
+			tile.sideCache[facing] = 0;
+			tile.sideCache[BlockHelper.getLeftSide(facing)] = sideCache[BlockHelper.getLeftSide(storedFacing)];
+			tile.sideCache[BlockHelper.getRightSide(facing)] = sideCache[BlockHelper.getRightSide(storedFacing)];
+			tile.sideCache[BlockHelper.getOppositeSide(facing)] = sideCache[BlockHelper.getOppositeSide(storedFacing)];
+		}
+		super.onBlockPlacedBy(world, pos, state, placer, stack);
+	}
+
+	@Override
+	public BlockRenderLayer getBlockLayer() {
+		return BlockRenderLayer.CUTOUT_MIPPED;
 	}
 
 	@Override
@@ -141,10 +171,17 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 			}
 		};
 
+		ModelLoader.setCustomStateMapper(this, ignoreState);
+	}
 
-		ModelLoader.setCustomStateMapper(this, ignoreState);for (int i = 0; i < Type.values().length; i++) {
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), i,
-					new ModelResourceLocation(modName + ":" + name, "type="	+ Type.byMetadata(i).getName()));
+	//TODO standardize with an interface or something
+	public void initItemModel() {
+		// ClientProxy.init (not preInit) so that's why it is a separate method.
+		Item itemBlock = Item.REGISTRY.getObject(new ResourceLocation(ThermalExpansion.modName, name));
+
+		for (int i = 0; i < Type.values().length; i++) {
+			ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(ModelMachine.MODEL_LOCATION, "type=" + Type.byMetadata(i).getName());
+			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemBlock, i, itemModelResourceLocation);
 		}
 	}
 

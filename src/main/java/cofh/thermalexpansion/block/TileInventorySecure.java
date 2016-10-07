@@ -24,6 +24,9 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.EnumPacketDirection;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.tileentity.TileEntity;
@@ -33,6 +36,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+
 
 public abstract class TileInventorySecure extends TileTEBase implements IInventory, ISecurable {
 
@@ -310,6 +314,35 @@ public abstract class TileInventorySecure extends TileTEBase implements IInvento
 	}
 
 	/* NETWORK METHODS */
+
+	@Override
+	public NBTTagCompound getUpdateTag() {
+
+		NBTTagCompound nbt = super.getUpdateTag();
+
+		nbt.setByte("access", (byte) access.ordinal());
+		nbt.setLong("ownerLeastSignificant", owner.getId().getLeastSignificantBits());
+		nbt.setLong("ownerMostSignificant", owner.getId().getMostSignificantBits());
+		nbt.setString("ownerName", owner.getName());
+
+		return nbt;
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+
+		super.onDataPacket(net, pkt);
+
+		NBTTagCompound nbt = pkt.getNbtCompound();
+
+		access = ISecurable.AccessMode.values()[nbt.getByte("access")];
+
+		if (net.getDirection() == EnumPacketDirection.CLIENTBOUND) {
+			owner = CoFHProps.DEFAULT_OWNER;
+			setOwner(new GameProfile(new UUID(nbt.getLong("ownerMostSignificant"), nbt.getLong("ownerLeastSignificant")), nbt.getString("ownerName")));
+		}
+	}
+
 	@Override
 	public PacketCoFHBase getPacket() {
 

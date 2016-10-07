@@ -11,6 +11,7 @@ import cofh.thermalexpansion.core.TEProps;
 import cofh.thermalexpansion.gui.CreativeTabTE;
 import cofh.thermalexpansion.gui.CreativeTabTEFlorbs;
 import cofh.thermalexpansion.gui.GuiHandler;
+import cofh.thermalexpansion.network.PacketTEBase;
 import cofh.thermalexpansion.util.FuelManager;
 import cofh.thermalexpansion.util.IMCHandler;
 import cofh.thermalexpansion.util.crafting.ChargerManager;
@@ -99,6 +100,8 @@ public class ThermalExpansion {
 		TEBlocks.initialize();
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, GUI_HANDLER);
+
+		PacketTEBase.initialize();
 
 		proxy.initialize(event);
 	}

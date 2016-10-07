@@ -14,6 +14,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -139,6 +141,29 @@ public class TileDynamoReactant extends TileDynamoBase implements IFluidHandler 
 	}
 
 	/* NETWORK METHODS */
+	@Override
+	public NBTTagCompound getUpdateTag() {
+
+		NBTTagCompound nbt = super.getUpdateTag();
+
+		nbt.setTag("tank", tank.getFluid().writeToNBT(new NBTTagCompound()));
+
+		return nbt;
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+
+		super.onDataPacket(net, pkt);
+
+		NBTTagCompound nbt = pkt.getNbtCompound();
+
+		renderFluid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("tank"));
+		if (renderFluid == null) {
+			renderFluid = new FluidStack(FluidRegistry.LAVA, FluidContainerRegistry.BUCKET_VOLUME);
+		}
+	}
+
 	@Override
 	public PacketCoFHBase getPacket() {
 

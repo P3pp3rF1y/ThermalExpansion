@@ -4,6 +4,7 @@ import cofh.api.core.IModelRegister;
 
 import java.util.ArrayList;
 
+import cofh.thermalexpansion.block.TEBlocks;
 import cofh.thermalexpansion.model.BakedModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -30,6 +31,8 @@ public class ProxyClient extends Proxy {
 	public void initialize(FMLInitializationEvent event) {
 
 		super.initialize(event);
+
+		TEBlocks.blockMachine.initItemModel();
 	}
 
 	@Override

@@ -28,6 +28,9 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.EnumPacketDirection;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -392,6 +395,30 @@ ITickable {
 			}
 		}
 		nbt.setTag("Augments", list);
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag() {
+
+		NBTTagCompound nbt = super.getUpdateTag();
+
+		nbt.setByte("facing", facing);
+		nbt.setBoolean("augmentRedstoneControl", augmentRedstoneControl);
+
+		return nbt;
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+
+		super.onDataPacket(net, pkt);
+
+		if (net.getDirection() == EnumPacketDirection.CLIENTBOUND) {
+			NBTTagCompound nbt = pkt.getNbtCompound();
+
+			facing = nbt.getByte("facing");
+			augmentRedstoneControl = nbt.getBoolean("augmentRedstoneControl");
+		}
 	}
 
 	/* NETWORK METHODS */

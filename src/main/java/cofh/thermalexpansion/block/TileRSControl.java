@@ -14,6 +14,9 @@ import cofh.thermalexpansion.network.PacketTEBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.EnumPacketDirection;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -89,6 +92,40 @@ public abstract class TileRSControl extends TileInventorySecure implements IReds
 	}
 
 	/* NETWORK METHODS */
+	@Override
+	public NBTTagCompound getUpdateTag() {
+
+		NBTTagCompound nbt = super.getUpdateTag();
+
+		nbt.setBoolean("isPowered", isPowered);
+		nbt.setByte("rsMode", (byte) rsMode.ordinal());
+		nbt.setBoolean("isActive", isActive);
+
+		return nbt;
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+
+		super.onDataPacket(net, pkt);
+
+		NBTTagCompound nbt = pkt.getNbtCompound();
+
+		isPowered = nbt.getBoolean("isPowered");
+		rsMode = ControlMode.values()[nbt.getByte("rsMode")];
+
+		if (net.getDirection() == EnumPacketDirection.CLIENTBOUND) {
+			boolean prevActive = isActive;
+			isActive = nbt.getBoolean("isActive");
+
+			if (isActive && !prevActive) {
+				if (getSoundEvent() != null) {
+					SoundHelper.playSound(getSound());
+				}
+			}
+		}
+	}
+
 	@Override
 	public PacketCoFHBase getPacket() {
 

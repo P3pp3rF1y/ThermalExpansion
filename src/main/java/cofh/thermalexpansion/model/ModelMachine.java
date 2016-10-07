@@ -18,7 +18,7 @@ import java.util.Set;
 
 public class ModelMachine implements IModel {
 
-	public static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(ThermalExpansion.modId + ":baked_machine_model");
+	public static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(ThermalExpansion.modId + ":machine");
 
 	//TODO this doesn't look great, there must be better way to get all the textures here and in the baked model
 	public static final ResourceLocation TEXTURE_LOCATION_PULVERIZER = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/Machine_Face_Pulverizer");
