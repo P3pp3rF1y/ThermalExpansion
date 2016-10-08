@@ -21,16 +21,10 @@ public class ModelMachine implements IModel {
 
 	public static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(ThermalExpansion.modId + ":machine");
 
-	private static final Set<ResourceLocation> TEXTURES;
-
-	static {
-		TEXTURES = new HashSet<>();
-
-		TEXTURES.add(TextureLocations.MISSING);
-		TEXTURES.addAll(TextureLocations.Machine.ALL);
-		TEXTURES.addAll(TextureLocations.Config.ALL);
-	}
-
+	private static final Set<ResourceLocation> TEXTURES = ImmutableSet.<ResourceLocation>builder()
+			.addAll(TextureLocations.Machine.ALL)
+			.addAll(TextureLocations.Config.ALL)
+			.add(TextureLocations.MISSING).build();
 
 	@Override
 	public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {

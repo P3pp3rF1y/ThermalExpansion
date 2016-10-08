@@ -227,8 +227,11 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		CHARGER(5, "charger", machineCharger),
 		CRUCIBLE(6, "crucible", machineCrucible),
 		TRANSPOSER(7, "transposer", machineTransposer),
-		// TRANSCAPSULATOR
+
 		CENTRIFUGE(8, "centrifuge", machineCentrifuge);
+
+		//TODO add additional machine types (some of them need more info)
+		// TRANSCAPSULATOR
 		// CRAFTER
 		// BREWER
 		// ENCHANTER
