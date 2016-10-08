@@ -34,6 +34,7 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
@@ -167,22 +168,16 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		StateMapperBase ignoreState = new StateMapperBase() {
 			@Override
 			protected ModelResourceLocation getModelResourceLocation(IBlockState iBlockState) {
-				return ModelMachine.MODEL_LOCATION;
+				return new ModelResourceLocation(ModelMachine.MODEL_LOCATION, "normal");
 			}
 		};
-
 		ModelLoader.setCustomStateMapper(this, ignoreState);
-	}
-
-	//TODO standardize with an interface or something
-	public void initItemModel() {
-		// ClientProxy.init (not preInit) so that's why it is a separate method.
-		Item itemBlock = Item.REGISTRY.getObject(new ResourceLocation(ThermalExpansion.modName, name));
 
 		for (int i = 0; i < Type.values().length; i++) {
-			ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(ModelMachine.MODEL_LOCATION, "type=" + Type.byMetadata(i).getName());
-			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemBlock, i, itemModelResourceLocation);
+			ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(new ResourceLocation(ThermalExpansion.modId, "machine_" + Type.byMetadata(i).getName()), "inventory" );
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), i, itemModelResourceLocation);
 		}
+
 	}
 
 	/* IInitializer */

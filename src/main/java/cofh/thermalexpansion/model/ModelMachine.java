@@ -19,7 +19,7 @@ import java.util.Set;
 
 public class ModelMachine implements IModel {
 
-	public static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(ThermalExpansion.modId + ":machine");
+	public static final ResourceLocation MODEL_LOCATION = new ResourceLocation(ThermalExpansion.modId, "machine");
 
 	private static final Set<ResourceLocation> TEXTURES = ImmutableSet.<ResourceLocation>builder()
 			.addAll(TextureLocations.Machine.ALL)

@@ -1,0 +1,11 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+        "down": "thermalexpansion:blocks/machine/machine_bottom",
+        "up": "thermalexpansion:blocks/machine/machine_top",
+        "north": "#front",
+        "south": "thermalexpansion:blocks/machine/machine_side",
+        "west": "thermalexpansion:blocks/machine/machine_side",
+        "east": "thermalexpansion:blocks/machine/machine_side"
+    }
+}

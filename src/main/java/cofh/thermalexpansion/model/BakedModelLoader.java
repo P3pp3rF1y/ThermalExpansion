@@ -12,7 +12,7 @@ public class BakedModelLoader implements ICustomModelLoader {
 
 	@Override
 	public boolean accepts(ResourceLocation modelLocation) {
-		return ThermalExpansion.modId.equals(modelLocation.getResourceDomain()) && ModelMachine.MODEL_LOCATION.getResourcePath().equals(modelLocation.getResourcePath());
+		return ModelMachine.MODEL_LOCATION.equals(modelLocation);
 	}
 
 	@Override

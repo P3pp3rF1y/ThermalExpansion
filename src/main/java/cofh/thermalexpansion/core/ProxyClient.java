@@ -24,15 +24,12 @@ public class ProxyClient extends Proxy {
 		for (int i = 0; i < modelList.size(); i++) {
 			modelList.get(i).registerModels();
 		}
-
 	}
 
 	@Override
 	public void initialize(FMLInitializationEvent event) {
 
 		super.initialize(event);
-
-		TEBlocks.blockMachine.initItemModel();
 	}
 
 	@Override
