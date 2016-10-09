@@ -12,6 +12,7 @@ import cofh.thermalexpansion.block.TileAugmentable;
 import cofh.thermalexpansion.core.TEProps;
 import cofh.thermalexpansion.item.TEAugments;
 
+import cofh.thermalexpansion.model.TextureLocations;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -20,6 +21,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.EnumPacketDirection;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -565,9 +567,19 @@ public abstract class TileMachineBase extends TileAugmentable implements ITickab
 
 	/* ISidedTexture */
 	@Override
-	public TextureAtlasSprite getTexture(EnumFacing side, int pass) {
+	public ResourceLocation getTexture(EnumFacing side, int pass) {
 
-		return null;
+		if (pass == 0) {
+			if (side.ordinal() == facing) {
+				return isActive ? TextureLocations.addTxFolder(TextureLocations.Machine.ACTIVE_FACE_MAP.get(BlockMachine.Type.byMetadata(type)))
+						: TextureLocations.addTxFolder(TextureLocations.Machine.FACE_MAP.get(BlockMachine.Type.byMetadata(type)));
+			} else {
+				return TextureLocations.addTxFolder(TextureLocations.Machine.SIDE_MAP.get(side));
+			}
+		} else if (pass == 1) {
+			return TextureLocations.addTxFolder(TextureLocations.Config.CONFIG_MAP.get(BlockTEBase.EnumSideConfig.values()[sideCache[side.ordinal()]]));
+		}
+		return TextureLocations.addTxFolder(TextureLocations.Machine.SIDE);
 	}
 
 	/* ISoundSource */

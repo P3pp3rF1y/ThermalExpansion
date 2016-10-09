@@ -9,15 +9,26 @@ import com.google.common.collect.ImmutableSet;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class TextureLocations {
 
+	private static Map<ResourceLocation, ResourceLocation> txCache = new HashMap<>();
+
+	public static ResourceLocation addTxFolder(ResourceLocation rl) {
+		if (!txCache.keySet().contains(rl)) {
+			txCache.put(rl, new ResourceLocation(rl.getResourceDomain(), "textures/" + rl.getResourcePath() + ".png"));
+		}
+		return txCache.get(rl);
+	}
+
 	public static final ResourceLocation MISSING = new ResourceLocation("missingno");
 
 	public static class Config {
 
+		public static final ResourceLocation NONE = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_none");
 		public static final ResourceLocation BLUE = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_blue");
 		public static final ResourceLocation GREEN = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_green");
 		public static final ResourceLocation OPEN = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_open");
@@ -26,6 +37,7 @@ public class TextureLocations {
 		public static final ResourceLocation RED = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_red");
 		public static final ResourceLocation YELLOW = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_yellow");
 		public static final Map<BlockTEBase.EnumSideConfig, ResourceLocation> CONFIG_MAP = ImmutableMap.<BlockTEBase.EnumSideConfig, ResourceLocation>builder()
+				.put(BlockTEBase.EnumSideConfig.NONE, NONE)
 				.put(BlockTEBase.EnumSideConfig.BLUE, BLUE)
 				.put(BlockTEBase.EnumSideConfig.GREEN, GREEN)
 				.put(BlockTEBase.EnumSideConfig.OPEN, OPEN)
