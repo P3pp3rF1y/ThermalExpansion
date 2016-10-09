@@ -548,13 +548,14 @@ public class TileTransposer extends TileMachineBase implements IFluidHandler {
 
 	/* NETWORK METHODS */
 	@Override
-	public NBTTagCompound getUpdateTag() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 
-		NBTTagCompound nbt = super.getUpdateTag();
+		SPacketUpdateTileEntity packet = super.getUpdatePacket();
+		NBTTagCompound nbt = packet.getNbtCompound();
 
 		nbt.setTag("renderFluid", renderFluid.writeToNBT(new NBTTagCompound()));
 
-		return nbt;
+		return packet;
 	}
 
 	@Override

@@ -149,15 +149,17 @@ public abstract class TileAugmentable extends TileReconfigurable implements IAug
 		nbt.setTag("Augments", list);
 	}
 
+	/* NETWORK METHODS */
 	@Override
-	public NBTTagCompound getUpdateTag() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 
-		NBTTagCompound nbt = super.getUpdateTag();
+		SPacketUpdateTileEntity packet = super.getUpdatePacket();
+		NBTTagCompound nbt = packet.getNbtCompound();
 
 		nbt.setBoolean("augmentReconfigSides", augmentReconfigSides);
 		nbt.setBoolean("augmentRedstoneControl", augmentRedstoneControl);
 
-		return nbt;
+		return packet;
 	}
 
 	@Override
@@ -173,7 +175,6 @@ public abstract class TileAugmentable extends TileReconfigurable implements IAug
 		}
 	}
 
-	/* NETWORK METHODS */
 	@Override
 	public PacketCoFHBase getPacket() {
 

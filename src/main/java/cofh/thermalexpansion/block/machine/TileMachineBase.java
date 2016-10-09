@@ -299,14 +299,16 @@ public abstract class TileMachineBase extends TileAugmentable implements ITickab
 		super.writeAugmentsToNBT(nbt);
 	}
 
+	/* NETWORK METHODS */
 	@Override
-	public NBTTagCompound getUpdateTag() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 
-		NBTTagCompound nbt = super.getUpdateTag();
+		SPacketUpdateTileEntity packet = super.getUpdatePacket();
+		NBTTagCompound nbt = packet.getNbtCompound();
 
 		nbt.setByte("level", level);
 
-		return nbt;
+		return packet;
 	}
 
 	@Override
@@ -326,7 +328,6 @@ public abstract class TileMachineBase extends TileAugmentable implements ITickab
 		}
 	}
 
-	/* NETWORK METHODS */
 	@Override
 	public PacketCoFHBase getPacket() {
 

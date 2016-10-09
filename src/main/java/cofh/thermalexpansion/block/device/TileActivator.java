@@ -513,17 +513,21 @@ public class TileActivator extends TileDeviceBase implements ITickable {
 		return nbt;
 	}
 
-	@Override
-	public NBTTagCompound getUpdateTag() {
 
-		NBTTagCompound nbt = super.getUpdateTag();
+	/* NETWORK METHODS */
+
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+
+		SPacketUpdateTileEntity packet = super.getUpdatePacket();
+		NBTTagCompound nbt = packet.getNbtCompound();
 
 		nbt.setBoolean("leftClick", leftClick);
 		nbt.setBoolean("actsSneaking", actsSneaking);
 		nbt.setByte("tickSlot", tickSlot);
 		nbt.setByte("angle", angle);
 
-		return nbt;
+		return packet;
 	}
 
 	@Override
@@ -539,7 +543,6 @@ public class TileActivator extends TileDeviceBase implements ITickable {
 		angle = nbt.getByte("angle");
 	}
 
-	/* NETWORK METHODS */
 	@Override
 	public PacketCoFHBase getPacket() {
 

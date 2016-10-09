@@ -397,15 +397,17 @@ ITickable {
 		nbt.setTag("Augments", list);
 	}
 
+	/* NETWORK METHODS */
 	@Override
-	public NBTTagCompound getUpdateTag() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 
-		NBTTagCompound nbt = super.getUpdateTag();
+		SPacketUpdateTileEntity packet = super.getUpdatePacket();
+		NBTTagCompound nbt = packet.getNbtCompound();
 
 		nbt.setByte("facing", facing);
 		nbt.setBoolean("augmentRedstoneControl", augmentRedstoneControl);
 
-		return nbt;
+		return packet;
 	}
 
 	@Override
@@ -421,7 +423,6 @@ ITickable {
 		}
 	}
 
-	/* NETWORK METHODS */
 	@Override
 	public PacketCoFHBase getPacket() {
 

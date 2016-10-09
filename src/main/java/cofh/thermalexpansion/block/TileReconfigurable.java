@@ -74,14 +74,15 @@ public abstract class TileReconfigurable extends TilePowered implements IReconfi
 
 	/* NETWORK METHODS */
 	@Override
-	public NBTTagCompound getUpdateTag() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 
-		NBTTagCompound nbt = super.getUpdateTag();
+		SPacketUpdateTileEntity packet = super.getUpdatePacket();
+		NBTTagCompound nbt = packet.getNbtCompound();
 
 		nbt.setByteArray("sideCache", sideCache);
 		nbt.setByte("facing", facing);
 
-		return nbt;
+		return packet;
 	}
 
 	@Override

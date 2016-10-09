@@ -89,12 +89,14 @@ public abstract class TilePowered extends TileRSControl implements IEnergyReceiv
 
 	/* NETWORK METHODS */
 	@Override
-	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound nbt = super.getUpdateTag();
+	public SPacketUpdateTileEntity getUpdatePacket() {
+
+		SPacketUpdateTileEntity packet = super.getUpdatePacket();
+		NBTTagCompound nbt = packet.getNbtCompound();
 
 		nbt.setInteger("energyStored", energyStorage.getEnergyStored());
 
-		return nbt;
+		return packet;
 	}
 
 	@Override

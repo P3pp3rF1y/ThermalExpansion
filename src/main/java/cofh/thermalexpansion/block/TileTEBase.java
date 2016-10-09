@@ -95,20 +95,14 @@ public abstract class TileTEBase extends TileCoFHBase implements ITilePacketHand
 	}
 
 	/* NETWORK METHODS */
-
 	@Override
-	public void handleUpdateTag(NBTTagCompound tag) {
-		super.handleUpdateTag(tag);
-	}
+	public SPacketUpdateTileEntity getUpdatePacket() {
 
-	@Override
-	public NBTTagCompound getUpdateTag() {
+		SPacketUpdateTileEntity packet = super.getUpdatePacket();
 
-		NBTTagCompound nbt = super.getUpdateTag();
+		packet.getNbtCompound().setString("tileName", tileName);
 
-		nbt.setString("tileName", tileName);
-
-		return nbt;
+		return packet;
 	}
 
 	@Override

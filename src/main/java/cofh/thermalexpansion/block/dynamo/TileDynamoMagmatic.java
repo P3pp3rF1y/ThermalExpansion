@@ -101,13 +101,14 @@ public class TileDynamoMagmatic extends TileDynamoBase implements IFluidHandler 
 
 	/* NETWORK METHODS */
 	@Override
-	public NBTTagCompound getUpdateTag() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 
-		NBTTagCompound nbt = super.getUpdateTag();
+		SPacketUpdateTileEntity packet = super.getUpdatePacket();
+		NBTTagCompound nbt = packet.getNbtCompound();
 
 		nbt.setTag("tank", tank.getFluid().writeToNBT(new NBTTagCompound()));
 
-		return nbt;
+		return packet;
 	}
 
 	@Override

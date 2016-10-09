@@ -314,18 +314,18 @@ public abstract class TileInventorySecure extends TileTEBase implements IInvento
 	}
 
 	/* NETWORK METHODS */
-
 	@Override
-	public NBTTagCompound getUpdateTag() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 
-		NBTTagCompound nbt = super.getUpdateTag();
+		SPacketUpdateTileEntity packet = super.getUpdatePacket();
+		NBTTagCompound nbt = packet.getNbtCompound();
 
 		nbt.setByte("access", (byte) access.ordinal());
 		nbt.setLong("ownerLeastSignificant", owner.getId().getLeastSignificantBits());
 		nbt.setLong("ownerMostSignificant", owner.getId().getMostSignificantBits());
 		nbt.setString("ownerName", owner.getName());
 
-		return nbt;
+		return packet;
 	}
 
 	@Override

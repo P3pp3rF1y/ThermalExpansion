@@ -93,15 +93,16 @@ public abstract class TileRSControl extends TileInventorySecure implements IReds
 
 	/* NETWORK METHODS */
 	@Override
-	public NBTTagCompound getUpdateTag() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 
-		NBTTagCompound nbt = super.getUpdateTag();
+		SPacketUpdateTileEntity packet = super.getUpdatePacket();
+		NBTTagCompound nbt = packet.getNbtCompound();
 
 		nbt.setBoolean("isPowered", isPowered);
 		nbt.setByte("rsMode", (byte) rsMode.ordinal());
 		nbt.setBoolean("isActive", isActive);
 
-		return nbt;
+		return packet;
 	}
 
 	@Override

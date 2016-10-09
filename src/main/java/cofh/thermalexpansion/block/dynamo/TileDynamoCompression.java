@@ -116,14 +116,16 @@ public class TileDynamoCompression extends TileDynamoBase implements IFluidHandl
 		return nbt;
 	}
 
+	/* NETWORK METHODS */
 	@Override
-	public NBTTagCompound getUpdateTag() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 
-		NBTTagCompound nbt = super.getUpdateTag();
+		SPacketUpdateTileEntity packet = super.getUpdatePacket();
+		NBTTagCompound nbt = packet.getNbtCompound();
 
 		nbt.setTag("fuelTank", fuelTank.getFluid().writeToNBT(new NBTTagCompound()));
 
-		return nbt;
+		return packet;
 	}
 
 	@Override
@@ -139,7 +141,6 @@ public class TileDynamoCompression extends TileDynamoBase implements IFluidHandl
 		}
 	}
 
-	/* NETWORK METHODS */
 	@Override
 	public PacketCoFHBase getPacket() {
 

@@ -155,17 +155,19 @@ public class TileBuffer extends TileDeviceBase implements ITickable {
 	}
 
 	/* NETWORK METHODS */
-	@Override
-	public NBTTagCompound getUpdateTag() {
 
-		NBTTagCompound nbt = super.getUpdateTag();
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+
+		SPacketUpdateTileEntity packet = super.getUpdatePacket();
+		NBTTagCompound nbt = packet.getNbtCompound();
 
 		nbt.setInteger("quantityInput", quantityInput);
 		nbt.setInteger("quantityOutput", quantityOutput);
 		nbt.setBoolean("enableInput", enableInput);
 		nbt.setBoolean("enableOutput", enableOutput);
 
-		return nbt;
+		return packet;
 	}
 
 	@Override
