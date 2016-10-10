@@ -117,7 +117,8 @@ public class InsolatorManager {
 
 		addFertilizer(ItemFertilizer.fertilizerBasic);
 		addFertilizer(ItemFertilizer.fertilizerRich);
-		addFertilizer(ItemFertilizer.fertilizerFlux);
+
+		//addFertilizer(ItemFertilizer.fertilizerFlux); TODO add flux fertilizer
 
 		addDefaultRecipe(new ItemStack(Items.WHEAT_SEEDS), new ItemStack(Items.WHEAT), new ItemStack(Items.WHEAT_SEEDS), 150);
 		addDefaultRecipe(new ItemStack(Items.POTATO), new ItemStack(Items.POTATO, 3), new ItemStack(Items.POISONOUS_POTATO), 2);

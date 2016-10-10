@@ -15,14 +15,7 @@ import cofh.thermalexpansion.item.TEItems;
 import cofh.thermalexpansion.network.PacketTEBase;
 import cofh.thermalexpansion.util.FuelManager;
 import cofh.thermalexpansion.util.IMCHandler;
-import cofh.thermalexpansion.util.crafting.ChargerManager;
-import cofh.thermalexpansion.util.crafting.CrucibleManager;
-import cofh.thermalexpansion.util.crafting.FurnaceManager;
-import cofh.thermalexpansion.util.crafting.InsolatorManager;
-import cofh.thermalexpansion.util.crafting.PulverizerManager;
-import cofh.thermalexpansion.util.crafting.SawmillManager;
-import cofh.thermalexpansion.util.crafting.SmelterManager;
-import cofh.thermalexpansion.util.crafting.TransposerManager;
+import cofh.thermalexpansion.util.crafting.*;
 import cofh.thermalfoundation.ThermalFoundation;
 
 import java.io.File;
@@ -92,6 +85,7 @@ public class ThermalExpansion {
 
 		TEBlocks.preInit();
 		TEItems.preInit();
+		TECrafting.preInit();
 
 		proxy.preInit(event);
 	}
@@ -101,6 +95,7 @@ public class ThermalExpansion {
 
 		TEBlocks.initialize();
 		TEItems.initialize();
+		TECrafting.initialize();
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, GUI_HANDLER);
 
@@ -114,6 +109,7 @@ public class ThermalExpansion {
 
 		TEBlocks.postInit();
 		TEItems.postInit();
+		TECrafting.postInit();
 
 		proxy.postInit(event);
 	}
@@ -123,14 +119,7 @@ public class ThermalExpansion {
 
 		IMCHandler.instance.handleIMC(FMLInterModComms.fetchRuntimeMessages(this));
 
-		FurnaceManager.loadRecipes();
-		PulverizerManager.loadRecipes();
-		SawmillManager.loadRecipes();
-		SmelterManager.loadRecipes();
-		InsolatorManager.loadRecipes();
-		ChargerManager.loadRecipes();
-		CrucibleManager.loadRecipes();
-		TransposerManager.loadRecipes();
+		TECrafting.loadComplete();
 
 		//TODO REGISTER MACHINE RECIPES
 
