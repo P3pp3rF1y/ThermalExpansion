@@ -40,11 +40,11 @@ public abstract class TileMachineBase extends TileAugmentable implements ITickab
 	protected static final boolean[] ENABLE_SOUND = new boolean[BlockMachine.Type.values().length];
 
 	protected static final int RATE = 500;
-	protected static final int AUGMENT_COUNT[] = new int[] { 3, 4, 5, 6 };
-	protected static final int ENERGY_CAPACITY[] = new int[] { 2, 3, 4, 5 };
-	protected static final int ENERGY_TRANSFER[] = new int[] { 3, 6, 12, 24 };
-	protected static final int AUTO_TRANSFER[] = new int[] { 8, 16, 32, 64 };
-	protected static final int FLUID_CAPACITY[] = new int[] { 1, 2, 4, 8 };
+	protected static final int[] AUGMENT_COUNT = new int[] { 3, 4, 5, 6 };
+	protected static final int[] ENERGY_CAPACITY = new int[] { 2, 3, 4, 5 };
+	protected static final int[] ENERGY_TRANSFER = new int[] { 3, 6, 12, 24 };
+	protected static final int[] AUTO_TRANSFER = new int[] { 8, 16, 32, 64 };
+	protected static final int[] FLUID_CAPACITY = new int[] { 1, 2, 4, 8 };
 
 	int processMax;
 

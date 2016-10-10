@@ -12,12 +12,8 @@ import cofh.core.CoFHProps;
 import cofh.core.network.PacketCoFHBase;
 import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.TimeTracker;
-import cofh.lib.util.helpers.AugmentHelper;
-import cofh.lib.util.helpers.BlockHelper;
-import cofh.lib.util.helpers.EnergyHelper;
-import cofh.lib.util.helpers.MathHelper;
-import cofh.lib.util.helpers.RedstoneControlHelper;
-import cofh.lib.util.helpers.ServerHelper;
+import cofh.lib.util.helpers.*;
+import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.block.TileRSControl;
 import cofh.thermalexpansion.core.TEProps;
 import cofh.thermalexpansion.item.TEAugments;
@@ -90,6 +86,23 @@ ITickable {
 		energyConfig = DEFAULT_ENERGY_CONFIG[this.type].copy();
 		energyStorage = new EnergyStorage(energyConfig.maxEnergy, energyConfig.maxPower * 2);
 
+	}
+
+	public static void configure() {
+
+		String comment = "Enable this to allow for Dynamos to be securable.";
+
+		for (int i = 0; i < BlockDynamo.Type.values().length; i++) {
+
+			SECURITY[i] = ThermalExpansion.CONFIG.get("Security", "Dynamo.All.Securable", true, comment);
+			String name = StringHelper.titleCase(BlockDynamo.Type.byMetadata(i).getName());
+			int maxPower = MathHelper.clamp(ThermalExpansion.CONFIG.get("Dynamo." + name, "BasePower", 80), 10, 160);
+			ThermalExpansion.CONFIG.set("Dynamo." + name, "BasePower", maxPower);
+			maxPower /= 10;
+			maxPower *= 10;
+			DEFAULT_ENERGY_CONFIG[i] = new EnergyConfig();
+			DEFAULT_ENERGY_CONFIG[i].setParamsDefault(maxPower);
+		}
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import cofh.thermalexpansion.core.TEProps;
 import cofh.thermalexpansion.gui.CreativeTabTE;
 import cofh.thermalexpansion.gui.CreativeTabTEFlorbs;
 import cofh.thermalexpansion.gui.GuiHandler;
+import cofh.thermalexpansion.item.TEItems;
 import cofh.thermalexpansion.network.PacketTEBase;
 import cofh.thermalexpansion.util.FuelManager;
 import cofh.thermalexpansion.util.IMCHandler;
@@ -90,6 +91,7 @@ public class ThermalExpansion {
 		CONFIG_CLIENT.setConfiguration(new Configuration(new File(CoFHProps.configDir, "cofh/thermalexpansion/client.cfg"), true));
 
 		TEBlocks.preInit();
+		TEItems.preInit();
 
 		proxy.preInit(event);
 	}
@@ -98,6 +100,7 @@ public class ThermalExpansion {
 	public void initialize(FMLInitializationEvent event) {
 
 		TEBlocks.initialize();
+		TEItems.initialize();
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, GUI_HANDLER);
 
@@ -110,6 +113,7 @@ public class ThermalExpansion {
 	public void postInit(FMLPostInitializationEvent event) {
 
 		TEBlocks.postInit();
+		TEItems.postInit();
 
 		proxy.postInit(event);
 	}
@@ -128,7 +132,10 @@ public class ThermalExpansion {
 		CrucibleManager.loadRecipes();
 		TransposerManager.loadRecipes();
 
-		FuelManager.parseFuels();
+		//TODO REGISTER MACHINE RECIPES
+
+		//TODO ENABLE FUEL PARSING
+		//FuelManager.parseFuels();
 
 		CONFIG.cleanUp(false, true);
 		CONFIG_CLIENT.cleanUp(false, true);

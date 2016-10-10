@@ -4,6 +4,8 @@ import cofh.api.core.IInitializer;
 import cofh.api.core.IModelRegister;
 import cofh.core.util.RegistryHelper;
 import cofh.lib.util.helpers.BlockHelper;
+import cofh.lib.util.helpers.ItemHelper;
+import cofh.lib.util.helpers.StringHelper;
 import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.block.BlockTEBase;
 import cofh.thermalexpansion.block.TileReconfigurable;
@@ -11,6 +13,8 @@ import cofh.thermalexpansion.core.TEProps;
 
 import java.util.List;
 
+import cofh.thermalexpansion.item.ItemAugment;
+import cofh.thermalexpansion.item.TEAugments;
 import cofh.thermalexpansion.model.ModelMachine;
 import cofh.thermalexpansion.util.ReconfigurableHelper;
 import net.minecraft.block.material.Material;
@@ -85,7 +89,11 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	public void getSubBlocks(Item item, CreativeTabs tab, List list) {
 
 		for (int i = 0; i < BlockMachine.Type.METADATA_LOOKUP.length; i++) {
-			list.add(new ItemStack(item, 1, i));
+			for (int j = 0; j < 4; j++) {
+				if (creativeTiers[j]) {
+					list.add(ItemBlockMachine.setDefaultTag(new ItemStack(item, 1, i), (byte) j));
+				}
+			}
 		}
 	}
 
@@ -201,6 +209,32 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		TileCrucible.initialize();
 		TileTransposer.initialize();
 
+		if (defaultAutoTransfer) {
+			defaultAugments[0] = ItemHelper.cloneStack(ItemAugment.generalAutoOutput);
+		}
+		if (defaultRedstoneControl) {
+			defaultAugments[1] = ItemHelper.cloneStack(ItemAugment.generalRedstoneControl);
+		}
+		if (defaultReconfigSides) {
+			defaultAugments[2] = ItemHelper.cloneStack(ItemAugment.generalReconfigSides);
+		}
+
+		machineFurnace = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.FURNACE.ordinal()));
+		machinePulverizer = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.PULVERIZER.ordinal()));
+		machineSawmill = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.SAWMILL.ordinal()));
+		machineSmelter = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.SMELTER.ordinal()));
+		machineCrucible = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.CRUCIBLE.ordinal()));
+		machineTransposer = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.TRANSPOSER.ordinal()));
+//TODO add
+		/*
+		precipitator = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.PRECIPITATOR.ordinal()));
+		extruder = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.EXTRUDER.ordinal()));
+		accumulator = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.ACCUMULATOR.ordinal()));
+		assembler = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.ASSEMBLER.ordinal()));
+*/
+		machineCharger = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.CHARGER.ordinal()));
+		machineInsolator = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.INSOLATOR.ordinal()));
+
 		return true;
 	}
 
@@ -221,11 +255,11 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		INSOLATOR(4, "insolator", machineInsolator),
 		CHARGER(5, "charger", machineCharger),
 		CRUCIBLE(6, "crucible", machineCrucible),
-		TRANSPOSER(7, "transposer", machineTransposer),
+		TRANSPOSER(7, "transposer", machineTransposer);
 
-		CENTRIFUGE(8, "centrifuge", machineCentrifuge);
 
 		//TODO add additional machine types (some of them need more info)
+		//CENTRIFUGE(8, "centrifuge", machineCentrifuge);
 		// TRANSCAPSULATOR
 		// CRAFTER
 		// BREWER
@@ -289,6 +323,35 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 				METADATA_LOOKUP[type.getMetadata()] = type;
 			}
 		}
+	}
+
+	public static boolean defaultAutoTransfer = true;
+	public static boolean defaultRedstoneControl = true;
+	public static boolean defaultReconfigSides = true;
+
+	public static boolean[] enable = new boolean[Type.values().length];
+	public static boolean[] creativeTiers = new boolean[4];
+	public static ItemStack[] defaultAugments = new ItemStack[3];
+
+	static {
+		String category = "Machine.";
+
+		for (int i = 0; i < Type.values().length; i++) {
+			enable[i] = ThermalExpansion.CONFIG.get(category + StringHelper.titleCase(Type.byMetadata(i).getName()), "Recipe.Enable", true);
+		}
+		category = "Machine.All";
+
+		creativeTiers[0] = ThermalExpansion.CONFIG.get(category, "CreativeTab.Basic", false);
+		creativeTiers[1] = ThermalExpansion.CONFIG.get(category, "CreativeTab.Hardened", false);
+		creativeTiers[2] = ThermalExpansion.CONFIG.get(category, "CreativeTab.Reinforced", false);
+		creativeTiers[3] = ThermalExpansion.CONFIG.get(category, "CreativeTab.Resonant", true);
+
+		category += ".Augments";
+
+		defaultAutoTransfer = ThermalExpansion.CONFIG.get(category, "Default.AutoTransfer", true);
+		defaultRedstoneControl = ThermalExpansion.CONFIG.get(category, "Default.RedstoneControl", true);
+		defaultReconfigSides = ThermalExpansion.CONFIG.get(category, "Default.ReconfigurableSides", true);
+
 	}
 
 	/* REFERENCES */

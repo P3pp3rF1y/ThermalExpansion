@@ -40,6 +40,11 @@ public class ProxyClient extends Proxy {
 
 	/* REGISTRATION */
 
+	@Override
+	public void addModelRegister(IModelRegister objectToRegister) {
+		modelList.add(objectToRegister);
+	}
+
 	/* HELPERS */
 
 	public static ArrayList<IModelRegister> modelList = new ArrayList<IModelRegister>();

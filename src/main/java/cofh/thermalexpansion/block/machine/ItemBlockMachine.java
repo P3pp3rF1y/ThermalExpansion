@@ -2,6 +2,7 @@ package cofh.thermalexpansion.block.machine;
 
 import cofh.api.tileentity.IRedstoneControl.ControlMode;
 import cofh.core.item.ItemBlockCoFHBase;
+import cofh.lib.util.helpers.AugmentHelper;
 import cofh.lib.util.helpers.EnergyHelper;
 import cofh.lib.util.helpers.ItemHelper;
 import cofh.lib.util.helpers.RedstoneControlHelper;
@@ -39,8 +40,7 @@ public class ItemBlockMachine extends ItemBlockCoFHBase {
 		RedstoneControlHelper.setControl(container, ControlMode.DISABLED);
 		EnergyHelper.setDefaultEnergyTag(container, 0);
 		container.getTagCompound().setByte("Level", level);
-		// TODO: FIX
-		// AugmentHelper.writeAugments(container, BlockMachine.defaultAugments);
+		AugmentHelper.writeAugments(container, BlockMachine.defaultAugments);
 
 		return container;
 	}
@@ -53,4 +53,5 @@ public class ItemBlockMachine extends ItemBlockCoFHBase {
 		return container.getTagCompound().getByte("Level");
 	}
 
+	public static final String[] NAMES = { "basic", "hardened", "reinforced", "resonant" };
 }

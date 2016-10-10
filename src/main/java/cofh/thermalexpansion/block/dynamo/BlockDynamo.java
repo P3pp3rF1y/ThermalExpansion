@@ -3,11 +3,13 @@ package cofh.thermalexpansion.block.dynamo;
 import cofh.core.util.RegistryHelper;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.FluidHelper;
+import cofh.lib.util.helpers.ItemHelper;
 import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.block.BlockTEBase;
 
 import java.util.List;
 
+import cofh.thermalexpansion.item.ItemAugment;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -177,6 +179,23 @@ public class BlockDynamo extends BlockTEBase {
 	@Override
 	public boolean initialize() {
 
+		TileDynamoBase.configure();
+		TileDynamoSteam.initialize();
+		TileDynamoMagmatic.initialize();
+		TileDynamoCompression.initialize();
+		TileDynamoReactant.initialize();
+		TileDynamoEnervation.initialize();
+
+		if (defaultRedstoneControl) {
+			defaultAugments[0] = ItemHelper.cloneStack(ItemAugment.generalRedstoneControl);
+		}
+
+		dynamoSteam = ItemBlockDynamo.setDefaultTag(new ItemStack(this, 1, Type.STEAM.ordinal()));
+		dynamoMagmatic = ItemBlockDynamo.setDefaultTag(new ItemStack(this, 1, Type.MAGMATIC.ordinal()));
+		dynamoCompression = ItemBlockDynamo.setDefaultTag(new ItemStack(this, 1, Type.COMPRESSION.ordinal()));
+		dynamoReactant = ItemBlockDynamo.setDefaultTag(new ItemStack(this, 1, Type.REACTANT.ordinal()));
+		dynamoEnervation = ItemBlockDynamo.setDefaultTag(new ItemStack(this, 1, Type.ENERVATION.ordinal()));
+
 		return true;
 	}
 
@@ -253,6 +272,10 @@ public class BlockDynamo extends BlockTEBase {
 			}
 		}
 	}
+
+	public static ItemStack[] defaultAugments = new ItemStack[4];
+
+	public static boolean defaultRedstoneControl = true;
 
 	/* REFERENCES */
 	public static ItemStack dynamoSteam;

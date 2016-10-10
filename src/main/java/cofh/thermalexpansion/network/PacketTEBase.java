@@ -4,9 +4,9 @@ import cofh.api.tileentity.IRedstoneControl;
 import cofh.api.tileentity.IRedstoneControl.ControlMode;
 import cofh.api.tileentity.ISecurable;
 import cofh.api.tileentity.ISecurable.AccessMode;
-import cofh.core.gui.container.IAugmentableContainer;
 import cofh.core.network.PacketCoFHBase;
 import cofh.core.network.PacketHandler;
+import cofh.lib.gui.container.IAugmentableContainer;
 import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.gui.container.ISchematicContainer;
 

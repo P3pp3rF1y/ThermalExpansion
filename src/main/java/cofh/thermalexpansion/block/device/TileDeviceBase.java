@@ -1,6 +1,8 @@
 package cofh.thermalexpansion.block.device;
 
 import cofh.lib.util.TimeTracker;
+import cofh.lib.util.helpers.StringHelper;
+import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.block.TileAugmentable;
 
 import net.minecraft.block.state.IBlockState;
@@ -15,6 +17,21 @@ public abstract class TileDeviceBase extends TileAugmentable {
 	protected static final EnergyConfig[] DEFAULT_ENERGY_CONFIG = new EnergyConfig[BlockDevice.Type.values().length];
 	public static final boolean[] SECURITY = new boolean[BlockDevice.Type.values().length];
 
+	public static void configure() {
+
+		for (int i = 0; i < BlockDevice.Type.values().length; i++) {
+			String name = StringHelper.titleCase(BlockDevice.Type.byMetadata(i).getName());
+			String comment = "Enable this to allow for " + name + "s to be securable.";
+			SECURITY[i] = ThermalExpansion.CONFIG.get("Security", "Device." + name + ".Securable", true, comment);
+		}
+		//TODO READD THESE ????
+		/*
+		ThermalExpansion.CONFIG.removeProperty("Security", "Device." + StringHelper.titleCase(BlockDevice.NAMES[Types.WORKBENCH_FALSE.ordinal()])
+				+ ".Securable");
+		ThermalExpansion.CONFIG.removeProperty("Security", "Device." + StringHelper.titleCase(BlockDevice.NAMES[Types.PUMP.ordinal()]) + ".Securable");
+		ThermalExpansion.CONFIG.removeProperty("Security", "Device." + StringHelper.titleCase(BlockDevice.NAMES[Types.EXTENDER.ordinal()]) + ".Securable");
+*/
+	}
 	boolean wasActive;
 
 	protected final byte type;

@@ -1,10 +1,14 @@
 package cofh.thermalexpansion.block.device;
 
 import cofh.core.util.RegistryHelper;
+import cofh.lib.util.helpers.ItemHelper;
+import cofh.lib.util.helpers.StringHelper;
+import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.block.BlockTEBase;
 
 import java.util.List;
 
+import cofh.thermalexpansion.item.ItemAugment;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
@@ -84,10 +88,31 @@ public class BlockDevice extends BlockTEBase {
 
 		RegistryHelper.registerBlockAndItem(this, new ResourceLocation(modName, "device"), ItemBlockDevice::new);
 
+		TileDeviceBase.configure();
+
 		TileActivator.initialize();
 		TileBuffer.initialize();
 		TileCollector.initialize();
 		TileNullifier.initialize();
+
+		//TODO READD
+		/*
+		TileWorkbenchFalse.initialize();
+		TileBreaker.initialize();
+		TileExtender.initialize();
+*/
+		if (defaultRedstoneControl) {
+			defaultAugments[0] = ItemHelper.cloneStack(ItemAugment.generalRedstoneControl);
+		}
+		if (defaultReconfigSides) {
+			defaultAugments[1] = ItemHelper.cloneStack(ItemAugment.generalReconfigSides);
+		}
+		deviceActivator = ItemBlockDevice.setDefaultTag(new ItemStack(this, 1, Type.ACTIVATOR.ordinal()));
+		deviceBreaker = ItemBlockDevice.setDefaultTag(new ItemStack(this, 1, Type.BREAKER.ordinal()));
+		deviceCollector = ItemBlockDevice.setDefaultTag(new ItemStack(this, 1, Type.COLLECTOR.ordinal()));
+		deviceNullifier = ItemBlockDevice.setDefaultTag(new ItemStack(this, 1, Type.NULLIFIER.ordinal()));
+		deviceBuffer = ItemBlockDevice.setDefaultTag(new ItemStack(this, 1, Type.BUFFER.ordinal()));
+		// extender = ItemBlockDevice.setDefaultTag(new ItemStack(this, 1, Types.EXTENDER.ordinal()));
 
 		return true;
 	}
@@ -171,6 +196,30 @@ public class BlockDevice extends BlockTEBase {
 			}
 		}
 	}
+
+	public static boolean[] enable = new boolean[Type.values().length];
+	public static ItemStack[] defaultAugments = new ItemStack[4];
+
+	public static boolean defaultRedstoneControl = true;
+	public static boolean defaultReconfigSides = true;
+
+	static {
+		String category = "Device.";
+
+		for (int i = 0; i < Type.values().length; i++) {
+			enable[i] = ThermalExpansion.CONFIG.get(category + StringHelper.titleCase(Type.byMetadata(i).getName()), "Recipe.Enable", true);
+		}
+		//TODO READD THESE???
+		/*
+		enable[Type.WORKBENCH_FALSE.ordinal()] = false;
+		enable[Type.PUMP.ordinal()] = false;
+		enable[Type.EXTENDER.ordinal()] = false;
+		ThermalExpansion.config.removeCategory(category + StringHelper.titleCase(NAMES[Types.WORKBENCH_FALSE.ordinal()]));
+		ThermalExpansion.config.removeCategory(category + StringHelper.titleCase(NAMES[Types.PUMP.ordinal()]));
+		ThermalExpansion.config.removeCategory(category + StringHelper.titleCase(NAMES[Types.EXTENDER.ordinal()]));
+*/
+	}
+
 
 	/* REFERENCES */
 	public static ItemStack deviceActivator;

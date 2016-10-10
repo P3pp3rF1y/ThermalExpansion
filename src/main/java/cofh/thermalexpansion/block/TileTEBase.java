@@ -10,6 +10,7 @@ import cofh.lib.util.helpers.ServerHelper;
 import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.gui.GuiHandler;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
@@ -113,6 +114,9 @@ public abstract class TileTEBase extends TileCoFHBase implements ITilePacketHand
 		if (ServerHelper.isClientWorld(worldObj)) {
 			tileName = pkt.getNbtCompound().getString("tileName");
 		}
+
+		IBlockState state = worldObj.getBlockState(pos);
+		worldObj.notifyBlockUpdate(pos, state, state, 3);
 	}
 
 	@Override

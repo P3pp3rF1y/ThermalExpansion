@@ -89,8 +89,8 @@ public abstract class GuiAugmentableBase extends GuiTEBase {
 
 		super.updateElementInformation();
 
-		//redstoneTab.setVisible(myTile.augmentRedstoneControl);
-		//configTab.setVisible(myTile.augmentReconfigSides);
+		redstoneTab.setVisible(myTile.augmentRedstoneControl);
+		configTab.setVisible(myTile.augmentReconfigSides);
 	}
 
 }

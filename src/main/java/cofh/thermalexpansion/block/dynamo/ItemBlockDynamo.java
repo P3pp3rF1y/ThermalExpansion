@@ -2,11 +2,7 @@ package cofh.thermalexpansion.block.dynamo;
 
 import cofh.api.tileentity.IRedstoneControl.ControlMode;
 import cofh.core.item.ItemBlockCoFHBase;
-import cofh.lib.util.helpers.EnergyHelper;
-import cofh.lib.util.helpers.ItemHelper;
-import cofh.lib.util.helpers.RedstoneControlHelper;
-import cofh.lib.util.helpers.SecurityHelper;
-import cofh.lib.util.helpers.StringHelper;
+import cofh.lib.util.helpers.*;
 import cofh.thermalexpansion.util.ReconfigurableHelper;
 
 import java.util.List;
@@ -58,8 +54,7 @@ public class ItemBlockDynamo extends ItemBlockCoFHBase {
 		ReconfigurableHelper.setFacing(container, 1);
 		RedstoneControlHelper.setControl(container, ControlMode.DISABLED);
 		EnergyHelper.setDefaultEnergyTag(container, 0);
-		// TODO: FIX
-		// AugmentHelper.writeAugments(container, BlockDynamo.defaultAugments);
+		AugmentHelper.writeAugments(container, BlockDynamo.defaultAugments);
 
 		return container;
 	}
