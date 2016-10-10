@@ -1,5 +1,6 @@
 package cofh.thermalexpansion.model;
 
+import cofh.core.CoFHProps;
 import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.block.BlockTEBase;
 import cofh.thermalexpansion.block.TileTEBase;
@@ -16,6 +17,7 @@ import java.util.Set;
 public class TextureLocations {
 
 	private static Map<ResourceLocation, ResourceLocation> txCache = new HashMap<>();
+	private static final String CB_SUFFIX = CoFHProps.enableColorBlindTextures ? "_cb" : "";
 
 	public static ResourceLocation addTxFolder(ResourceLocation rl) {
 		if (!txCache.keySet().contains(rl)) {
@@ -29,13 +31,13 @@ public class TextureLocations {
 	public static class Config {
 
 		public static final ResourceLocation NONE = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_none");
-		public static final ResourceLocation BLUE = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_blue");
-		public static final ResourceLocation GREEN = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_green");
+		public static final ResourceLocation BLUE = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_blue" + CB_SUFFIX);
+		public static final ResourceLocation GREEN = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_green" + CB_SUFFIX);
 		public static final ResourceLocation OPEN = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_open");
-		public static final ResourceLocation ORANGE = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_orange");
-		public static final ResourceLocation PURPLE = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_purple");
-		public static final ResourceLocation RED = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_red");
-		public static final ResourceLocation YELLOW = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_yellow");
+		public static final ResourceLocation ORANGE = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_orange" + CB_SUFFIX);
+		public static final ResourceLocation PURPLE = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_purple" + CB_SUFFIX);
+		public static final ResourceLocation RED = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_red" + CB_SUFFIX);
+		public static final ResourceLocation YELLOW = new ResourceLocation(ThermalExpansion.modId, "blocks/config/config_yellow" + CB_SUFFIX);
 		public static final Map<BlockTEBase.EnumSideConfig, ResourceLocation> CONFIG_MAP = ImmutableMap.<BlockTEBase.EnumSideConfig, ResourceLocation>builder()
 				.put(BlockTEBase.EnumSideConfig.NONE, NONE)
 				.put(BlockTEBase.EnumSideConfig.BLUE, BLUE)
@@ -47,10 +49,6 @@ public class TextureLocations {
 				.put(BlockTEBase.EnumSideConfig.YELLOW, YELLOW).build();
 
 		public static final Set<ResourceLocation> ALL = ImmutableSet.copyOf(CONFIG_MAP.values());
-
-		public static class CB {
-
-		}
 	}
 
 	public static class Machine {

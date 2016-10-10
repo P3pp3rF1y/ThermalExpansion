@@ -176,7 +176,6 @@ public class ThermalExpansion {
 		if (CoFHProps.enableColorBlindTextures) {
 			TEProps.textureGuiCommon = TEProps.PATH_COMMON_CB;
 			TEProps.textureGuiAssembler = TEProps.PATH_ASSEMBLER_CB;
-			TEProps.textureSelection = TEProps.TEXTURE_CB;
 			//BlockCell.textureSelection = BlockCell.TEXTURE_CB;
 		}
 		TEProps.useAlternateStarfieldShader = ThermalExpansion.CONFIG_CLIENT.get("Render", "UseAlternateShader", true,

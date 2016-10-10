@@ -44,12 +44,8 @@ public class TEProps {
 	public static final ResourceLocation PATH_ASSEMBLER_CB = new ResourceLocation(PATH_ELEMENTS + "slots_assembler_cb.png");
 	public static final String PATH_ICON = PATH_GUI + "icons/";
 
-	public static final String TEXTURE_DEFAULT = "Config_";
-	public static final String TEXTURE_CB = "Config_CB_";
-
 	public static ResourceLocation textureGuiCommon = PATH_COMMON;
 	public static ResourceLocation textureGuiAssembler = PATH_ASSEMBLER;
-	public static String textureSelection = TEXTURE_DEFAULT;
 	public static boolean useAlternateStarfieldShader = false;
 
 	/* Render Ids */
