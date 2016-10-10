@@ -410,4 +410,7 @@ public abstract class TileAugmentable extends TileReconfigurable implements IAug
 		return sideConfig.allowExtractionSide[sideCache[side.ordinal()]] && sideConfig.allowExtractionSlot[slot];
 	}
 
+	public BlockTEBase.EnumSideConfig getSideConfig(EnumFacing side) {
+		return BlockTEBase.EnumSideConfig.values()[sideConfig.sideTex[sideCache[side.ordinal()]]];
+	}
 }

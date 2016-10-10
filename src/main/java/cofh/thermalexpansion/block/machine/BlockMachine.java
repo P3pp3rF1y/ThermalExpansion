@@ -8,6 +8,7 @@ import cofh.lib.util.helpers.ItemHelper;
 import cofh.lib.util.helpers.StringHelper;
 import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.block.BlockTEBase;
+import cofh.thermalexpansion.block.TileAugmentable;
 import cofh.thermalexpansion.block.TileReconfigurable;
 import cofh.thermalexpansion.core.TEProps;
 
@@ -72,19 +73,19 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 
 		IExtendedBlockState extState = (IExtendedBlockState) state;
 
-		TileReconfigurable tile = (TileReconfigurable) world.getTileEntity(pos);
+		TileAugmentable tile = (TileAugmentable) world.getTileEntity(pos);
 		extState = extState.withProperty(TEProps.ACTIVE, tile.isActive);
 		extState = extState.withProperty(TEProps.FACING, EnumFacing.values()[tile.getFacing()]);
-		for (int side = 0; side < 6 ; side++) {
-			extState = extState.withProperty(TEProps.SIDE_CONFIG[side], EnumSideConfig.values()[tile.sideCache[side]]);
+		for (EnumFacing facing : EnumFacing.VALUES) {
+			extState = extState.withProperty(TEProps.SIDE_CONFIG[facing.ordinal()], tile.getSideConfig(facing));
 		}
-		extState = extState.withProperty(TEProps.FLUID, getFluidName(tile));
+		extState = extState.withProperty(TEProps.FLUID, getFluidTextureName(tile));
 
 		return extState;
 	}
 
 	//TODO move to better place
-	private String getFluidName(TileEntity tile) {
+	private String getFluidTextureName(TileEntity tile) {
 
 		if (tile instanceof IFluidFace) {
 			IFluidFace fluidFace = (IFluidFace) tile;

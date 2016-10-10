@@ -592,7 +592,7 @@ public abstract class TileMachineBase extends TileAugmentable implements ITickab
 				return TextureLocations.addTxFolder(TextureLocations.Machine.SIDE_MAP.get(side));
 			}
 		} else if (pass == 1) {
-			return TextureLocations.addTxFolder(TextureLocations.Config.CONFIG_MAP.get(BlockTEBase.EnumSideConfig.values()[sideCache[side.ordinal()]]));
+			return TextureLocations.addTxFolder(TextureLocations.Config.CONFIG_MAP.get(getSideConfig(side)));
 		}
 		return TextureLocations.addTxFolder(TextureLocations.Machine.SIDE);
 	}
