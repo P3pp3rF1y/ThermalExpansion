@@ -25,7 +25,6 @@ import java.util.*;
 public class BakedModelMachine implements IBakedModel {
 
 	private static Map<EnumFacing, TextureAtlasSprite> sideSprites;
-	private static Map<EnumFacing, TextureAtlasSprite> framedSideSprites;
 	private static Map<BlockMachine.Type, TextureAtlasSprite> faceSprites;
 	private static Map<BlockMachine.Type, TextureAtlasSprite> activeFaceSprites;
 	private static Map<BlockTEBase.EnumSideConfig, TextureAtlasSprite> configSprites;
@@ -50,10 +49,8 @@ public class BakedModelMachine implements IBakedModel {
 	public BakedModelMachine(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
 
 		sideSprites = new HashMap<>();
-		framedSideSprites = new HashMap<>();
 		for(EnumFacing facing : EnumFacing.VALUES) {
 			sideSprites.put(facing, bakedTextureGetter.apply(TextureLocations.Machine.SIDE_MAP.get(facing)));
-			framedSideSprites.put(facing, bakedTextureGetter.apply(TextureLocations.Machine.FRAMED_SIDE_MAP.get(facing)));
 		}
 
 		faceSprites = new HashMap<>();
@@ -93,11 +90,11 @@ public class BakedModelMachine implements IBakedModel {
 		for(EnumFacing facing : EnumFacing.VALUES) {
 			if(frontFacing == facing) {
 				quads.add(createFullFaceQuad(facing, getFaceTexture(type, active)));
-			} else if(configs[facing.getIndex()] == BlockTEBase.EnumSideConfig.NONE) {
-				quads.add(createFullFaceQuad(facing, getSideTexture(facing)));
 			} else {
-				quads.add(createFullFaceQuad(facing, getFrameSideTexture(facing)));
-				quads.add(createFullFaceQuad(facing, getConfigTexture(configs[facing.getIndex()])));
+				quads.add(createFullFaceQuad(facing, getSideTexture(facing)));
+				if(configs[facing.getIndex()] != BlockTEBase.EnumSideConfig.NONE) {
+					quads.add(createFullFaceQuad(facing, getConfigTexture(configs[facing.getIndex()])));
+				}
 			}
 		}
 
@@ -107,11 +104,6 @@ public class BakedModelMachine implements IBakedModel {
 	private TextureAtlasSprite getConfigTexture(BlockTEBase.EnumSideConfig config) {
 
 		return configSprites.get(config);
-	}
-
-	private TextureAtlasSprite getFrameSideTexture(EnumFacing facing) {
-
-		return framedSideSprites.get(facing);
 	}
 
 	private TextureAtlasSprite getSideTexture(EnumFacing facing) {

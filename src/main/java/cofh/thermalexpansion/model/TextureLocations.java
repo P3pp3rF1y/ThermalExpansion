@@ -66,17 +66,6 @@ public class TextureLocations {
 			.put(EnumFacing.EAST, SIDE)
 			.put(EnumFacing.WEST, SIDE).build();
 
-		public static final ResourceLocation FRAME_TOP = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_frame_top");
-		public static final ResourceLocation FRAME_BOTTOM = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_frame_bottom");
-		public static final ResourceLocation FRAME_SIDE = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_frame_side");
-		public static final Map<EnumFacing, ResourceLocation> FRAMED_SIDE_MAP = ImmutableMap.<EnumFacing, ResourceLocation>builder()
-				.put(EnumFacing.DOWN, FRAME_BOTTOM)
-				.put(EnumFacing.UP, FRAME_TOP)
-				.put(EnumFacing.NORTH, FRAME_SIDE)
-				.put(EnumFacing.SOUTH, FRAME_SIDE)
-				.put(EnumFacing.EAST, FRAME_SIDE)
-				.put(EnumFacing.WEST, FRAME_SIDE).build();
-
 		public static final ResourceLocation PULVERIZER = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_face_pulverizer");
 		public static final ResourceLocation FURNACE = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_face_furnace");
 		public static final ResourceLocation SAWMILL = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_face_sawmill");
@@ -115,6 +104,6 @@ public class TextureLocations {
 				.put(BlockMachine.Type.TRANSPOSER, TRANSPOSER_ACTIVE).build();
 
 		public static final Set<ResourceLocation> ALL = ImmutableSet.<ResourceLocation>builder()
-				.addAll(SIDE_MAP.values()).addAll(FRAMED_SIDE_MAP.values()).addAll(FACE_MAP.values()).addAll(ACTIVE_FACE_MAP.values()).build();
+				.addAll(SIDE_MAP.values()).addAll(FACE_MAP.values()).addAll(ACTIVE_FACE_MAP.values()).build();
 	}
 }
