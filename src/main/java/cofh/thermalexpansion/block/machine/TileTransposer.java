@@ -26,7 +26,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class TileTransposer extends TileMachineBase implements IFluidHandler {
+public class TileTransposer extends TileMachineBase implements IFluidHandler, IFluidFace {
 
 	public static void initialize() {
 
@@ -566,7 +566,7 @@ public class TileTransposer extends TileMachineBase implements IFluidHandler {
 		if (net.getDirection() == EnumPacketDirection.CLIENTBOUND) {
 			NBTTagCompound nbt = pkt.getNbtCompound();
 
-			renderFluid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fuelTank"));
+			renderFluid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("renderFluid"));
 			if (renderFluid == null) {
 				renderFluid = new FluidStack(FluidRegistry.LAVA, FluidContainerRegistry.BUCKET_VOLUME);
 			}
@@ -778,16 +778,11 @@ public class TileTransposer extends TileMachineBase implements IFluidHandler {
 	@Override
 	public FluidTankInfo[] getTankInfo(EnumFacing from) {
 
-		// if (reverse) {
-		// if (sideCache[from.ordinal()] != 3) {
-		// return CoFHProps.EMPTY_TANK_INFO;
-		// }
-		// } else {
-		// if (sideCache[from.ordinal()] != 1) {
-		// return CoFHProps.EMPTY_TANK_INFO;
-		// }
-		// }
 		return new FluidTankInfo[] { tank.getInfo() };
 	}
 
+	@Override
+	public String getFluidTextureName() {
+		return renderFluid != null ? renderFluid.getFluid().getStill().toString() : "";
+	}
 }

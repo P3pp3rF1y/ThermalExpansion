@@ -3,14 +3,15 @@ package cofh.thermalexpansion.core;
 import cofh.thermalexpansion.block.BlockTEBase;
 import cofh.thermalexpansion.block.BlockTEBase.EnumSideConfig;
 
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.properties.PropertyEnum;
+import com.google.common.base.Optional;
+import net.minecraft.block.properties.*;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+
+import java.util.Collection;
 
 public class TEProps {
 
@@ -61,6 +62,12 @@ public class TEProps {
 	/* Common Block Properties */
 	public static final IUnlistedProperty<Boolean> ACTIVE = Properties.toUnlisted(PropertyBool.create("active"));
 	public static final IUnlistedProperty<EnumFacing> FACING = Properties.toUnlisted(PropertyDirection.create("facing"));
+	public static final IUnlistedProperty<String> FLUID = new IUnlistedProperty<String>() {
+		@Override public String getName() { return "fluid_rl"; }
+		@Override public boolean isValid(String value) { return true; }
+		@Override public Class<String> getType() { return String.class; }
+		@Override public String valueToString(String value) { return value; }
+	};
 	public static final IUnlistedProperty<EnumSideConfig>[] SIDE_CONFIG = new IUnlistedProperty[6];
 
 	static {

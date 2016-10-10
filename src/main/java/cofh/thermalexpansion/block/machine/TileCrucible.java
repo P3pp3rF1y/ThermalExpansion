@@ -25,7 +25,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class TileCrucible extends TileMachineBase implements IFluidHandler {
+public class TileCrucible extends TileMachineBase implements IFluidHandler, IFluidFace {
 
 	public static void initialize() {
 
@@ -262,7 +262,7 @@ public class TileCrucible extends TileMachineBase implements IFluidHandler {
 		if (net.getDirection() == EnumPacketDirection.CLIENTBOUND) {
 			NBTTagCompound nbt = pkt.getNbtCompound();
 
-			renderFluid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fuelTank"));
+			renderFluid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("renderFluid"));
 			if (renderFluid == null) {
 				renderFluid = new FluidStack(FluidRegistry.LAVA, FluidContainerRegistry.BUCKET_VOLUME);
 			}
@@ -383,4 +383,8 @@ public class TileCrucible extends TileMachineBase implements IFluidHandler {
 		return new FluidTankInfo[] { tank.getInfo() };
 	}
 
+	@Override
+	public String getFluidTextureName() {
+		return renderFluid != null ? renderFluid.getFluid().getStill().toString() : "";
+	}
 }

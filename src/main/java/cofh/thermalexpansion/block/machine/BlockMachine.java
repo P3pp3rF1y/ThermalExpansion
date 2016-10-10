@@ -63,7 +63,7 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		return new ExtendedBlockState(this,
 				new IProperty[] {TYPE},
 				new IUnlistedProperty[] {TEProps.ACTIVE, TEProps.FACING, TEProps.SIDE_CONFIG[0], TEProps.SIDE_CONFIG[1],
-					TEProps.SIDE_CONFIG[2], TEProps.SIDE_CONFIG[3], TEProps.SIDE_CONFIG[4], TEProps.SIDE_CONFIG[5]}
+					TEProps.SIDE_CONFIG[2], TEProps.SIDE_CONFIG[3], TEProps.SIDE_CONFIG[4], TEProps.SIDE_CONFIG[5], TEProps.FLUID}
 				);
 	}
 
@@ -78,8 +78,21 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		for (int side = 0; side < 6 ; side++) {
 			extState = extState.withProperty(TEProps.SIDE_CONFIG[side], EnumSideConfig.values()[tile.sideCache[side]]);
 		}
+		extState = extState.withProperty(TEProps.FLUID, getFluidName(tile));
 
 		return extState;
+	}
+
+	//TODO move to better place
+	private String getFluidName(TileEntity tile) {
+
+		if (tile instanceof IFluidFace) {
+			IFluidFace fluidFace = (IFluidFace) tile;
+
+			return fluidFace.getFluidTextureName();
+		}
+
+		return "";
 	}
 
 	@Override

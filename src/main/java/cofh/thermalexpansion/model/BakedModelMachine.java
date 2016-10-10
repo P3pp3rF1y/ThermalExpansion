@@ -6,6 +6,7 @@ import cofh.thermalexpansion.core.TEProps;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -81,6 +82,7 @@ public class BakedModelMachine implements IBakedModel {
 		BlockMachine.Type type = extState.getValue(BlockMachine.TYPE);
 		EnumFacing frontFacing = extState.getValue(TEProps.FACING);
 		boolean active = extState.getValue(TEProps.ACTIVE);
+		String fluidName = extState.getValue(TEProps.FLUID);
 
 		BlockTEBase.EnumSideConfig[] configs = new BlockTEBase.EnumSideConfig[6];
 		for(EnumFacing confFacing : EnumFacing.VALUES) {
@@ -89,6 +91,9 @@ public class BakedModelMachine implements IBakedModel {
 
 		for(EnumFacing facing : EnumFacing.VALUES) {
 			if(frontFacing == facing) {
+				if (active && fluidName != null && !fluidName.isEmpty()) {
+					quads.add(createFullFaceQuad(facing, getFluidTexture(fluidName)));
+				}
 				quads.add(createFullFaceQuad(facing, getFaceTexture(type, active)));
 			} else {
 				quads.add(createFullFaceQuad(facing, getSideTexture(facing)));
@@ -99,6 +104,10 @@ public class BakedModelMachine implements IBakedModel {
 		}
 
 		return quads;
+	}
+
+	private TextureAtlasSprite getFluidTexture(String fluidName) {
+		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluidName);
 	}
 
 	private TextureAtlasSprite getConfigTexture(BlockTEBase.EnumSideConfig config) {
@@ -128,10 +137,10 @@ public class BakedModelMachine implements IBakedModel {
 
 		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(format);
 		builder.setTexture(sprite);
-		putVertex(builder, normal, v1.xCoord, v1.yCoord, v1.zCoord, sprite, 0, 0);
-		putVertex(builder, normal, v2.xCoord, v2.yCoord, v2.zCoord, sprite, 0, 16);
-		putVertex(builder, normal, v3.xCoord, v3.yCoord, v3.zCoord, sprite, 16, 16);
-		putVertex(builder, normal, v4.xCoord, v4.yCoord, v4.zCoord, sprite, 16, 0);
+		putVertex(builder, normal, v1.xCoord, v1.yCoord, v1.zCoord, sprite, 0, 0 /*sprite.getMinU(), sprite.getMinV()*/);
+		putVertex(builder, normal, v2.xCoord, v2.yCoord, v2.zCoord, sprite, 0, 16 /*sprite.getminu(), sprite.getmaxv()*/);
+		putVertex(builder, normal, v3.xCoord, v3.yCoord, v3.zCoord, sprite, 16, 16 /*sprite.getMaxU(), sprite.getMaxV()*/);
+		putVertex(builder, normal, v4.xCoord, v4.yCoord, v4.zCoord, sprite, 16, 0 /*sprite.getMaxU(), sprite.getMaxV()*/);
 		return builder.build();
 	}
 
