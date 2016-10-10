@@ -27,6 +27,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -163,6 +164,24 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 			default:
 				return null;
 		}
+	}
+
+
+	@Override
+	public NBTTagCompound getItemStackTag(IBlockAccess world, BlockPos pos) {
+
+		NBTTagCompound tag = super.getItemStackTag(world, pos);
+		TileMachineBase tile = (TileMachineBase) world.getTileEntity(pos);
+
+		if (tile != null) {
+			if (tag == null) {
+				tag = new NBTTagCompound();
+			}
+			ReconfigurableHelper.setItemStackTagReconfig(tag, tile);
+			tag.setInteger("Energy", tile.getEnergyStored(EnumFacing.DOWN));
+			tile.writeAugmentsToNBT(tag);
+		}
+		return tag;
 	}
 
 	/* IModelRegister */

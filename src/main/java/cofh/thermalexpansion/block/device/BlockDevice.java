@@ -8,7 +8,9 @@ import cofh.thermalexpansion.block.BlockTEBase;
 
 import java.util.List;
 
+import cofh.thermalexpansion.block.TileAugmentable;
 import cofh.thermalexpansion.item.ItemAugment;
+import cofh.thermalexpansion.util.ReconfigurableHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
@@ -17,9 +19,13 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -80,6 +86,25 @@ public class BlockDevice extends BlockTEBase {
 			default:
 				return null;
 		}
+	}
+
+	@Override
+	public NBTTagCompound getItemStackTag(IBlockAccess world, BlockPos pos) {
+		NBTTagCompound tag = super.getItemStackTag(world, pos);
+		TileEntity tile = world.getTileEntity(pos);
+
+		if (tile instanceof TileAugmentable) {
+			TileAugmentable theTile = (TileAugmentable) world.getTileEntity(pos);
+
+			if (tag == null) {
+				tag = new NBTTagCompound();
+			}
+			ReconfigurableHelper.setItemStackTagReconfig(tag, theTile);
+			tag.setInteger("Energy", theTile.getEnergyStored(EnumFacing.DOWN));
+
+			theTile.writeAugmentsToNBT(tag);
+		}
+		return tag;
 	}
 
 	/* IInitializer */
