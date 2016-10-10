@@ -250,7 +250,8 @@ public abstract class TileMachineBase extends TileAugmentable implements ITickab
 				.withProperty(TEProps.SIDE_CONFIG[2], BlockTEBase.EnumSideConfig.VALUES[sideCache[2]])
 				.withProperty(TEProps.SIDE_CONFIG[3], BlockTEBase.EnumSideConfig.VALUES[sideCache[3]])
 				.withProperty(TEProps.SIDE_CONFIG[4], BlockTEBase.EnumSideConfig.VALUES[sideCache[4]])
-				.withProperty(TEProps.SIDE_CONFIG[5], BlockTEBase.EnumSideConfig.VALUES[sideCache[5]]);
+				.withProperty(TEProps.SIDE_CONFIG[5], BlockTEBase.EnumSideConfig.VALUES[sideCache[5]])
+				.withProperty(TEProps.FLUID, "");
 	}
 
 	/* GUI METHODS */
@@ -585,16 +586,16 @@ public abstract class TileMachineBase extends TileAugmentable implements ITickab
 	public ResourceLocation getTexture(EnumFacing side, int pass) {
 
 		if (pass == 0) {
-			if (side.ordinal() == facing) {
-				return isActive ? TextureLocations.addTxFolder(TextureLocations.Machine.ACTIVE_FACE_MAP.get(BlockMachine.Type.byMetadata(type)))
-						: TextureLocations.addTxFolder(TextureLocations.Machine.FACE_MAP.get(BlockMachine.Type.byMetadata(type)));
-			} else {
-				return TextureLocations.addTxFolder(TextureLocations.Machine.SIDE_MAP.get(side));
-			}
+				return TextureLocations.Machine.SIDE_MAP.get(side);
 		} else if (pass == 1) {
-			return TextureLocations.addTxFolder(TextureLocations.Config.CONFIG_MAP.get(getSideConfig(side)));
+			if (side.ordinal() == facing) {
+				return isActive ? TextureLocations.Machine.ACTIVE_FACE_MAP.get(BlockMachine.Type.byMetadata(type))
+						: TextureLocations.Machine.FACE_MAP.get(BlockMachine.Type.byMetadata(type));
+			} else {
+				return TextureLocations.Config.CONFIG_MAP.get(getSideConfig(side));
+			}
 		}
-		return TextureLocations.addTxFolder(TextureLocations.Machine.SIDE);
+		return TextureLocations.Machine.SIDE;
 	}
 
 	/* ISoundSource */

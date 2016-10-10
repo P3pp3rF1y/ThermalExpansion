@@ -22,10 +22,13 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class TileCrucible extends TileMachineBase implements IFluidHandler, IFluidFace {
+public class TileCrucible extends TileMachineBase implements IFluidHandler {
 
 	public static void initialize() {
 
@@ -178,6 +181,18 @@ public class TileCrucible extends TileMachineBase implements IFluidHandler, IFlu
 		transferOutputFluid();
 
 		super.update();
+	}
+
+	/* BLOCK STATE */
+	@Override
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+
+		return ((IExtendedBlockState) super.getExtendedState(state, world, pos)).withProperty(TEProps.FLUID, getRenderFluidTexture());
+	}
+
+	private String getRenderFluidTexture() {
+
+		return renderFluid != null ? renderFluid.getFluid().getStill().toString() : "";
 	}
 
 	@Override
@@ -384,7 +399,9 @@ public class TileCrucible extends TileMachineBase implements IFluidHandler, IFlu
 	}
 
 	@Override
-	public String getFluidTextureName() {
-		return renderFluid != null ? renderFluid.getFluid().getStill().toString() : "";
+	public ResourceLocation getTexture(EnumFacing side, int pass) {
+		if (pass == 0 && side.ordinal() == facing && renderFluid != null)
+			return renderFluid.getFluid().getStill();
+		return super.getTexture(side, pass);
 	}
 }

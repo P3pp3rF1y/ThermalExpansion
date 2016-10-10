@@ -19,13 +19,6 @@ public class TextureLocations {
 	private static Map<ResourceLocation, ResourceLocation> txCache = new HashMap<>();
 	private static final String CB_SUFFIX = CoFHProps.enableColorBlindTextures ? "_cb" : "";
 
-	public static ResourceLocation addTxFolder(ResourceLocation rl) {
-		if (!txCache.keySet().contains(rl)) {
-			txCache.put(rl, new ResourceLocation(rl.getResourceDomain(), "textures/" + rl.getResourcePath() + ".png"));
-		}
-		return txCache.get(rl);
-	}
-
 	public static final ResourceLocation MISSING = new ResourceLocation("missingno");
 
 	public static class Config {

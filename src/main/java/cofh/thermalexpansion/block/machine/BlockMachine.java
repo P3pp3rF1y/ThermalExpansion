@@ -71,29 +71,9 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
 
-		IExtendedBlockState extState = (IExtendedBlockState) state;
+		TileMachineBase tile = (TileMachineBase) world.getTileEntity(pos);
 
-		TileAugmentable tile = (TileAugmentable) world.getTileEntity(pos);
-		extState = extState.withProperty(TEProps.ACTIVE, tile.isActive);
-		extState = extState.withProperty(TEProps.FACING, EnumFacing.values()[tile.getFacing()]);
-		for (EnumFacing facing : EnumFacing.VALUES) {
-			extState = extState.withProperty(TEProps.SIDE_CONFIG[facing.ordinal()], tile.getSideConfig(facing));
-		}
-		extState = extState.withProperty(TEProps.FLUID, getFluidTextureName(tile));
-
-		return extState;
-	}
-
-	//TODO move to better place
-	private String getFluidTextureName(TileEntity tile) {
-
-		if (tile instanceof IFluidFace) {
-			IFluidFace fluidFace = (IFluidFace) tile;
-
-			return fluidFace.getFluidTextureName();
-		}
-
-		return "";
+		return tile.getExtendedState(state, world, pos);
 	}
 
 	@Override

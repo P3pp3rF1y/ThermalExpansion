@@ -6,10 +6,15 @@ import java.util.ArrayList;
 
 import cofh.thermalexpansion.block.TEBlocks;
 import cofh.thermalexpansion.model.BakedModelLoader;
+import cofh.thermalexpansion.model.TextureLocations;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ProxyClient extends Proxy {
 
@@ -18,6 +23,8 @@ public class ProxyClient extends Proxy {
 	public void preInit(FMLPreInitializationEvent event) {
 
 		super.preInit(event);
+
+		MinecraftForge.EVENT_BUS.register(this);
 
 		ModelLoaderRegistry.registerLoader(new BakedModelLoader());
 
@@ -43,6 +50,20 @@ public class ProxyClient extends Proxy {
 	@Override
 	public void addModelRegister(IModelRegister objectToRegister) {
 		modelList.add(objectToRegister);
+	}
+
+	@SubscribeEvent
+	public void onTextureStitch(TextureStitchEvent event) {
+
+/*
+		for (ResourceLocation location : TextureLocations.Config.ALL) {
+			event.getMap().registerSprite(location);
+		}
+
+		for (ResourceLocation location : TextureLocations.Machine.ALL) {
+			event.getMap().registerSprite(location);
+		}
+*/
 	}
 
 	/* HELPERS */
