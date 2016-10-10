@@ -7,6 +7,8 @@ import cofh.core.network.PacketCoFHBase;
 import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.MathHelper;
 import cofh.lib.util.helpers.ServerHelper;
+import cofh.lib.util.helpers.StringHelper;
+import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.block.BlockTEBase;
 import cofh.thermalexpansion.block.TileAugmentable;
 import cofh.thermalexpansion.core.TEProps;
@@ -45,6 +47,18 @@ public abstract class TileMachineBase extends TileAugmentable implements ITickab
 	protected static final int[] ENERGY_TRANSFER = new int[] { 3, 6, 12, 24 };
 	protected static final int[] AUTO_TRANSFER = new int[] { 8, 16, 32, 64 };
 	protected static final int[] FLUID_CAPACITY = new int[] { 1, 2, 4, 8 };
+
+	public static void configure() {
+
+		for (int i = 0; i < BlockMachine.Type.values().length; i++) {
+			String name = StringHelper.titleCase(BlockMachine.Type.byMetadata(i).getName());
+			String comment = "Enable this to allow for " + name + "s to be securable.";
+			SECURITY[i] = ThermalExpansion.CONFIG.get("Security", "Machine." + name + ".Securable", true, comment);
+
+			comment = "Enable sounds for the " + name + ".";
+			ENABLE_SOUND[i] = ThermalExpansion.CONFIG_CLIENT.get("Machine." + name, "Sound.Enable", true, comment);
+		}
+	}
 
 	int processMax;
 

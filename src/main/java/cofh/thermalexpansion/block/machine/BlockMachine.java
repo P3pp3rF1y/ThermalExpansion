@@ -216,6 +216,8 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	@Override
 	public boolean initialize() {
 
+		TileMachineBase.configure();
+
 		TileFurnace.initialize();
 		TilePulverizer.initialize();
 		TileSawmill.initialize();
