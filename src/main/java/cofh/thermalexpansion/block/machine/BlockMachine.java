@@ -4,6 +4,7 @@ import cofh.api.core.IInitializer;
 import cofh.api.core.IModelRegister;
 import cofh.core.util.RegistryHelper;
 import cofh.lib.util.helpers.BlockHelper;
+import cofh.lib.util.helpers.FluidHelper;
 import cofh.lib.util.helpers.ItemHelper;
 import cofh.lib.util.helpers.StringHelper;
 import cofh.thermalexpansion.ThermalExpansion;
@@ -36,6 +37,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -112,14 +114,12 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity tile = world.getTileEntity(pos);
 
-		//TODO ADD EXTRUDER AND PRECIPITATOR
-/*
+		//TODO change to fluid caps (or just warp that inside the fluid helper
 		if (tile instanceof TileExtruder || tile instanceof TilePrecipitator) {
 			if (FluidHelper.fillHandlerWithContainer(world, (IFluidHandler) tile, player)) {
 				return true;
 			}
 		}
-*/
 
 		return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
 	}
@@ -185,6 +185,8 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 				return new TileAssembler();
 			case EXTRUDER:
 				return new TileExtruder();
+			case PRECIPITATOR:
+				return new TilePrecipitator();
 			default:
 				return null;
 		}
@@ -253,6 +255,7 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		TileAccumulator.initialize();
 		TileAssembler.initialize();
 		TileExtruder.initialize();
+		TilePrecipitator.initialize();
 
 		if (defaultAutoTransfer) {
 			defaultAugments[0] = ItemHelper.cloneStack(ItemAugment.generalAutoOutput);
@@ -270,16 +273,12 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		machineSmelter = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.SMELTER.ordinal()));
 		machineCrucible = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.CRUCIBLE.ordinal()));
 		machineTransposer = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.TRANSPOSER.ordinal()));
-//TODO add
-		/*
-		precipitator = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.PRECIPITATOR.ordinal()));
-		extruder = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.EXTRUDER.ordinal()));
-*/
 		machineCharger = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.CHARGER.ordinal()));
 		machineInsolator = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.INSOLATOR.ordinal()));
 		machineAccumulator = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.ACCUMULATOR.ordinal()));
 		machineAssembler = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.ASSEMBLER.ordinal()));
 		machineExtruder = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.EXTRUDER.ordinal()));
+		machinePrecipitator = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.PRECIPITATOR.ordinal()));
 
 		return true;
 	}
@@ -483,15 +482,12 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		machineSmelter = ItemBlockMachine.setDefaultTag(machineSmelter);
 		machineCrucible = ItemBlockMachine.setDefaultTag(machineCrucible);
 		machineTransposer = ItemBlockMachine.setDefaultTag(machineTransposer);
-		//TODO READD
-/*
-		machinePrecipitator = ItemBlockMachine.setDefaultTag(machinePrecipitator);
-*/
 		machineCharger = ItemBlockMachine.setDefaultTag(machineCharger);
 		machineInsolator = ItemBlockMachine.setDefaultTag(machineInsolator);
 		machineAccumulator = ItemBlockMachine.setDefaultTag(machineAccumulator);
 		machineAssembler = ItemBlockMachine.setDefaultTag(machineAssembler);
 		machineExtruder = ItemBlockMachine.setDefaultTag(machineExtruder);
+		machinePrecipitator = ItemBlockMachine.setDefaultTag(machinePrecipitator);
 	}
 
 
@@ -509,8 +505,8 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		TRANSPOSER(7, "transposer", machineTransposer),
 		ACCUMULATOR(8, "accumulator", machineAccumulator),
 		ASSEMBLER(9, "assembler", machineAssembler),
-		EXTRUDER(10, "extruder", machineExtruder);
-
+		EXTRUDER(10, "extruder", machineExtruder),
+		PRECIPITATOR(11, "precipitator", machinePrecipitator);
 
 		//TODO add additional machine types (some of them need more info)
 		//CENTRIFUGE(8, "centrifuge", machineCentrifuge);
@@ -518,8 +514,6 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		// CRAFTER
 		// BREWER
 		// ENCHANTER
-		// PRECIPITATOR
-		// EXTRUDER
 		// @formatter:on
 
 		private static final BlockMachine.Type[] METADATA_LOOKUP = new BlockMachine.Type[values().length];
@@ -621,5 +615,6 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	public static ItemStack machineAccumulator;
 	public static ItemStack machineAssembler;
 	public static ItemStack machineExtruder;
+	public static ItemStack machinePrecipitator;
 
 }

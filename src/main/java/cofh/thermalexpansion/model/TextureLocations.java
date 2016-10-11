@@ -68,6 +68,7 @@ public class TextureLocations {
 		public static final ResourceLocation ACCUMULATOR = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_face_accumulator");
 		public static final ResourceLocation ASSEMBLER = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_face_assembler");
 		public static final ResourceLocation EXTRUDER = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_face_extruder");
+		public static final ResourceLocation PRECIPITATOR = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_face_precipitator");
 		public static final Map<BlockMachine.Type, ResourceLocation> FACE_MAP = ImmutableMap.<BlockMachine.Type, ResourceLocation>builder()
 				.put(BlockMachine.Type.FURNACE, FURNACE)
 				.put(BlockMachine.Type.PULVERIZER, PULVERIZER)
@@ -79,7 +80,8 @@ public class TextureLocations {
 				.put(BlockMachine.Type.TRANSPOSER, TRANSPOSER)
 				.put(BlockMachine.Type.ACCUMULATOR, ACCUMULATOR)
 				.put(BlockMachine.Type.ASSEMBLER, ASSEMBLER)
-				.put(BlockMachine.Type.EXTRUDER, EXTRUDER).build();
+				.put(BlockMachine.Type.EXTRUDER, EXTRUDER)
+				.put(BlockMachine.Type.PRECIPITATOR, PRECIPITATOR).build();
 
 		public static final ResourceLocation PULVERIZER_ACTIVE = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_active_pulverizer");
 		public static final ResourceLocation FURNACE_ACTIVE = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_active_furnace");
@@ -92,6 +94,7 @@ public class TextureLocations {
 		public static final ResourceLocation ACCUMULATOR_ACTIVE = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_active_accumulator");
 		public static final ResourceLocation ASSEMBLER_ACTIVE = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_active_assembler");
 		public static final ResourceLocation EXTRUDER_ACTIVE = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_active_extruder");
+		public static final ResourceLocation PRECIPITATOR_ACTIVE = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_active_precipitator");
 		public static final ResourceLocation CENTRIFUGE_ACTIVE = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_active_centrifuge");
 		public static final Map<BlockMachine.Type, ResourceLocation> ACTIVE_FACE_MAP = ImmutableMap.<BlockMachine.Type, ResourceLocation>builder()
 				.put(BlockMachine.Type.FURNACE, FURNACE_ACTIVE)
@@ -104,7 +107,8 @@ public class TextureLocations {
 				.put(BlockMachine.Type.TRANSPOSER, TRANSPOSER_ACTIVE)
 				.put(BlockMachine.Type.ACCUMULATOR, ACCUMULATOR_ACTIVE)
 				.put(BlockMachine.Type.ASSEMBLER, ASSEMBLER_ACTIVE)
-				.put(BlockMachine.Type.EXTRUDER, EXTRUDER_ACTIVE).build();
+				.put(BlockMachine.Type.EXTRUDER, EXTRUDER_ACTIVE)
+				.put(BlockMachine.Type.PRECIPITATOR, PRECIPITATOR_ACTIVE).build();
 
 		public static final Set<ResourceLocation> ALL = ImmutableSet.<ResourceLocation>builder()
 				.addAll(SIDE_MAP.values()).addAll(FACE_MAP.values()).addAll(ACTIVE_FACE_MAP.values()).build();
