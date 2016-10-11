@@ -1,0 +1,6 @@
+{
+    "parent": "thermalexpansion:block/machine_base",
+    "textures": {
+        "front": "thermalexpansion:blocks/machine/machine_face_assembler"
+    }
+}

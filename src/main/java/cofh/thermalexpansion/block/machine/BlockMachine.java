@@ -4,13 +4,10 @@ import cofh.api.core.IInitializer;
 import cofh.api.core.IModelRegister;
 import cofh.core.util.RegistryHelper;
 import cofh.lib.util.helpers.BlockHelper;
-import cofh.lib.util.helpers.FluidHelper;
 import cofh.lib.util.helpers.ItemHelper;
 import cofh.lib.util.helpers.StringHelper;
 import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.block.BlockTEBase;
-import cofh.thermalexpansion.block.TileAugmentable;
-import cofh.thermalexpansion.block.TileReconfigurable;
 import cofh.thermalexpansion.core.TEProps;
 
 import java.util.List;
@@ -18,7 +15,6 @@ import java.util.List;
 import cofh.thermalexpansion.item.ItemAugment;
 import cofh.thermalexpansion.model.ModelMachine;
 import cofh.thermalexpansion.util.ReconfigurableHelper;
-import cofh.thermalexpansion.util.crafting.TECraftingHandler;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
@@ -39,9 +35,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -187,6 +181,8 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 				return new TileTransposer();
 			case ACCUMULATOR:
 				return new TileAccumulator();
+			case ASSEMBLER:
+				return new TileAssembler();
 			default:
 				return null;
 		}
@@ -253,6 +249,7 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		TileCrucible.initialize();
 		TileTransposer.initialize();
 		TileAccumulator.initialize();
+		TileAssembler.initialize();
 
 		if (defaultAutoTransfer) {
 			defaultAugments[0] = ItemHelper.cloneStack(ItemAugment.generalAutoOutput);
@@ -274,12 +271,11 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		/*
 		precipitator = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.PRECIPITATOR.ordinal()));
 		extruder = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.EXTRUDER.ordinal()));
-		accumulator = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.ACCUMULATOR.ordinal()));
-		assembler = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.ASSEMBLER.ordinal()));
 */
 		machineCharger = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.CHARGER.ordinal()));
 		machineInsolator = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.INSOLATOR.ordinal()));
 		machineAccumulator = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.ACCUMULATOR.ordinal()));
+		machineAssembler = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.ASSEMBLER.ordinal()));
 
 		return true;
 	}
@@ -492,6 +488,7 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		machineCharger = ItemBlockMachine.setDefaultTag(machineCharger);
 		machineInsolator = ItemBlockMachine.setDefaultTag(machineInsolator);
 		machineAccumulator = ItemBlockMachine.setDefaultTag(machineAccumulator);
+		machineAssembler = ItemBlockMachine.setDefaultTag(machineAssembler);
 	}
 
 
@@ -507,7 +504,8 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		CHARGER(5, "charger", machineCharger),
 		CRUCIBLE(6, "crucible", machineCrucible),
 		TRANSPOSER(7, "transposer", machineTransposer),
-		ACCUMULATOR(8, "accumulator", machineAccumulator);
+		ACCUMULATOR(8, "accumulator", machineAccumulator),
+		ASSEMBLER(9, "assembler", machineAssembler);
 
 
 		//TODO add additional machine types (some of them need more info)
@@ -617,5 +615,6 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	public static ItemStack machineTransposer;
 	public static ItemStack machineCentrifuge;
 	public static ItemStack machineAccumulator;
+	public static ItemStack machineAssembler;
 
 }

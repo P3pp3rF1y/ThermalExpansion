@@ -33,6 +33,7 @@ public class TEProps {
 	public static final String PATH_ENTITY = PATH_GFX + "entity/";
 	public static final String PATH_RENDER = PATH_GFX + "blocks/";
 	public static final String PATH_ELEMENTS = PATH_GUI + "elements/";
+	public static final String PATH_ICONS = PATH_GUI + "icons/";;
 
 	public static final String PATH_GUI_DEVICE = PATH_GUI + "device/";
 	public static final String PATH_GUI_DYNAMO = PATH_GUI + "dynamo/";
