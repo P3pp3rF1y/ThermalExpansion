@@ -273,7 +273,7 @@ public class TileTransposer extends TileMachineBase implements IFluidHandler {
 				processRem = 0;
 				return;
 			}
-			ItemStack output = recipe.getOutput();
+			ItemStack output = ItemHelper.cloneStack(recipe.getOutput());
 			int recipeChance = recipe.getChance();
 			if (recipeChance >= 100 || worldObj.rand.nextInt(secondaryChance) < recipeChance) {
 				if (inventory[2] == null) {
