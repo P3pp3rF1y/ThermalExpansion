@@ -23,6 +23,7 @@ import cofh.thermalfoundation.ThermalFoundation;
 
 import java.io.File;
 
+import cofh.thermalfoundation.item.TFItems;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
@@ -85,6 +86,8 @@ public class ThermalExpansion {
 
 		CONFIG.setConfiguration(new Configuration(new File(CoFHProps.configDir, "/cofh/thermalexpansion/common.cfg"), true));
 		CONFIG_CLIENT.setConfiguration(new Configuration(new File(CoFHProps.configDir, "cofh/thermalexpansion/client.cfg"), true));
+
+		configOptions();
 
 		TEBlocks.preInit();
 		TEItems.preInit();
@@ -208,17 +211,7 @@ public class ThermalExpansion {
 			@Override
 			protected ItemStack getStack() {
 
-				return null;
-				//return TEItems.powerCoilElectrum;
-			}
-		};
-		tabTools = toolTab ? tabCommon : new CreativeTabTE("Tools") {
-
-			@Override
-			protected ItemStack getStack() {
-
-				return null;
-				//return TEItems.toolWrench;
+				return TFItems.itemMaterial.powerCoilElectrum;
 			}
 		};
 		tabFlorbs = florbTab ? tabCommon : new CreativeTabTEFlorbs();
