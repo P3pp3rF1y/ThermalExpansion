@@ -185,6 +185,8 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 				return new TileCrucible();
 			case TRANSPOSER:
 				return new TileTransposer();
+			case ACCUMULATOR:
+				return new TileAccumulator();
 			default:
 				return null;
 		}
@@ -250,6 +252,7 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		TileCharger.initialize();
 		TileCrucible.initialize();
 		TileTransposer.initialize();
+		TileAccumulator.initialize();
 
 		if (defaultAutoTransfer) {
 			defaultAugments[0] = ItemHelper.cloneStack(ItemAugment.generalAutoOutput);
@@ -276,6 +279,7 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 */
 		machineCharger = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.CHARGER.ordinal()));
 		machineInsolator = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.INSOLATOR.ordinal()));
+		machineAccumulator = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.ACCUMULATOR.ordinal()));
 
 		return true;
 	}
@@ -483,16 +487,16 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 /*
 		machinePrecipitator = ItemBlockMachine.setDefaultTag(machinePrecipitator);
 		machineExtruder = ItemBlockMachine.setDefaultTag(machineExtruder);
-		machineAccumulator = ItemBlockMachine.setDefaultTag(machineAccumulator);
 		machineAssembler = ItemBlockMachine.setDefaultTag(machineAssembler);
 */
 		machineCharger = ItemBlockMachine.setDefaultTag(machineCharger);
 		machineInsolator = ItemBlockMachine.setDefaultTag(machineInsolator);
+		machineAccumulator = ItemBlockMachine.setDefaultTag(machineAccumulator);
 	}
 
 
 	/* TYPE */
-	public enum Type implements IStringSerializable {
+	public static enum Type implements IStringSerializable {
 
 		// @formatter:off
 		FURNACE(0, "furnace", machineFurnace),
@@ -502,7 +506,8 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		INSOLATOR(4, "insolator", machineInsolator),
 		CHARGER(5, "charger", machineCharger),
 		CRUCIBLE(6, "crucible", machineCrucible),
-		TRANSPOSER(7, "transposer", machineTransposer);
+		TRANSPOSER(7, "transposer", machineTransposer),
+		ACCUMULATOR(8, "accumulator", machineAccumulator);
 
 
 		//TODO add additional machine types (some of them need more info)
@@ -611,5 +616,6 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	public static ItemStack machineCrucible;
 	public static ItemStack machineTransposer;
 	public static ItemStack machineCentrifuge;
+	public static ItemStack machineAccumulator;
 
 }
