@@ -4,6 +4,7 @@ public class TECrafting {
 
 	public static void preInit() {
 
+		TECraftingHandler.initialize();
 	}
 
 	public static void initialize() {

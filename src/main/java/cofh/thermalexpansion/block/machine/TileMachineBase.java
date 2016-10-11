@@ -247,7 +247,7 @@ public abstract class TileMachineBase extends TileAugmentable implements ITickab
 		return exState.withProperty(TEProps.ACTIVE, isActive).withProperty(TEProps.FACING, EnumFacing.VALUES[facing])
 				.withProperty(TEProps.SIDE_CONFIG[0], getSideConfig(EnumFacing.DOWN))
 				.withProperty(TEProps.SIDE_CONFIG[1], getSideConfig(EnumFacing.UP))
-				.withProperty(TEProps.SIDE_CONFIG[2],  getSideConfig(EnumFacing.NORTH))
+				.withProperty(TEProps.SIDE_CONFIG[2], getSideConfig(EnumFacing.NORTH))
 				.withProperty(TEProps.SIDE_CONFIG[3], getSideConfig(EnumFacing.SOUTH))
 				.withProperty(TEProps.SIDE_CONFIG[4], getSideConfig(EnumFacing.WEST))
 				.withProperty(TEProps.SIDE_CONFIG[5], getSideConfig(EnumFacing.EAST))

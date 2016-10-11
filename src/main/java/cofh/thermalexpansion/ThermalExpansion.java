@@ -6,6 +6,9 @@ import cofh.core.network.PacketCore;
 import cofh.core.network.PacketCore.PacketTypes;
 import cofh.core.util.ConfigHandler;
 import cofh.thermalexpansion.block.TEBlocks;
+import cofh.thermalexpansion.block.device.BlockDevice;
+import cofh.thermalexpansion.block.dynamo.BlockDynamo;
+import cofh.thermalexpansion.block.machine.BlockMachine;
 import cofh.thermalexpansion.core.Proxy;
 import cofh.thermalexpansion.core.TEProps;
 import cofh.thermalexpansion.gui.CreativeTabTE;
@@ -233,6 +236,12 @@ public class ThermalExpansion {
 		ChargerManager.refreshRecipes();
 		CrucibleManager.refreshRecipes();
 		TransposerManager.refreshRecipes();
+//TODO READD
+/*
+		BlockDevice.refreshItemStacks();
+		BlockDynamo.refreshItemStacks();
+*/
+		BlockMachine.refreshItemStacks();
 	}
 
 }

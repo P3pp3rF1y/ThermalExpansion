@@ -4,6 +4,7 @@ import cofh.api.core.IInitializer;
 import cofh.api.core.IModelRegister;
 import cofh.core.util.RegistryHelper;
 import cofh.lib.util.helpers.BlockHelper;
+import cofh.lib.util.helpers.FluidHelper;
 import cofh.lib.util.helpers.ItemHelper;
 import cofh.lib.util.helpers.StringHelper;
 import cofh.thermalexpansion.ThermalExpansion;
@@ -17,6 +18,7 @@ import java.util.List;
 import cofh.thermalexpansion.item.ItemAugment;
 import cofh.thermalexpansion.model.ModelMachine;
 import cofh.thermalexpansion.util.ReconfigurableHelper;
+import cofh.thermalexpansion.util.crafting.TECraftingHandler;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
@@ -26,21 +28,20 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -91,6 +92,7 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+
 		if (stack.getTagCompound() != null) {
 			TileMachineBase tile = (TileMachineBase) world.getTileEntity(pos);
 
@@ -110,6 +112,34 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 			tile.sideCache[BlockHelper.getOppositeSide(facing)] = sideCache[BlockHelper.getOppositeSide(storedFacing)];
 		}
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
+	}
+
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		TileEntity tile = world.getTileEntity(pos);
+
+		//TODO ADD EXTRUDER AND PRECIPITATOR
+/*
+		if (tile instanceof TileExtruder || tile instanceof TilePrecipitator) {
+			if (FluidHelper.fillHandlerWithContainer(world, (IFluidHandler) tile, player)) {
+				return true;
+			}
+		}
+*/
+
+		return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
+	}
+
+	@Override
+	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+
+		return false;
+	}
+
+	@Override
+	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+
+		return true;
 	}
 
 	@Override
@@ -253,11 +283,216 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	@Override
 	public boolean postInit() {
 
+		String machineFrame = "thermalexpansion:machineFrame";
+		String copperPart = "thermalexpansion:machineCopper";
+		String invarPart = "thermalexpansion:machineInvar";
+
+		//TODO REPLACE WITH JEI
+		// @formatter:off
+/*
+		if (enable[Types.FURNACE.ordinal()]) {
+			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(furnace, defaultAugments, new Object[] {
+					" X ",
+					"YCY",
+					"IPI",
+					'C', machineFrame,
+					'I', copperPart,
+					'P', TEItems.powerCoilGold,
+					'X', "dustRedstone",
+					'Y', Blocks.brick_block
+			}));
+		}
+		if (enable[Types.PULVERIZER.ordinal()]) {
+			String category = "Machine.Pulverizer";
+			String comment = "If enabled, the Pulverizer will require Diamonds instead of Flint.";
+			Item component = ThermalExpansion.config.get(category, "RequireDiamonds", false, comment) ? Items.diamond : Items.flint;
+			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(pulverizer, defaultAugments, new Object[] {
+					" X ",
+					"YCY",
+					"IPI",
+					'C', machineFrame,
+					'I', copperPart,
+					'P', TEItems.powerCoilGold,
+					'X', Blocks.piston,
+					'Y', component
+			}));
+		}
+		if (enable[Types.SAWMILL.ordinal()]) {
+			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(sawmill, defaultAugments, new Object[] {
+					" X ",
+					"YCY",
+					"IPI",
+					'C', machineFrame,
+					'I', copperPart,
+					'P', TEItems.powerCoilGold,
+					'X', Items.iron_axe,
+					'Y', "plankWood"
+			}));
+		}
+		if (enable[Types.SMELTER.ordinal()]) {
+			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(smelter, defaultAugments, new Object[] {
+					" X ",
+					"YCY",
+					"IPI",
+					'C', machineFrame,
+					'I', invarPart,
+					'P', TEItems.powerCoilGold,
+					'X', Items.bucket,
+					'Y', "ingotInvar"
+			}));
+		}
+		if (enable[Types.CRUCIBLE.ordinal()]) {
+			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(crucible, defaultAugments, new Object[] {
+					" X ",
+					"YCY",
+					"IPI",
+					'C', machineFrame,
+					'I', invarPart,
+					'P', TEItems.powerCoilGold,
+					'X', BlockFrame.frameCellBasic,
+					'Y', Blocks.nether_brick
+			}));
+		}
+		if (enable[Types.TRANSPOSER.ordinal()]) {
+			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(transposer, defaultAugments, new Object[] {
+					" X ",
+					"YCY",
+					"IPI",
+					'C', machineFrame,
+					'I', copperPart,
+					'P', TEItems.powerCoilGold,
+					'X', Items.bucket,
+					'Y', "blockGlass"
+			}));
+		}
+		if (enable[Types.PRECIPITATOR.ordinal()]) {
+			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(precipitator, defaultAugments, new Object[] {
+					" X ",
+					"YCY",
+					"IPI",
+					'C', machineFrame,
+					'I', copperPart,
+					'P', TEItems.powerCoilGold,
+					'X', Blocks.piston,
+					'Y', "ingotInvar"
+			}));
+		}
+		if (enable[Types.EXTRUDER.ordinal()]) {
+			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(extruder, defaultAugments, new Object[] {
+					" X ",
+					"YCY",
+					"IPI",
+					'C', machineFrame,
+					'I', copperPart,
+					'P', TEItems.pneumaticServo,
+					'X', Blocks.piston,
+					'Y', "blockGlass"
+			}));
+		}
+		if (enable[Types.ACCUMULATOR.ordinal()]) {
+			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(accumulator, defaultAugments, new Object[] {
+					" X ",
+					"YCY",
+					"IPI",
+					'C', machineFrame,
+					'I', copperPart,
+					'P', TEItems.pneumaticServo,
+					'X', Items.bucket,
+					'Y', "blockGlass"
+			}));
+		}
+		if (enable[Types.ASSEMBLER.ordinal()]) {
+			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(assembler, defaultAugments, new Object[] {
+					" X ",
+					"YCY",
+					"IPI",
+					'C', machineFrame,
+					'I', copperPart,
+					'P', TEItems.powerCoilGold,
+					'X', Blocks.chest,
+					'Y', "gearTin"
+			}));
+		}
+		if (enable[Types.CHARGER.ordinal()]) {
+			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(charger, defaultAugments, new Object[] {
+					" X ",
+					"YCY",
+					"IPI",
+					'C', machineFrame,
+					'I', copperPart,
+					'P', TEItems.powerCoilGold,
+					'X', BlockFrame.frameCellBasic,
+					'Y', TEItems.powerCoilSilver
+			}));
+		}
+		if (enable[Types.INSOLATOR.ordinal()]) {
+			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(insolator, defaultAugments, new Object[] {
+					" X ",
+					"YCY",
+					"IPI",
+					'C', machineFrame,
+					'I', copperPart,
+					'P', TEItems.powerCoilGold,
+					'X', "gearLumium",
+					'Y', Blocks.dirt
+			}));
+		}
+*/
+		// @formatter:on
+//TODO READD WITH JEI
+/*
+		TECraftingHandler.addMachineUpgradeRecipes(machineFurnace);
+		TECraftingHandler.addMachineUpgradeRecipes(machinePulverizer);
+		TECraftingHandler.addMachineUpgradeRecipes(sawmill);
+		TECraftingHandler.addMachineUpgradeRecipes(smelter);
+		TECraftingHandler.addMachineUpgradeRecipes(crucible);
+		TECraftingHandler.addMachineUpgradeRecipes(transposer);
+		TECraftingHandler.addMachineUpgradeRecipes(precipitator);
+		TECraftingHandler.addMachineUpgradeRecipes(extruder);
+		TECraftingHandler.addMachineUpgradeRecipes(accumulator);
+		TECraftingHandler.addMachineUpgradeRecipes(assembler);
+		TECraftingHandler.addMachineUpgradeRecipes(charger);
+		TECraftingHandler.addMachineUpgradeRecipes(insolator);
+
+		TECraftingHandler.addSecureRecipe(furnace);
+		TECraftingHandler.addSecureRecipe(pulverizer);
+		TECraftingHandler.addSecureRecipe(sawmill);
+		TECraftingHandler.addSecureRecipe(smelter);
+		TECraftingHandler.addSecureRecipe(crucible);
+		TECraftingHandler.addSecureRecipe(transposer);
+		TECraftingHandler.addSecureRecipe(precipitator);
+		TECraftingHandler.addSecureRecipe(extruder);
+		TECraftingHandler.addSecureRecipe(accumulator);
+		TECraftingHandler.addSecureRecipe(assembler);
+		TECraftingHandler.addSecureRecipe(charger);
+		TECraftingHandler.addSecureRecipe(insolator);
+*/
+
 		return true;
 	}
 
+	public static void refreshItemStacks() {
+
+		machineFurnace = ItemBlockMachine.setDefaultTag(machineFurnace);
+		machinePulverizer = ItemBlockMachine.setDefaultTag(machinePulverizer);
+		machineSawmill = ItemBlockMachine.setDefaultTag(machineSawmill);
+		machineSmelter = ItemBlockMachine.setDefaultTag(machineSmelter);
+		machineCrucible = ItemBlockMachine.setDefaultTag(machineCrucible);
+		machineTransposer = ItemBlockMachine.setDefaultTag(machineTransposer);
+		//TODO READD
+/*
+		machinePrecipitator = ItemBlockMachine.setDefaultTag(machinePrecipitator);
+		machineExtruder = ItemBlockMachine.setDefaultTag(machineExtruder);
+		machineAccumulator = ItemBlockMachine.setDefaultTag(machineAccumulator);
+		machineAssembler = ItemBlockMachine.setDefaultTag(machineAssembler);
+*/
+		machineCharger = ItemBlockMachine.setDefaultTag(machineCharger);
+		machineInsolator = ItemBlockMachine.setDefaultTag(machineInsolator);
+	}
+
+
 	/* TYPE */
-	public static enum Type implements IStringSerializable {
+	public enum Type implements IStringSerializable {
 
 		// @formatter:off
 		FURNACE(0, "furnace", machineFurnace),
