@@ -183,6 +183,8 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 				return new TileAccumulator();
 			case ASSEMBLER:
 				return new TileAssembler();
+			case EXTRUDER:
+				return new TileExtruder();
 			default:
 				return null;
 		}
@@ -250,6 +252,7 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		TileTransposer.initialize();
 		TileAccumulator.initialize();
 		TileAssembler.initialize();
+		TileExtruder.initialize();
 
 		if (defaultAutoTransfer) {
 			defaultAugments[0] = ItemHelper.cloneStack(ItemAugment.generalAutoOutput);
@@ -276,6 +279,7 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		machineInsolator = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.INSOLATOR.ordinal()));
 		machineAccumulator = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.ACCUMULATOR.ordinal()));
 		machineAssembler = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.ASSEMBLER.ordinal()));
+		machineExtruder = ItemBlockMachine.setDefaultTag(new ItemStack(this, 1, Type.EXTRUDER.ordinal()));
 
 		return true;
 	}
@@ -482,13 +486,12 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		//TODO READD
 /*
 		machinePrecipitator = ItemBlockMachine.setDefaultTag(machinePrecipitator);
-		machineExtruder = ItemBlockMachine.setDefaultTag(machineExtruder);
-		machineAssembler = ItemBlockMachine.setDefaultTag(machineAssembler);
 */
 		machineCharger = ItemBlockMachine.setDefaultTag(machineCharger);
 		machineInsolator = ItemBlockMachine.setDefaultTag(machineInsolator);
 		machineAccumulator = ItemBlockMachine.setDefaultTag(machineAccumulator);
 		machineAssembler = ItemBlockMachine.setDefaultTag(machineAssembler);
+		machineExtruder = ItemBlockMachine.setDefaultTag(machineExtruder);
 	}
 
 
@@ -505,7 +508,8 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		CRUCIBLE(6, "crucible", machineCrucible),
 		TRANSPOSER(7, "transposer", machineTransposer),
 		ACCUMULATOR(8, "accumulator", machineAccumulator),
-		ASSEMBLER(9, "assembler", machineAssembler);
+		ASSEMBLER(9, "assembler", machineAssembler),
+		EXTRUDER(10, "extruder", machineExtruder);
 
 
 		//TODO add additional machine types (some of them need more info)
@@ -616,5 +620,6 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	public static ItemStack machineCentrifuge;
 	public static ItemStack machineAccumulator;
 	public static ItemStack machineAssembler;
+	public static ItemStack machineExtruder;
 
 }

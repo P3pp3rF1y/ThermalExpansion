@@ -156,7 +156,7 @@ public class TileAccumulator extends TileMachineBase implements IFluidHandler {
 		for (int i = outputTrackerFluid + 1; i <= outputTrackerFluid + 6; i++) {
 			side = i % 6;
 
-			if (sideCache[side] == 2) {
+			if (sideCache[side] == 1) {
 				int toDrain = FluidHelper.fillAdjacentFluidHandler(this, EnumFacing.VALUES[side], outputBuffer, true);
 
 				if (toDrain > 0) {
