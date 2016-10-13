@@ -103,17 +103,17 @@ info.thermalexpansion.modeSend=Nur Senden
 info.thermalexpansion.modeSendRecv=Senden/Empfangen
 
 #Smelter
-info.thermalexpansion.smelter.toggleLock=Sperre Fluxslot
-info.thermalexpansion.smelter.toggleUnlock=Öffne Fluxslot
+gui.thermalexpansion.smelter.toggleLock=Sperre Fluxslot
+gui.thermalexpansion.smelter.toggleUnlock=Öffne Fluxslot
 
 #Transposer
-info.thermalexpansion.transposer.toggleEmpty=Schalte: Leeren
-info.thermalexpansion.transposer.toggleFill=Schalte: Füllen
-info.thermalexpansion.transposer.toggleWait=Geschaltet
+gui.thermalexpansion.transposer.toggleEmpty=Schalte: Leeren
+gui.thermalexpansion.transposer.toggleFill=Schalte: Füllen
+gui.thermalexpansion.transposer.toggleWait=Geschaltet
 
 #Insolator
-info.thermalexpansion.insolator.toggleLock=Sperre Düngerslot
-info.thermalexpansion.insolator.toggleUnlock=Öffne Düngerslot
+gui.thermalexpansion.insolator.toggleLock=Sperre Düngerslot
+gui.thermalexpansion.insolator.toggleUnlock=Öffne Düngerslot
 
 #Plates
 info.thermalexpansion.distance=Entfernung

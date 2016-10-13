@@ -104,17 +104,17 @@ info.thermalexpansion.modeSend=보내기
 info.thermalexpansion.modeSendRecv=받기/보내기
 
 #제련기(Smelter)
-info.thermalexpansion.smelter.toggleLock=촉매 슬롯 잠금
-info.thermalexpansion.smelter.toggleUnlock=촉매 슬롯 잠금 해제
+gui.thermalexpansion.smelter.toggleLock=촉매 슬롯 잠금
+gui.thermalexpansion.smelter.toggleUnlock=촉매 슬롯 잠금 해제
 
 #액체 운송기(Transposer)
-info.thermalexpansion.transposer.toggleEmpty=전환: 비우기
-info.thermalexpansion.transposer.toggleFill=전환: 채우기
-info.thermalexpansion.transposer.toggleWait=토글
+gui.thermalexpansion.transposer.toggleEmpty=전환: 비우기
+gui.thermalexpansion.transposer.toggleFill=전환: 채우기
+gui.thermalexpansion.transposer.toggleWait=토글
 
 #식물 성장기(Insolator)
-info.thermalexpansion.insolator.toggleLock=비료 슬롯 잠금
-info.thermalexpansion.insolator.toggleUnlock=비료 슬롯 잠금 해제
+gui.thermalexpansion.insolator.toggleLock=비료 슬롯 잠금
+gui.thermalexpansion.insolator.toggleUnlock=비료 슬롯 잠금 해제
 
 #플레이트(Plates)
 info.thermalexpansion.distance=범위

@@ -103,17 +103,17 @@ info.thermalexpansion.modeSend=Только отправлять
 info.thermalexpansion.modeSendRecv=Отправлять/Принимать
 
 #Smelter
-info.thermalexpansion.smelter.toggleLock=Закрыть флакс-слот
-info.thermalexpansion.smelter.toggleUnlock=Открыть флакс-слот
+gui.thermalexpansion.smelter.toggleLock=Закрыть флакс-слот
+gui.thermalexpansion.smelter.toggleUnlock=Открыть флакс-слот
 
 #Transposer
-info.thermalexpansion.transposer.toggleEmpty=Переключить: Опустошение
-info.thermalexpansion.transposer.toggleFill=Переключить: Заполнение
-info.thermalexpansion.transposer.toggleWait=Переключено
+gui.thermalexpansion.transposer.toggleEmpty=Переключить: Опустошение
+gui.thermalexpansion.transposer.toggleFill=Переключить: Заполнение
+gui.thermalexpansion.transposer.toggleWait=Переключено
 
 #Insolator
-info.thermalexpansion.insolator.toggleLock=Закрыть слот удобрения
-info.thermalexpansion.insolator.toggleUnlock=Открыть слот удобрения
+gui.thermalexpansion.insolator.toggleLock=Закрыть слот удобрения
+gui.thermalexpansion.insolator.toggleUnlock=Открыть слот удобрения
 
 #Plates
 info.thermalexpansion.distance=Дистанция

@@ -104,17 +104,17 @@ info.thermalexpansion.modeSend=Odesílat pouze
 info.thermalexpansion.modeSendRecv=Odesílat/Přijímat
 
 #Smelter
-info.thermalexpansion.smelter.toggleLock=Uzamknout slot Fluxu
-info.thermalexpansion.smelter.toggleUnlock=Odemknout slot Fluxu
+gui.thermalexpansion.smelter.toggleLock=Uzamknout slot Fluxu
+gui.thermalexpansion.smelter.toggleUnlock=Odemknout slot Fluxu
 
 #Transposer
-info.thermalexpansion.transposer.toggleEmpty=Přepnuto: Vyprázdnit
-info.thermalexpansion.transposer.toggleFill=Přepnuto: Naplnit
-info.thermalexpansion.transposer.toggleWait=Přepnuto
+gui.thermalexpansion.transposer.toggleEmpty=Přepnuto: Vyprázdnit
+gui.thermalexpansion.transposer.toggleFill=Přepnuto: Naplnit
+gui.thermalexpansion.transposer.toggleWait=Přepnuto
 
 #Insolator
-info.thermalexpansion.insolator.toggleLock=Uzamknout slot hnojiva
-info.thermalexpansion.insolator.toggleUnlock=Odemknout slot hnojiva
+gui.thermalexpansion.insolator.toggleLock=Uzamknout slot hnojiva
+gui.thermalexpansion.insolator.toggleUnlock=Odemknout slot hnojiva
 
 #Plates
 info.thermalexpansion.distance=Vzdálenost

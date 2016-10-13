@@ -103,17 +103,17 @@ info.thermalexpansion.modeSend=Send Only
 info.thermalexpansion.modeSendRecv=Send/Receive
 
 #Smelter
-info.thermalexpansion.smelter.toggleLock=Lock Flux Slot
-info.thermalexpansion.smelter.toggleUnlock=Unlock Flux Slot
+gui.thermalexpansion.smelter.toggleLock=Lock Flux Slot
+gui.thermalexpansion.smelter.toggleUnlock=Unlock Flux Slot
 
 #Transposer
-info.thermalexpansion.transposer.toggleEmpty=Toggle: Empty
-info.thermalexpansion.transposer.toggleFill=Toggle: Fill
-info.thermalexpansion.transposer.toggleWait=Toggled
+gui.thermalexpansion.transposer.toggleEmpty=Toggle: Empty
+gui.thermalexpansion.transposer.toggleFill=Toggle: Fill
+gui.thermalexpansion.transposer.toggleWait=Toggled
 
 #Insolator
-info.thermalexpansion.insolator.toggleLock=Lock Fertilizer Slot
-info.thermalexpansion.insolator.toggleUnlock=Unlock Fertilizer Slot
+gui.thermalexpansion.insolator.toggleLock=Lock Fertilizer Slot
+gui.thermalexpansion.insolator.toggleUnlock=Unlock Fertilizer Slot
 
 #Plates
 info.thermalexpansion.distance=Distance

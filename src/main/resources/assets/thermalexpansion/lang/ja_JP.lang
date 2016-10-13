@@ -105,17 +105,17 @@ info.thermalexpansion.modeSend=送信のみ
 info.thermalexpansion.modeSendRecv=送受信
 
 #Smelter
-info.thermalexpansion.smelter.toggleLock=融剤スロットの固定
-info.thermalexpansion.smelter.toggleUnlock=融剤スロットの解放
+gui.thermalexpansion.smelter.toggleLock=融剤スロットの固定
+gui.thermalexpansion.smelter.toggleUnlock=融剤スロットの解放
 
 #Transposer
-info.thermalexpansion.transposer.toggleEmpty=空にする
-info.thermalexpansion.transposer.toggleFill=満たす
-info.thermalexpansion.transposer.toggleWait=Toggled
+gui.thermalexpansion.transposer.toggleEmpty=空にする
+gui.thermalexpansion.transposer.toggleFill=満たす
+gui.thermalexpansion.transposer.toggleWait=Toggled
 
 #Insolator
-info.thermalexpansion.insolator.toggleLock=肥料スロットの固定
-info.thermalexpansion.insolator.toggleUnlock=肥料スロットの解放
+gui.thermalexpansion.insolator.toggleLock=肥料スロットの固定
+gui.thermalexpansion.insolator.toggleUnlock=肥料スロットの解放
 
 #Plates
 info.thermalexpansion.distance=距離

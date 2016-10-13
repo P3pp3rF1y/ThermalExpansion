@@ -103,17 +103,17 @@ info.thermalexpansion.modeSend=Solo Enviar
 info.thermalexpansion.modeSendRecv=Enviar/Recibir
 
 #Smelter
-info.thermalexpansion.smelter.toggleLock=Cerrar Ranura de Flux
-info.thermalexpansion.smelter.toggleUnlock=Abrir Ranura de Flux 
+gui.thermalexpansion.smelter.toggleLock=Cerrar Ranura de Flux
+gui.thermalexpansion.smelter.toggleUnlock=Abrir Ranura de Flux
 
 #Transposer
-info.thermalexpansion.transposer.toggleEmpty=Alternar: Vaciar
-info.thermalexpansion.transposer.toggleFill=Alternar: Rellenar
-info.thermalexpansion.transposer.toggleWait=Alternar
+gui.thermalexpansion.transposer.toggleEmpty=Alternar: Vaciar
+gui.thermalexpansion.transposer.toggleFill=Alternar: Rellenar
+gui.thermalexpansion.transposer.toggleWait=Alternar
 
 #Insolator
-info.thermalexpansion.insolator.toggleLock=Cerrar Ranura de Fertilizante
-info.thermalexpansion.insolator.toggleUnlock=Abrir Ranura de Fertilizante
+gui.thermalexpansion.insolator.toggleLock=Cerrar Ranura de Fertilizante
+gui.thermalexpansion.insolator.toggleUnlock=Abrir Ranura de Fertilizante
 
 #Plates
 info.thermalexpansion.distance=Distancia

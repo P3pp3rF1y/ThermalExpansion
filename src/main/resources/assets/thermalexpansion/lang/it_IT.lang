@@ -104,17 +104,17 @@ info.thermalexpansion.modeSend=Manda solo
 info.thermalexpansion.modeSendRecv=Manda/Ricevi
 
 #Smelter
-info.thermalexpansion.smelter.toggleLock=Blocca slot per separatori
-info.thermalexpansion.smelter.toggleUnlock=Sblocca slot per separatori
+gui.thermalexpansion.smelter.toggleLock=Blocca slot per separatori
+gui.thermalexpansion.smelter.toggleUnlock=Sblocca slot per separatori
 
 #Transposer
-info.thermalexpansion.transposer.toggleEmpty=Alterna: svuota
-info.thermalexpansion.transposer.toggleFill=Alterna: riempi
-info.thermalexpansion.transposer.toggleWait=Alternato
+gui.thermalexpansion.transposer.toggleEmpty=Alterna: svuota
+gui.thermalexpansion.transposer.toggleFill=Alterna: riempi
+gui.thermalexpansion.transposer.toggleWait=Alternato
 
 #Insolator
-info.thermalexpansion.insolator.toggleLock=Blocca slot per fertilizzante
-info.thermalexpansion.insolator.toggleUnlock=Sblocca slot per fertilizzante
+gui.thermalexpansion.insolator.toggleLock=Blocca slot per fertilizzante
+gui.thermalexpansion.insolator.toggleUnlock=Sblocca slot per fertilizzante
 
 #Plates
 info.thermalexpansion.distance=Distanza
