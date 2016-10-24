@@ -11,14 +11,20 @@ import cofh.lib.util.helpers.MathHelper;
 import cofh.lib.util.helpers.RedstoneControlHelper;
 import cofh.lib.util.helpers.ServerHelper;
 import cofh.thermalexpansion.ThermalExpansion;
+import cofh.thermalexpansion.block.BlockTEBase;
 import cofh.thermalexpansion.block.TileReconfigurable;
 import cofh.thermalexpansion.gui.client.GuiCell;
 import cofh.thermalexpansion.gui.container.ContainerTEBase;
 
+import cofh.thermalexpansion.model.TextureLocations;
 import cofh.thermalexpansion.util.ReconfigurableHelper;
+import cofh.thermalfoundation.fluid.TFFluids;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.EnumPacketDirection;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -44,6 +50,7 @@ public class TileCell extends TileReconfigurable implements IEnergyProvider, ITi
 	public static boolean enableSecurity = true;
 
 	public static final byte[] DEFAULT_SIDES = { 1, 2, 2, 2, 2, 2 };
+	private static final byte[] sideTex = {0, 1, 4};
 
 	int compareTracker;
 	byte meterTracker;
@@ -280,8 +287,32 @@ public class TileCell extends TileReconfigurable implements IEnergyProvider, ITi
 	}
 
 	/* NETWORK METHODS */
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
 
-	packets !!!!!!
+		SPacketUpdateTileEntity packet = super.getUpdatePacket();
+		NBTTagCompound nbt = packet.getNbtCompound();
+
+		nbt.setInteger("energySend", energySend);
+		nbt.setInteger("energyReceive", energyReceive);
+		nbt.setInteger("energyStorage", energyStorage.getEnergyStored());
+
+		return packet;
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+
+		super.onDataPacket(net, pkt);
+
+		if (net.getDirection() == EnumPacketDirection.CLIENTBOUND) {
+			NBTTagCompound nbt = pkt.getNbtCompound();
+
+			energySend = nbt.getInteger("energySend");
+			energyReceive = nbt.getInteger("energyReceive");
+			energyStorage.setEnergyStored(nbt.getInteger("energyStorage"));
+		}
+	}
 
 	@Override
 	public PacketCoFHBase getPacket() {
@@ -449,17 +480,22 @@ public class TileCell extends TileReconfigurable implements IEnergyProvider, ITi
 	public ResourceLocation getTexture(EnumFacing side, int pass) {
 
 		if (pass == 0) {
-			return type.getMetadata() < 2 ? IconRegistry.getIcon("StorageRedstone") : IconRegistry.getIcon("FluidRedstone");
+			return type.getMetadata() < 2 ? TextureLocations.Cell.CENTER_SOLID : TFFluids.fluidRedstone.getStill();
 		} else if (pass == 1) {
-			return IconRegistry.getIcon("Cell", type * 2);
+			return TextureLocations.Cell.FACE_MAP.get(type);
 		} else if (pass == 2) {
-			return IconRegistry.getIcon(BlockCell.textureSelection, sideCache[side]);
+			return TextureLocations.Cell.CONFIG_MAP.get(getSideConfig(side));
 		}
-		if (side != facing) {
-			return IconRegistry.getIcon(BlockCell.textureSelection, 0);
+		if (side.getIndex() != facing) {
+			return TextureLocations.Config.NONE;
 		}
 		int stored = Math.min(8, getScaledEnergyStored(9));
-		return IconRegistry.getIcon("CellMeter", stored);
+		return TextureLocations.Cell.METER_MAP.get(stored);
+	}
+
+	protected BlockTEBase.EnumSideConfig getSideConfig(EnumFacing side) {
+
+		return BlockTEBase.EnumSideConfig.values()[sideTex[sideCache[side.ordinal()]]];
 	}
 
 }
