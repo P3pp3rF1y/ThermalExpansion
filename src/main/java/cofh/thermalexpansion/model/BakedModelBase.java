@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-abstract class BakedModelBase implements IBakedModel {
+abstract class BakedModelBase extends BakedPerspectiveModelBase {
 
 	static final Vec3d[] NORTH_FACE = new Vec3d[] { new Vec3d(1, 1, 0), new Vec3d(1, 0, 0), new Vec3d(0, 0, 0),
 			new Vec3d(0, 1, 0) };

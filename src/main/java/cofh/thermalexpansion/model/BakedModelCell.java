@@ -83,7 +83,14 @@ public class BakedModelCell extends BakedModelBase {
 		return getSpriteFromLocation(TextureLocations.Cell.FACE_MAP.get(type));
 	}
 
-	@Override public boolean isAmbientOcclusion() {
+	@Override
+	public boolean isGui3d() {
+
+		return true;
+	}
+
+	@Override
+	public boolean isAmbientOcclusion() {
 
 		return true;
 	}
