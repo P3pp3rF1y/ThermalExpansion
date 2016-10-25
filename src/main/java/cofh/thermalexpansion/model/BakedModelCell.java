@@ -1,6 +1,8 @@
 package cofh.thermalexpansion.model;
 
+import cofh.thermalexpansion.block.BlockTEBase;
 import cofh.thermalexpansion.block.cell.BlockCell;
+import cofh.thermalexpansion.core.TEProps;
 import cofh.thermalfoundation.fluid.TFFluids;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
@@ -18,6 +20,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.model.IModelState;
+import net.minecraftforge.common.property.IExtendedBlockState;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -44,11 +47,25 @@ public class BakedModelCell extends BakedModelBase {
 
 		BlockRenderLayer layer = MinecraftForgeClient.getRenderLayer();
 		List<BakedQuad> quads = new ArrayList<>();
+		IExtendedBlockState exState = (IExtendedBlockState) state;
 
+		//TODO clean this so that it's more readable, get caching in place
 		if (layer == null || layer == BlockRenderLayer.CUTOUT) {
 			for (EnumFacing facing : EnumFacing.VALUES) {
 				quads.add(createInsetFullFaceQuad(facing, 0.8125, getInnerTexture()));
 				quads.add(createFullFaceQuad(facing, getFaceTexture()));
+
+				if (exState != null) {
+					if (facing == exState.getValue(TEProps.FACING)) {
+						if (type == BlockCell.Type.CREATIVE) {
+							quads.add(createFullFaceQuad(facing, getCreativeMeterTexture()));
+						} else {
+							quads.add(createFullFaceQuad(facing, getMeterTexture(exState.getValue(BlockCell.METER))));
+						}
+					} else {
+						quads.add(createFullFaceQuad(facing, getConfigTexture(exState.getValue(TEProps.SIDE_CONFIG[facing.ordinal()]))));
+					}
+				}
 			}
 
 			if (type == BlockCell.Type.BASIC || type == BlockCell.Type.HARDENED) {
@@ -62,6 +79,21 @@ public class BakedModelCell extends BakedModelBase {
 		}
 
 		return quads;
+	}
+
+	private TextureAtlasSprite getConfigTexture(BlockTEBase.EnumSideConfig config) {
+
+		return getSpriteFromLocation(TextureLocations.Cell.CONFIG_MAP.get(config));
+	}
+
+	private TextureAtlasSprite getMeterTexture(int meterTracker) {
+
+		return getSpriteFromLocation(TextureLocations.Cell.METER_MAP.get(meterTracker));
+	}
+
+	private TextureAtlasSprite getCreativeMeterTexture() {
+
+		return getSpriteFromLocation(TextureLocations.Cell.METER_CREATIVE);
 	}
 
 	private TextureAtlasSprite getCenterTexture() {

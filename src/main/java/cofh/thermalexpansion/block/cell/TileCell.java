@@ -89,7 +89,8 @@ public class TileCell extends TileReconfigurable implements IEnergyProvider, ITi
 				.withProperty(TEProps.SIDE_CONFIG[2], getSideConfig(EnumFacing.NORTH))
 				.withProperty(TEProps.SIDE_CONFIG[3], getSideConfig(EnumFacing.SOUTH))
 				.withProperty(TEProps.SIDE_CONFIG[4], getSideConfig(EnumFacing.WEST))
-				.withProperty(TEProps.SIDE_CONFIG[5], getSideConfig(EnumFacing.EAST));
+				.withProperty(TEProps.SIDE_CONFIG[5], getSideConfig(EnumFacing.EAST))
+				.withProperty(BlockCell.METER, Math.min(8, getScaledEnergyStored(9)));
 	}
 
 	@Override

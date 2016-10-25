@@ -206,13 +206,14 @@ public class TextureLocations {
 		}
 
 		public static final ResourceLocation METER_CREATIVE = new ResourceLocation(ThermalExpansion.modId,
-				"blocks/cell/cell_meter_creative.png");
+				"blocks/cell/cell_meter_creative");
 
 		public static final ResourceLocation CENTER_SOLID = new ResourceLocation(ThermalExpansion.modId,
 				"blocks/cell/cell_center_solid");
 
 		public static final Set<ResourceLocation> ALL = ImmutableSet.<ResourceLocation>builder()
-				.addAll(FACE_MAP.values()).addAll(INNER_MAP.values()).add(BLUE).add(ORANGE).add(METER_CREATIVE).add(CENTER_SOLID)
+				.addAll(FACE_MAP.values()).addAll(INNER_MAP.values()).add(BLUE).add(ORANGE).addAll(METER_MAP.values())
+				.add(METER_CREATIVE).add(CENTER_SOLID)
 				.build();
 	}
 

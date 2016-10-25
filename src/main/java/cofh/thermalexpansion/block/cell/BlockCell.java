@@ -14,6 +14,7 @@ import cofh.thermalexpansion.util.ReconfigurableHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -26,7 +27,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
@@ -34,6 +38,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -42,6 +47,7 @@ import java.util.List;
 public class BlockCell extends BlockTEBase implements IModelRegister {
 
 	public static final PropertyEnum<Type> TYPE = PropertyEnum.create("type", Type.class);
+	public static final IUnlistedProperty<Integer> METER = Properties.toUnlisted(PropertyInteger.create("meter", 0, 8));
 
 	public BlockCell() {
 
@@ -57,7 +63,7 @@ public class BlockCell extends BlockTEBase implements IModelRegister {
 		return new ExtendedBlockState(this,
 				new IProperty[] { TYPE },
 				new IUnlistedProperty[] { TEProps.FACING, TEProps.SIDE_CONFIG[0], TEProps.SIDE_CONFIG[1],
-						TEProps.SIDE_CONFIG[2], TEProps.SIDE_CONFIG[3], TEProps.SIDE_CONFIG[4], TEProps.SIDE_CONFIG[5] }
+						TEProps.SIDE_CONFIG[2], TEProps.SIDE_CONFIG[3], TEProps.SIDE_CONFIG[4], TEProps.SIDE_CONFIG[5], METER }
 		);
 	}
 
@@ -181,6 +187,7 @@ public class BlockCell extends BlockTEBase implements IModelRegister {
 
 		return true;
 	}
+
 	@Override
 	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 
@@ -234,7 +241,8 @@ public class BlockCell extends BlockTEBase implements IModelRegister {
 		for (Type type : Type.values()) {
 			ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(
 					ModelCell.BASE_MODEL_LOCATION.toString(), "type=" + type.getName());
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), type.getMetadata(), itemModelResourceLocation);
+			ModelLoader
+					.setCustomModelResourceLocation(Item.getItemFromBlock(this), type.getMetadata(), itemModelResourceLocation);
 		}
 
 	}
