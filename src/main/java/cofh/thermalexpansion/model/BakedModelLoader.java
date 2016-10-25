@@ -32,7 +32,7 @@ public class BakedModelLoader implements ICustomModelLoader {
 
 	private boolean isSubModelOf(ResourceLocation modelLocation, ResourceLocation baseModel) {
 
-		if (modelLocation.getResourceDomain() != baseModel.getResourceDomain())
+		if (!modelLocation.getResourceDomain().equals(baseModel.getResourceDomain()))
 			return false;
 
 		return modelLocation.getResourcePath().startsWith(baseModel.getResourcePath());

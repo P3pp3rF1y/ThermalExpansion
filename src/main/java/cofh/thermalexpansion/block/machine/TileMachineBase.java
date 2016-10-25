@@ -242,7 +242,7 @@ public abstract class TileMachineBase extends TileAugmentable implements ITickab
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
 
-		IExtendedBlockState exState = (IExtendedBlockState) state;
+		IExtendedBlockState exState = (IExtendedBlockState) super.getExtendedState(state, world, pos);
 
 		return exState.withProperty(TEProps.ACTIVE, isActive).withProperty(TEProps.FACING, EnumFacing.VALUES[facing])
 				.withProperty(TEProps.SIDE_CONFIG[0], getSideConfig(EnumFacing.DOWN))

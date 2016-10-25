@@ -13,12 +13,14 @@ import cofh.lib.util.helpers.ServerHelper;
 import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.block.BlockTEBase;
 import cofh.thermalexpansion.block.TileReconfigurable;
+import cofh.thermalexpansion.core.TEProps;
 import cofh.thermalexpansion.gui.client.GuiCell;
 import cofh.thermalexpansion.gui.container.ContainerTEBase;
 
 import cofh.thermalexpansion.model.TextureLocations;
 import cofh.thermalexpansion.util.ReconfigurableHelper;
 import cofh.thermalfoundation.fluid.TFFluids;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,6 +32,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -72,6 +76,20 @@ public class TileCell extends TileReconfigurable implements IEnergyProvider, ITi
 
 		type = BlockCell.Type.byMetadata(metadata);
 		energyStorage = new EnergyStorage(type.getCapacity(), type.getMaxReceive());
+	}
+
+	@Override
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+
+		IExtendedBlockState exState = (IExtendedBlockState) super.getExtendedState(state, world, pos);
+
+		return exState.withProperty(TEProps.FACING, EnumFacing.VALUES[facing])
+				.withProperty(TEProps.SIDE_CONFIG[0], getSideConfig(EnumFacing.DOWN))
+				.withProperty(TEProps.SIDE_CONFIG[1], getSideConfig(EnumFacing.UP))
+				.withProperty(TEProps.SIDE_CONFIG[2], getSideConfig(EnumFacing.NORTH))
+				.withProperty(TEProps.SIDE_CONFIG[3], getSideConfig(EnumFacing.SOUTH))
+				.withProperty(TEProps.SIDE_CONFIG[4], getSideConfig(EnumFacing.WEST))
+				.withProperty(TEProps.SIDE_CONFIG[5], getSideConfig(EnumFacing.EAST));
 	}
 
 	@Override

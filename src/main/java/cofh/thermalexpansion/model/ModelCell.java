@@ -4,8 +4,8 @@ import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.block.cell.BlockCell;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
@@ -27,14 +27,11 @@ public class ModelCell implements IModel {
 
 	static Map<BlockCell.Type, BakedModelCell> bakedModels = new HashMap<>();
 
-	private Set<ResourceLocation> textures;
 	private BlockCell.Type type;
 
-	public ModelCell(BlockCell.Type type) {
+	private ModelCell(BlockCell.Type type) {
 
 		this.type = type;
-
-		textures = ImmutableSet.of(TextureLocations.Cell.FACE_MAP.get(type), TextureLocations.Cell.INNER_MAP.get(type));
 	}
 
 	@Override
@@ -46,16 +43,21 @@ public class ModelCell implements IModel {
 	@Override
 	public Collection<ResourceLocation> getTextures() {
 
-		return textures;
+		return Collections.emptySet();
 	}
 
 	@Override
 	public IBakedModel bake(IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
 
-		bakedModels.put(type, new BakedModelCell(state, format, bakedTextureGetter));
+		if (type == null) {
+			return new BakedModelCell(state, format, bakedTextureGetter);
+		}
 
-		return null;
+		BakedModelCell bakedModel = new BakedModelCell(type, state, format, bakedTextureGetter);
+		bakedModels.put(type, bakedModel);
+
+		return bakedModel;
 	}
 
 	@Override
@@ -66,11 +68,11 @@ public class ModelCell implements IModel {
 
 	public static IModel getModel(ResourceLocation modelLocation) {
 
-		String resourcePath = modelLocation.getResourcePath();
+		String variant = ((ModelResourceLocation) modelLocation).getVariant();
 
 		for (BlockCell.Type type : MODELS.keySet()) {
 			//TODO optimize the String handling
-			if (resourcePath.endsWith(BlockCell.Type.CREATIVE.getName())) {
+			if (variant.endsWith(type.getName())) {
 				return MODELS.get(type);
 			}
 		}

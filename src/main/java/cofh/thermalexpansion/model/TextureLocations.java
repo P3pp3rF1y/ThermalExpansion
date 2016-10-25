@@ -7,16 +7,19 @@ import cofh.thermalexpansion.block.cell.BlockCell;
 import cofh.thermalexpansion.block.machine.BlockMachine;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class TextureLocations {
 
-	private static Map<ResourceLocation, ResourceLocation> txCache = new HashMap<>();
 	private static final String CB_SUFFIX = CoFHProps.enableColorBlindTextures ? "_cb" : "";
 
 	public static final ResourceLocation MISSING = new ResourceLocation("missingno");
@@ -149,15 +152,15 @@ public class TextureLocations {
 	public static class Cell {
 
 		public static final ResourceLocation CREATIVE = new ResourceLocation(ThermalExpansion.modId,
-				"blocks/cell/cell_basic.png");
+				"blocks/cell/cell_creative");
 		public static final ResourceLocation BASIC = new ResourceLocation(ThermalExpansion.modId,
-				"blocks/cell/cell_basic.png");
+				"blocks/cell/cell_basic");
 		public static final ResourceLocation HARDENED = new ResourceLocation(ThermalExpansion.modId,
-				"blocks/cell/cell_basic.png");
+				"blocks/cell/cell_hardened");
 		public static final ResourceLocation REINFORCED = new ResourceLocation(ThermalExpansion.modId,
-				"blocks/cell/cell_basic.png");
+				"blocks/cell/cell_reinforced");
 		public static final ResourceLocation RESONANT = new ResourceLocation(ThermalExpansion.modId,
-				"blocks/cell/cell_basic.png");
+				"blocks/cell/cell_resonant");
 		public static final Map<BlockCell.Type, ResourceLocation> FACE_MAP = ImmutableMap.<BlockCell.Type, ResourceLocation>builder()
 				.put(BlockCell.Type.CREATIVE, CREATIVE)
 				.put(BlockCell.Type.BASIC, BASIC)
@@ -166,15 +169,15 @@ public class TextureLocations {
 				.put(BlockCell.Type.RESONANT, RESONANT).build();
 
 		public static final ResourceLocation CREATIVE_INNER = new ResourceLocation(ThermalExpansion.modId,
-				"blocks/cell/cell_basic.png");
+				"blocks/cell/cell_creative_inner");
 		public static final ResourceLocation BASIC_INNER = new ResourceLocation(ThermalExpansion.modId,
-				"blocks/cell/cell_basic.png");
+				"blocks/cell/cell_basic_inner");
 		public static final ResourceLocation HARDENED_INNER = new ResourceLocation(ThermalExpansion.modId,
-				"blocks/cell/cell_basic.png");
+				"blocks/cell/cell_hardened_inner");
 		public static final ResourceLocation REINFORCED_INNER = new ResourceLocation(ThermalExpansion.modId,
-				"blocks/cell/cell_basic.png");
+				"blocks/cell/cell_reinforced_inner");
 		public static final ResourceLocation RESONANT_INNER = new ResourceLocation(ThermalExpansion.modId,
-				"blocks/cell/cell_basic.png");
+				"blocks/cell/cell_resonant_inner");
 		public static final Map<BlockCell.Type, ResourceLocation> INNER_MAP = ImmutableMap.<BlockCell.Type, ResourceLocation>builder()
 				.put(BlockCell.Type.CREATIVE, CREATIVE_INNER)
 				.put(BlockCell.Type.BASIC, BASIC_INNER)
@@ -201,11 +204,25 @@ public class TextureLocations {
 
 			METER_MAP = builder.build();
 		}
+
 		public static final ResourceLocation METER_CREATIVE = new ResourceLocation(ThermalExpansion.modId,
 				"blocks/cell/cell_meter_creative.png");
 
 		public static final ResourceLocation CENTER_SOLID = new ResourceLocation(ThermalExpansion.modId,
 				"blocks/cell/cell_center_solid.png");
 
+		public static final Set<ResourceLocation> ALL = ImmutableSet.<ResourceLocation>builder()
+				.addAll(FACE_MAP.values()).addAll(INNER_MAP.values()).add(BLUE).add(ORANGE).add(METER_CREATIVE).add(CENTER_SOLID)
+				.build();
+	}
+
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void onTextureStitch(TextureStitchEvent.Pre event) {
+
+		TextureMap textureMap = event.getMap();
+		for (ResourceLocation rl : Cell.ALL) {
+			textureMap.registerSprite(rl);
+		}
 	}
 }

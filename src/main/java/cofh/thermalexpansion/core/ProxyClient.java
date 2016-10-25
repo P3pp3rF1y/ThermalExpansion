@@ -25,6 +25,7 @@ public class ProxyClient extends Proxy {
 		super.preInit(event);
 
 		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new TextureLocations());
 
 		ModelLoaderRegistry.registerLoader(new BakedModelLoader());
 

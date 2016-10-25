@@ -86,7 +86,7 @@ public class BakedModelMachine extends BakedModelBase {
 
 	private TextureAtlasSprite getFluidTexture(String fluidName) {
 
-		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluidName);
+		return getSpriteFromTextureName(fluidName);
 	}
 
 	private TextureAtlasSprite getConfigTexture(BlockTEBase.EnumSideConfig config) {

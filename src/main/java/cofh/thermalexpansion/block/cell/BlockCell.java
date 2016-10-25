@@ -1,46 +1,45 @@
 package cofh.thermalexpansion.block.cell;
 
-import static cofh.lib.util.helpers.ItemHelper.ShapedRecipe;
+import cofh.api.core.IModelRegister;
 import cofh.core.util.CoreUtils;
 import cofh.core.util.RegistryHelper;
-import cofh.core.util.crafting.RecipeUpgradeOverride;
 import cofh.lib.util.helpers.BlockHelper;
-import cofh.lib.util.helpers.ItemHelper;
 import cofh.lib.util.helpers.MathHelper;
 import cofh.lib.util.helpers.StringHelper;
 import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.block.BlockTEBase;
-import cofh.thermalexpansion.block.simple.BlockFrame;
 import cofh.thermalexpansion.core.TEProps;
-import cofh.thermalexpansion.item.TEItems;
+import cofh.thermalexpansion.model.ModelCell;
 import cofh.thermalexpansion.util.ReconfigurableHelper;
-import cofh.thermalexpansion.util.crafting.PulverizerManager;
-import cofh.thermalexpansion.util.crafting.TECraftingHandler;
-import cofh.thermalfoundation.item.ItemMaterial;
-import cofh.thermalfoundation.item.TFItems;
-import java.util.List;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockCell extends BlockTEBase {
+import java.util.List;
+
+public class BlockCell extends BlockTEBase implements IModelRegister {
 
 	public static final PropertyEnum<Type> TYPE = PropertyEnum.create("type", Type.class);
 
@@ -50,6 +49,72 @@ public class BlockCell extends BlockTEBase {
 		setHardness(20.0F);
 		setResistance(120.0F);
 		setUnlocalizedName("thermalexpansion.cell");
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState() {
+
+		return new ExtendedBlockState(this,
+				new IProperty[] { TYPE },
+				new IUnlistedProperty[] { TEProps.FACING, TEProps.SIDE_CONFIG[0], TEProps.SIDE_CONFIG[1],
+						TEProps.SIDE_CONFIG[2], TEProps.SIDE_CONFIG[3], TEProps.SIDE_CONFIG[4], TEProps.SIDE_CONFIG[5] }
+		);
+	}
+
+	@Override
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+
+		TileCell tile = (TileCell) world.getTileEntity(pos);
+
+		return tile.getExtendedState(state, world, pos);
+	}
+
+	@Override
+	public BlockRenderLayer getBlockLayer() {
+
+		return BlockRenderLayer.CUTOUT;
+	}
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+
+		return false;
+	}
+
+	@Override
+	public boolean isFullCube(IBlockState state) {
+
+		return false;
+	}
+
+	@Override
+	public void getSubBlocks(Item item, CreativeTabs tab, List list) {
+
+		if (enable[0]) {
+			list.add(ItemBlockCell.setDefaultTag(new ItemStack(item, 1, 0), -1));
+		}
+		for (int i = 1; i < Type.values().length; i++) {
+			list.add(ItemBlockCell.setDefaultTag(new ItemStack(item, 1, i), 0));
+			list.add(ItemBlockCell.setDefaultTag(new ItemStack(item, 1, i), Type.byMetadata(i).getCapacity()));
+		}
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+
+		return this.getDefaultState().withProperty(TYPE, BlockCell.Type.byMetadata(meta));
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+
+		return state.getValue(TYPE).getMetadata();
+	}
+
+	@Override
+	public int damageDropped(IBlockState state) {
+
+		return state.getValue(TYPE).getMetadata();
 	}
 
 	@Override
@@ -69,18 +134,6 @@ public class BlockCell extends BlockTEBase {
 			return new TileCellCreative(type.metadata);
 		}
 		return new TileCell(type.metadata);
-	}
-
-	@Override
-	public void getSubBlocks(Item item, CreativeTabs tab, List list) {
-
-		if (enable[0]) {
-			list.add(ItemBlockCell.setDefaultTag(new ItemStack(item, 1, 0), -1));
-		}
-		for (int i = 1; i < Type.values().length; i++) {
-			list.add(ItemBlockCell.setDefaultTag(new ItemStack(item, 1, i), 0));
-			list.add(ItemBlockCell.setDefaultTag(new ItemStack(item, 1, i), Type.byMetadata(i).getCapacity()));
-		}
 	}
 
 	@Override
@@ -128,47 +181,10 @@ public class BlockCell extends BlockTEBase {
 
 		return true;
 	}
-
 	@Override
 	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 
 		return true;
-	}
-
-	@Override
-	public IIcon getIcon(int side, int metadata) {
-
-		return IconRegistry.getIcon("Cell" + 2 * metadata);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir) {
-
-		for (int i = 0; i < 9; i++) {
-			IconRegistry.addIcon("CellMeter" + i, "thermalexpansion:cell/Cell_Meter_" + i, ir);
-		}
-		IconRegistry.addIcon("CellMeterCreative", "thermalexpansion:cell/Cell_Meter_Creative", ir);
-		IconRegistry.addIcon("Cell" + 0, "thermalexpansion:cell/Cell_Creative", ir);
-		IconRegistry.addIcon("Cell" + 1, "thermalexpansion:cell/Cell_Creative_Inner", ir);
-		IconRegistry.addIcon("Cell" + 2, "thermalexpansion:cell/Cell_Basic", ir);
-		IconRegistry.addIcon("Cell" + 3, "thermalexpansion:cell/Cell_Basic_Inner", ir);
-		IconRegistry.addIcon("Cell" + 4, "thermalexpansion:cell/Cell_Hardened", ir);
-		IconRegistry.addIcon("Cell" + 5, "thermalexpansion:cell/Cell_Hardened_Inner", ir);
-		IconRegistry.addIcon("Cell" + 6, "thermalexpansion:cell/Cell_Reinforced", ir);
-		IconRegistry.addIcon("Cell" + 7, "thermalexpansion:cell/Cell_Reinforced_Inner", ir);
-		IconRegistry.addIcon("Cell" + 8, "thermalexpansion:cell/Cell_Resonant", ir);
-		IconRegistry.addIcon("Cell" + 9, "thermalexpansion:cell/Cell_Resonant_Inner", ir);
-
-		IconRegistry.addIcon(TEXTURE_DEFAULT + 0, "thermalexpansion:config/Config_None", ir);
-		IconRegistry.addIcon(TEXTURE_DEFAULT + 1, "thermalexpansion:cell/Cell_Config_Orange", ir);
-		IconRegistry.addIcon(TEXTURE_DEFAULT + 2, "thermalexpansion:cell/Cell_Config_Blue", ir);
-
-		IconRegistry.addIcon(TEXTURE_CB + 0, "thermalexpansion:config/Config_None", ir);
-		IconRegistry.addIcon(TEXTURE_CB + 1, "thermalexpansion:cell/Cell_Config_Orange_CB", ir);
-		IconRegistry.addIcon(TEXTURE_CB + 2, "thermalexpansion:cell/Cell_Config_Blue_CB", ir);
-
-		IconRegistry.addIcon("StorageRedstone", "thermalexpansion:cell/Cell_Center_Solid", ir);
 	}
 
 	@Override
@@ -197,6 +213,30 @@ public class BlockCell extends BlockTEBase {
 			return false;
 		}
 		return super.canDismantle(world, pos, state, player);
+	}
+
+	/* IModelRegister */
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		StateMapperBase ignoreState = new StateMapperBase() {
+
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+
+				return new ModelResourceLocation(ModelCell.BASE_MODEL_LOCATION.toString(),
+						"type=" + state.getValue(TYPE).getName());
+			}
+		};
+		ModelLoader.setCustomStateMapper(this, ignoreState);
+
+		for (int i = 0; i < Type.values().length; i++) {
+			ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(
+					ModelCell.BASE_MODEL_LOCATION.toString(), "type=" + Type.byMetadata(i).getName());
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), i, itemModelResourceLocation);
+		}
+
 	}
 
 	/* IInitializer */
@@ -232,36 +272,50 @@ public class BlockCell extends BlockTEBase {
 	@Override
 	public boolean postInit() {
 
-		if (enable[Type.BASIC.ordinal()]) {
-			GameRegistry.addRecipe(ShapedRecipe(cellBasic, " I ", "IXI", " P ", 'I', "ingotCopper", 'X', BlockFrame.frameCellBasic, 'P',
-					ItemMaterial.powerCoilElectrum));
-			PulverizerManager.addRecipe(4000, cellBasic, ItemHelper.cloneStack(Items.REDSTONE, 8), ItemHelper.cloneStack(ItemMaterial.ingotLead, 3));
+		//TODO fix recipes
+/*		if (enable[Type.BASIC.ordinal()]) {
+			GameRegistry.addRecipe(
+					ShapedRecipe(cellBasic, " I ", "IXI", " P ", 'I', "ingotCopper", 'X', BlockFrame.frameCellBasic, 'P',
+							ItemMaterial.powerCoilElectrum));
+			PulverizerManager.addRecipe(4000, cellBasic, ItemHelper.cloneStack(Items.REDSTONE, 8),
+					ItemHelper.cloneStack(ItemMaterial.ingotLead, 3));
 		}
 		if (enable[Type.HARDENED.ordinal()]) {
-			GameRegistry.addRecipe(ShapedRecipe(cellHardened, " I ", "IXI", " P ", 'I', "ingotCopper", 'X', BlockFrame.frameCellHardened, 'P',
-					ItemMaterial.powerCoilElectrum));
-			GameRegistry.addRecipe(new RecipeUpgradeOverride(cellHardened, new Object[] { " I ", "IXI", " I ", 'I', "ingotInvar", 'X', cellBasic }).addInteger(
-					"Send", Type.BASIC.getMaxSend(), Type.HARDENED.getMaxSend()).addInteger("Recv", Type.BASIC.getMaxReceive(), Type.HARDENED.getMaxReceive()));
-			GameRegistry.addRecipe(ShapedRecipe(cellHardened, "IYI", "YXY", "IPI", 'I', "ingotInvar", 'X', BlockFrame.frameCellBasic, 'Y', "ingotCopper", 'P',
-					ItemMaterial.powerCoilElectrum));
-			PulverizerManager.addRecipe(4000, cellHardened, ItemHelper.cloneStack(Items.REDSTONE, 8), ItemHelper.cloneStack(ItemMaterial.ingotInvar, 3));
+			GameRegistry.addRecipe(
+					ShapedRecipe(cellHardened, " I ", "IXI", " P ", 'I', "ingotCopper", 'X', BlockFrame.frameCellHardened, 'P',
+							ItemMaterial.powerCoilElectrum));
+			GameRegistry.addRecipe(new RecipeUpgradeOverride(cellHardened,
+					new Object[] { " I ", "IXI", " I ", 'I', "ingotInvar", 'X', cellBasic }).addInteger(
+					"Send", Type.BASIC.getMaxSend(), Type.HARDENED.getMaxSend())
+					.addInteger("Recv", Type.BASIC.getMaxReceive(), Type.HARDENED.getMaxReceive()));
+			GameRegistry.addRecipe(
+					ShapedRecipe(cellHardened, "IYI", "YXY", "IPI", 'I', "ingotInvar", 'X', BlockFrame.frameCellBasic, 'Y',
+							"ingotCopper", 'P',
+							ItemMaterial.powerCoilElectrum));
+			PulverizerManager.addRecipe(4000, cellHardened, ItemHelper.cloneStack(Items.REDSTONE, 8),
+					ItemHelper.cloneStack(ItemMaterial.ingotInvar, 3));
 		}
 		if (enable[Type.REINFORCED.ordinal()]) {
-			GameRegistry.addRecipe(ShapedRecipe(cellReinforced, " X ", "YCY", "IPI", 'C', BlockFrame.frameCellReinforcedFull, 'I', "ingotLead", 'P',
-					ItemMaterial.powerCoilElectrum, 'X', "ingotElectrum", 'Y', "ingotElectrum"));
+			GameRegistry.addRecipe(
+					ShapedRecipe(cellReinforced, " X ", "YCY", "IPI", 'C', BlockFrame.frameCellReinforcedFull, 'I', "ingotLead",
+							'P',
+							ItemMaterial.powerCoilElectrum, 'X', "ingotElectrum", 'Y', "ingotElectrum"));
 		}
 		if (enable[Type.RESONANT.ordinal()]) {
-			GameRegistry.addRecipe(ShapedRecipe(cellResonant, " X ", "YCY", "IPI", 'C', BlockFrame.frameCellResonantFull, 'I', "ingotLead", 'P',
-					ItemMaterial.powerCoilElectrum, 'X', "ingotElectrum", 'Y', "ingotElectrum"));
-			GameRegistry.addRecipe(new RecipeUpgradeOverride(cellResonant, new Object[] { " I ", "IXI", " I ", 'I', "ingotEnderium", 'X', cellReinforced })
-					.addInteger("Send", Type.REINFORCED.getMaxSend(), Type.RESONANT.getMaxSend()).addInteger("Recv", Type.REINFORCED.getMaxReceive(),
+			GameRegistry.addRecipe(
+					ShapedRecipe(cellResonant, " X ", "YCY", "IPI", 'C', BlockFrame.frameCellResonantFull, 'I', "ingotLead", 'P',
+							ItemMaterial.powerCoilElectrum, 'X', "ingotElectrum", 'Y', "ingotElectrum"));
+			GameRegistry.addRecipe(new RecipeUpgradeOverride(cellResonant,
+					new Object[] { " I ", "IXI", " I ", 'I', "ingotEnderium", 'X', cellReinforced })
+					.addInteger("Send", Type.REINFORCED.getMaxSend(), Type.RESONANT.getMaxSend())
+					.addInteger("Recv", Type.REINFORCED.getMaxReceive(),
 							Type.RESONANT.getMaxReceive()));
 		}
 		TECraftingHandler.addSecureRecipe(cellCreative);
 		TECraftingHandler.addSecureRecipe(cellBasic);
 		TECraftingHandler.addSecureRecipe(cellHardened);
 		TECraftingHandler.addSecureRecipe(cellReinforced);
-		TECraftingHandler.addSecureRecipe(cellResonant);
+		TECraftingHandler.addSecureRecipe(cellResonant);*/
 
 		return true;
 	}
@@ -284,7 +338,8 @@ public class BlockCell extends BlockTEBase {
 		private final int maxReceive;
 		private final int capacity;
 
-		Type(int metadata, String name, ItemStack stack, float hardness, int resistance, int maxSend, int maxReceive, int capacity) {
+		Type(int metadata, String name, ItemStack stack, float hardness, int resistance, int maxSend, int maxReceive,
+				int capacity) {
 
 			this.metadata = metadata;
 			this.name = name;
@@ -294,18 +349,25 @@ public class BlockCell extends BlockTEBase {
 
 			String category = "Cell." + StringHelper.titleCase(name);
 			if (metadata == 0) {
-				this.maxSend = MathHelper.clamp(ThermalExpansion.CONFIG.get(category, "MaxValue", maxSend), maxSend / 10, maxSend * 1000);
+				this.maxSend = MathHelper
+						.clamp(ThermalExpansion.CONFIG.get(category, "MaxValue", maxSend), maxSend / 10, maxSend * 1000);
 				this.maxReceive = this.maxSend;
 				this.capacity = -1;
 			} else {
-				this.maxSend = MathHelper.clamp(ThermalExpansion.CONFIG.get(category, "MaxSend", maxSend), maxSend / 10, maxSend * 1000);
-				this.maxReceive = MathHelper.clamp(ThermalExpansion.CONFIG.get(category, "MaxReceive", maxReceive), maxReceive / 10, maxReceive * 1000);;
-				this.capacity = MathHelper.clamp(ThermalExpansion.CONFIG.get(category, "Capacity", capacity), capacity / 10, metadata == 4 ? 1000000 * 1000 : capacity);
+				this.maxSend = MathHelper
+						.clamp(ThermalExpansion.CONFIG.get(category, "MaxSend", maxSend), maxSend / 10, maxSend * 1000);
+				this.maxReceive = MathHelper
+						.clamp(ThermalExpansion.CONFIG.get(category, "MaxReceive", maxReceive), maxReceive / 10,
+								maxReceive * 1000);
+				;
+				this.capacity = MathHelper.clamp(ThermalExpansion.CONFIG.get(category, "Capacity", capacity), capacity / 10,
+						metadata == 4 ? 1000000 * 1000 : capacity);
 			}
 		}
 
 		@Override
 		public String getName() {
+
 			return name;
 		}
 
@@ -329,22 +391,27 @@ public class BlockCell extends BlockTEBase {
 		}
 
 		public float getHardness() {
+
 			return hardness;
 		}
 
 		public int getResistance() {
+
 			return resistance;
 		}
 
 		public int getMaxSend() {
+
 			return maxSend;
 		}
 
 		public int getMaxReceive() {
+
 			return maxReceive;
 		}
 
 		public int getCapacity() {
+
 			return capacity;
 		}
 	}
@@ -356,7 +423,8 @@ public class BlockCell extends BlockTEBase {
 
 		enable[0] = ThermalExpansion.CONFIG.get(category + StringHelper.titleCase(Type.CREATIVE.getName()), "Enable", true);
 		for (int i = 1; i < Type.values().length; i++) {
-			enable[i] = ThermalExpansion.CONFIG.get(category + StringHelper.titleCase(Type.byMetadata(i).getName()), "Recipe.Enable", true);
+			enable[i] = ThermalExpansion.CONFIG
+					.get(category + StringHelper.titleCase(Type.byMetadata(i).getName()), "Recipe.Enable", true);
 		}
 	}
 

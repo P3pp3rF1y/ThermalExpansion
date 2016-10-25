@@ -2,6 +2,7 @@ package cofh.thermalexpansion.model;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -14,6 +15,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.common.model.IModelState;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 abstract class BakedModelBase implements IBakedModel {
@@ -45,15 +48,17 @@ abstract class BakedModelBase implements IBakedModel {
 		this.format = format;
 	}
 
-	BakedQuad createInsetFullFaceQuad(EnumFacing facing, TextureAtlasSprite sprite, double inset) {
+	BakedQuad createInsetFullFaceQuad(EnumFacing facing, double inset, TextureAtlasSprite sprite) {
 
 		Vec3d[] vectors = FACE_VECTORS.get(facing);
+		Vec3d[] modifiedVectors = new Vec3d[vectors.length];
 
-		for (Vec3d vec : vectors) {
-			vec.add((new Vec3d(facing.getOpposite().getDirectionVec())).scale(inset));
+		for (int i = 0; i < vectors.length; i++) {
+			modifiedVectors[i] = vectors[i].add((new Vec3d(facing.getOpposite().getDirectionVec())).scale(inset));
 		}
 
-		return createQuad(vectors[0], vectors[1], vectors[2], vectors[3], facing, sprite);
+		//TODO add caching
+		return createQuad(modifiedVectors[0], modifiedVectors[1], modifiedVectors[2], modifiedVectors[3], facing, sprite);
 	}
 
 	BakedQuad createFullFaceQuad(EnumFacing facing, TextureAtlasSprite sprite) {
@@ -63,16 +68,46 @@ abstract class BakedModelBase implements IBakedModel {
 		return createQuad(vectors[0], vectors[1], vectors[2], vectors[3], facing, sprite);
 	}
 
+	protected List<BakedQuad> createCenteredCube(double size, TextureAtlasSprite sprite) {
+
+		List<BakedQuad> quads = new ArrayList<>();
+
+		double padding = (1.0 - size) / 2;
+		float minU, minV;
+		minU = minV = (float) (padding * 16f);
+		float maxU, maxV;
+		maxU = maxV = (float) ((1.0 - padding) * 16f);
+
+		for (EnumFacing facing : EnumFacing.VALUES) {
+			Vec3d[] vectors = FACE_VECTORS.get(facing);
+			Vec3d[] modifiedVectors = new Vec3d[vectors.length];
+
+			for (int i = 0; i < vectors.length; i++) {
+				modifiedVectors[i] = vectors[i].add(vectors[i].scale(-padding))
+						.add(vectors[i].addVector(-1, -1, -1).scale(-padding));
+			}
+
+			quads.add(createQuad(modifiedVectors[0], modifiedVectors[1], modifiedVectors[2], modifiedVectors[3], facing, sprite, minU, minV, maxU, maxV));
+		}
+		return quads;
+	}
+
 	private BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, EnumFacing facing, TextureAtlasSprite sprite) {
+
+		return createQuad(v1, v2, v3, v4, facing, sprite, 0, 16, 0, 16);
+	}
+
+	private BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, EnumFacing facing, TextureAtlasSprite sprite, float minU,
+			float maxU, float minV, float maxV) {
 
 		Vec3d normal = new Vec3d(facing.getDirectionVec());
 
 		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(format);
 		builder.setTexture(sprite);
-		putVertex(builder, normal, v1.xCoord, v1.yCoord, v1.zCoord, sprite, 0, 0 /*sprite.getMinU(), sprite.getMinV()*/);
-		putVertex(builder, normal, v2.xCoord, v2.yCoord, v2.zCoord, sprite, 0, 16 /*sprite.getminu(), sprite.getmaxv()*/);
-		putVertex(builder, normal, v3.xCoord, v3.yCoord, v3.zCoord, sprite, 16, 16 /*sprite.getMaxU(), sprite.getMaxV()*/);
-		putVertex(builder, normal, v4.xCoord, v4.yCoord, v4.zCoord, sprite, 16, 0 /*sprite.getMaxU(), sprite.getMaxV()*/);
+		putVertex(builder, normal, v1.xCoord, v1.yCoord, v1.zCoord, sprite, minU, minV);
+		putVertex(builder, normal, v2.xCoord, v2.yCoord, v2.zCoord, sprite, minU, maxV);
+		putVertex(builder, normal, v3.xCoord, v3.yCoord, v3.zCoord, sprite, maxU, maxV);
+		putVertex(builder, normal, v4.xCoord, v4.yCoord, v4.zCoord, sprite, maxU, minV);
 		return builder.build();
 	}
 
@@ -103,6 +138,16 @@ abstract class BakedModelBase implements IBakedModel {
 			}
 		}
 	}
+
+	protected TextureAtlasSprite getSpriteFromTextureName(String name) {
+
+		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(name);
+	}
+
+	protected TextureAtlasSprite getSpriteFromLocation(ResourceLocation location) {
+
+		return getSpriteFromTextureName(location.toString());
+}
 
 	@Override
 	public ItemCameraTransforms getItemCameraTransforms() {
