@@ -209,7 +209,7 @@ public class TextureLocations {
 				"blocks/cell/cell_meter_creative.png");
 
 		public static final ResourceLocation CENTER_SOLID = new ResourceLocation(ThermalExpansion.modId,
-				"blocks/cell/cell_center_solid.png");
+				"blocks/cell/cell_center_solid");
 
 		public static final Set<ResourceLocation> ALL = ImmutableSet.<ResourceLocation>builder()
 				.addAll(FACE_MAP.values()).addAll(INNER_MAP.values()).add(BLUE).add(ORANGE).add(METER_CREATIVE).add(CENTER_SOLID)

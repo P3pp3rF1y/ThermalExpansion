@@ -87,7 +87,7 @@ abstract class BakedModelBase implements IBakedModel {
 						.add(vectors[i].addVector(-1, -1, -1).scale(-padding));
 			}
 
-			quads.add(createQuad(modifiedVectors[0], modifiedVectors[1], modifiedVectors[2], modifiedVectors[3], facing, sprite, minU, minV, maxU, maxV));
+			quads.add(createQuad(modifiedVectors[0], modifiedVectors[1], modifiedVectors[2], modifiedVectors[3], facing, sprite, minU, maxU, minV, maxV));
 		}
 		return quads;
 	}
