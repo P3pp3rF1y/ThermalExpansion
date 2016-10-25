@@ -3,13 +3,20 @@ package cofh.thermalexpansion.model;
 import cofh.thermalexpansion.block.cell.BlockCell;
 import cofh.thermalfoundation.fluid.TFFluids;
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.model.IModelState;
 
 import javax.annotation.Nullable;
@@ -35,14 +42,24 @@ public class BakedModelCell extends BakedModelBase {
 	@Override
 	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
 
+		BlockRenderLayer layer = MinecraftForgeClient.getRenderLayer();
 		List<BakedQuad> quads = new ArrayList<>();
 
-/*		for (EnumFacing facing : EnumFacing.VALUES) {
-			quads.add(createInsetFullFaceQuad(facing, 0.8125, getInnerTexture()));
-			quads.add(createFullFaceQuad(facing, getFaceTexture()));
-		}*/
+		if (layer == null || layer == BlockRenderLayer.CUTOUT) {
+			for (EnumFacing facing : EnumFacing.VALUES) {
+				quads.add(createInsetFullFaceQuad(facing, 0.8125, getInnerTexture()));
+				quads.add(createFullFaceQuad(facing, getFaceTexture()));
+			}
 
-		quads.addAll(createCenteredCube(0.7, getCenterTexture()));
+			if (type == BlockCell.Type.BASIC || type == BlockCell.Type.HARDENED) {
+				quads.addAll(createCenteredCube(0.7, getCenterTexture(), 1.0f));
+			}
+		}
+
+		if ((layer == null || layer == BlockRenderLayer.TRANSLUCENT) &&
+				!(type == BlockCell.Type.BASIC || type == BlockCell.Type.HARDENED)) {
+			quads.addAll(createCenteredCube(0.7, getCenterTexture(), layer == null ? 1.0f : 0.25f));
+		}
 
 		return quads;
 	}
@@ -53,6 +70,7 @@ public class BakedModelCell extends BakedModelBase {
 		return getSpriteFromLocation(type == BlockCell.Type.BASIC || type == BlockCell.Type.HARDENED ?
 				TextureLocations.Cell.CENTER_SOLID : TFFluids.fluidRedstone.getStill());
 	}
+
 	private TextureAtlasSprite getInnerTexture() {
 
 		//TODO add caching
@@ -65,6 +83,11 @@ public class BakedModelCell extends BakedModelBase {
 		return getSpriteFromLocation(TextureLocations.Cell.FACE_MAP.get(type));
 	}
 
+	@Override public boolean isAmbientOcclusion() {
+
+		return true;
+	}
+
 	@Override
 	public TextureAtlasSprite getParticleTexture() {
 
@@ -74,8 +97,16 @@ public class BakedModelCell extends BakedModelBase {
 	@Override
 	public ItemOverrideList getOverrides() {
 
-		return ItemOverrideList.NONE;
-	}
+		return new ItemOverrideList(ImmutableList.of()) {
 
+			@Override
+			public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
+
+				BlockCell.Type type = BlockCell.Type.byMetadata(stack.getMetadata());
+
+				return ModelCell.bakedModels.get(type);
+			}
+		};
+	}
 
 }

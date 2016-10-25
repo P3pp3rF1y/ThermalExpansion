@@ -70,9 +70,9 @@ public class BlockCell extends BlockTEBase implements IModelRegister {
 	}
 
 	@Override
-	public BlockRenderLayer getBlockLayer() {
+	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
 
-		return BlockRenderLayer.CUTOUT;
+		return layer == BlockRenderLayer.CUTOUT || layer == BlockRenderLayer.TRANSLUCENT;
 	}
 
 	@Override
@@ -231,10 +231,10 @@ public class BlockCell extends BlockTEBase implements IModelRegister {
 		};
 		ModelLoader.setCustomStateMapper(this, ignoreState);
 
-		for (int i = 0; i < Type.values().length; i++) {
+		for (Type type : Type.values()) {
 			ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(
-					ModelCell.BASE_MODEL_LOCATION.toString(), "type=" + Type.byMetadata(i).getName());
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), i, itemModelResourceLocation);
+					ModelCell.BASE_MODEL_LOCATION.toString(), "type=" + type.getName());
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), type.getMetadata(), itemModelResourceLocation);
 		}
 
 	}
