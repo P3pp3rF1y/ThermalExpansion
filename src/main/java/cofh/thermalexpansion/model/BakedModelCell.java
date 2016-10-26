@@ -69,13 +69,19 @@ public class BakedModelCell extends BakedModelBase {
 			}
 
 			if (type == BlockCell.Type.BASIC || type == BlockCell.Type.HARDENED) {
-				quads.addAll(createCenteredCube(0.7, getCenterTexture(), 1.0f));
+				quads.addAll(createCenteredCube(0.7, getCenterTexture(), 1.0f, 1.0f));
 			}
 		}
 
 		if ((layer == null || layer == BlockRenderLayer.TRANSLUCENT) &&
 				!(type == BlockCell.Type.BASIC || type == BlockCell.Type.HARDENED)) {
-			quads.addAll(createCenteredCube(0.7, getCenterTexture(), layer == null ? 1.0f : 0.5f));
+			float red = 1.0f;
+
+			if (exState != null) {
+				red = (165f + (exState.getValue(BlockCell.METER) * 10)) / 255f;
+			}
+
+			quads.addAll(createCenteredCube(0.7, getCenterTexture(), layer == null ? 1.0f : 0.4f, red));
 		}
 
 		return quads;
