@@ -75,7 +75,7 @@ public class BakedModelCell extends BakedModelBase {
 
 		if ((layer == null || layer == BlockRenderLayer.TRANSLUCENT) &&
 				!(type == BlockCell.Type.BASIC || type == BlockCell.Type.HARDENED)) {
-			quads.addAll(createCenteredCube(0.7, getCenterTexture(), layer == null ? 1.0f : 0.25f));
+			quads.addAll(createCenteredCube(0.7, getCenterTexture(), layer == null ? 1.0f : 0.5f));
 		}
 
 		return quads;
