@@ -22,7 +22,7 @@ import java.util.UUID;
 
 public class GuiCell extends GuiTEBase {
 
-	static final String TEX_PATH = TEProps.PATH_GUI + "Cell.png";
+	static final String TEX_PATH = TEProps.PATH_GUI + "cell.png";
 	static final ResourceLocation TEXTURE = new ResourceLocation(TEX_PATH);
 
 	TileCell myTile;

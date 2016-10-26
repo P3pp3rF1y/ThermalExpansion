@@ -92,22 +92,21 @@ public class TabConfigCell extends TabBase {
 		float colorG = (backgroundColor >> 8 & 255) / 255.0F * 0.6F;
 		float colorB = (backgroundColor & 255) / 255.0F * 0.6F;
 		GL11.glColor4f(colorR, colorG, colorB, 1.0F);
-		gui.drawTexturedModalRect(posX() + 16, posY + 20, 16, 20, 64, 64);
+		gui.drawTexturedModalRect(16, 20, 16, 20, 64, 64);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		gui.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
 		for (int i = 0; i < 3; i++) {
-			gui.drawTextureMapIcon(myTile.getTexture(EnumFacing.UP, i), posX() + 40, posY + 24);
-			gui.drawTextureMapIcon(myTile.getTexture(BlockHelper.ENUM_SIDE_LEFT[myTile.getFacing()], i), posX() + 20, posY + 44);
-			gui.drawTextureMapIcon(myTile.getTexture(EnumFacing.VALUES[myTile.getFacing()], i), posX() + 40, posY + 44);
-			gui.drawTextureMapIcon(myTile.getTexture(BlockHelper.ENUM_SIDE_RIGHT[myTile.getFacing()], i), posX() + 60, posY + 44);
-			gui.drawTextureMapIcon(myTile.getTexture(EnumFacing.DOWN, i), posX() + 40, posY + 64);
-			gui.drawTextureMapIcon(myTile.getTexture(BlockHelper.ENUM_SIDE_OPPOSITE[myTile.getFacing()], i), posX() + 60, posY + 64);
+			gui.drawTextureMapIcon(myTile.getTexture(EnumFacing.UP, i), 40, 24);
+			gui.drawTextureMapIcon(myTile.getTexture(BlockHelper.ENUM_SIDE_LEFT[myTile.getFacing()], i), 20, 44);
+			gui.drawTextureMapIcon(myTile.getTexture(EnumFacing.VALUES[myTile.getFacing()], i), 40, 44);
+			gui.drawTextureMapIcon(myTile.getTexture(BlockHelper.ENUM_SIDE_RIGHT[myTile.getFacing()], i), 60, 44);
+			gui.drawTextureMapIcon(myTile.getTexture(EnumFacing.DOWN, i), 40, 64);
+			gui.drawTextureMapIcon(myTile.getTexture(BlockHelper.ENUM_SIDE_OPPOSITE[myTile.getFacing()], i), 60, 64);
 		}
 
-		//TODO is this needed? face gets drawn in the 2nd pass (index 1) so why here again?
-		//gui.drawIcon(myTile.getTexture(myTile.getFacing(), 3), posX() + 40, posY + 44);
+		gui.drawTextureMapIcon(myTile.getTexture(EnumFacing.VALUES[myTile.getFacing()], 3), 40, 44);
 
 	}
 
@@ -118,7 +117,7 @@ public class TabConfigCell extends TabBase {
 		if (!isFullyOpened()) {
 			return;
 		}
-		getFontRenderer().drawStringWithShadow(StringHelper.localize("info.cofh.configuration"), posXOffset() + 18, posY + 6, headerColor);
+		getFontRenderer().drawStringWithShadow(StringHelper.localize("info.cofh.configuration"), 18, 6, headerColor);
 	}
 
 	void handleSideChange(EnumFacing side, int mouseButton) {

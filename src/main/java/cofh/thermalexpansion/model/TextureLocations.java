@@ -188,7 +188,7 @@ public class TextureLocations {
 		public static final ResourceLocation BLUE = new ResourceLocation(ThermalExpansion.modId,
 				"blocks/cell/cell_config_blue" + CB_SUFFIX);
 		public static final ResourceLocation ORANGE = new ResourceLocation(ThermalExpansion.modId,
-				"blocks/cell/cell_config_blue" + CB_SUFFIX);
+				"blocks/cell/cell_config_orange" + CB_SUFFIX);
 		public static final Map<BlockTEBase.EnumSideConfig, ResourceLocation> CONFIG_MAP = ImmutableMap
 				.of(BlockTEBase.EnumSideConfig.NONE, Config.NONE, BlockTEBase.EnumSideConfig.BLUE, BLUE,
 						BlockTEBase.EnumSideConfig.ORANGE, ORANGE);
