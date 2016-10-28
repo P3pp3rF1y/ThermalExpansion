@@ -21,23 +21,21 @@ public abstract class BakedPerspectiveModelBase implements IPerspectiveAwareMode
 	static {
 
 		TRANSFORMATIONS = ImmutableMap.<TransformType, Matrix4f>builder()
-				.put(GUI, getTransformMatrix(30, 225, 0, 0, 0, 0, 0.625f, 0.625f, 0.625f))
-				.put(GROUND, getTransformMatrix(0, 0, 0, 0, 3, 0, 0.25f, 0.25f, 0.25f))
-				.put(FIXED, getTransformMatrix(0, 0, 0, 0, 0, 0, 0.5f, 0.5f, 0.5f))
-				.put(THIRD_PERSON_LEFT_HAND, getTransformMatrix(75, 45, 0, 0, 2.5f, 0, 0.375f, 0.375f, 0.375f))
-				.put(THIRD_PERSON_RIGHT_HAND, getTransformMatrix(75, 45, 0, 0, 2.5f, 0, 0.375f, 0.375f, 0.375f))
-				.put(FIRST_PERSON_RIGHT_HAND, getTransformMatrix(0, 45, 0, 0, 0, 0, 0.40f, 0.40f, 0.40f))
-				.put(FIRST_PERSON_LEFT_HAND, getTransformMatrix(0, 225, 0, 0, 0, 0, 0.40f, 0.40f, 0.40f)).build();
+				.put(GUI, 						getTransformMatrix(30, 225, 0, 0, 0, 0, 0.625f, 0.625f, 0.625f))
+				.put(GROUND, 					getTransformMatrix(0, 0, 0, 0, 3, 0, 0.25f, 0.25f, 0.25f))
+				.put(FIXED, 					getTransformMatrix(0, 0, 0, 0, 0, 0, 0.5f, 0.5f, 0.5f))
+				.put(THIRD_PERSON_LEFT_HAND, 	getTransformMatrix(75, 45, 0, 0, 2.5f, 0, 0.375f, 0.375f, 0.375f))
+				.put(THIRD_PERSON_RIGHT_HAND, 	getTransformMatrix(75, 45, 0, 0, 2.5f, 0, 0.375f, 0.375f, 0.375f))
+				.put(FIRST_PERSON_RIGHT_HAND, 	getTransformMatrix(0, 45, 0, 0, 0, 0, 0.40f, 0.40f, 0.40f))
+				.put(FIRST_PERSON_LEFT_HAND, 	getTransformMatrix(0, 225, 0, 0, 0, 0, 0.40f, 0.40f, 0.40f)).build();
 	}
-
-	private static final float SCALE = 0.0625F; //seems like an arbitrary scale used in vanilla with translation
 
 	private static Matrix4f getTransformMatrix(float rotationX, float rotationY, float rotationZ, float translationX,
 			float translationY, float translationZ, float scaleX, float scaleY,
 			float scaleZ) {
 
-		final javax.vecmath.Vector3f translation = new javax.vecmath.Vector3f(translationX * SCALE, translationY * SCALE,
-				translationZ * SCALE);
+		final javax.vecmath.Vector3f translation = new javax.vecmath.Vector3f(translationX / 16, translationY / 16,
+				translationZ / 16);
 		final javax.vecmath.Vector3f scale = new javax.vecmath.Vector3f(scaleX, scaleY, scaleZ);
 		final Quat4f rotation = TRSRTransformation
 				.quatFromXYZDegrees(new javax.vecmath.Vector3f(rotationX, rotationY, rotationZ));

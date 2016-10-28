@@ -2,10 +2,12 @@ package cofh.thermalexpansion.block.simple;
 
 import cofh.api.block.IDismantleable;
 import cofh.api.core.IInitializer;
+import cofh.api.core.IModelRegister;
 import cofh.core.util.CoreUtils;
 import cofh.core.util.RegistryHelper;
 import cofh.lib.util.helpers.ItemHelper;
 import cofh.thermalexpansion.ThermalExpansion;
+import cofh.thermalexpansion.model.ModelFrame;
 import cofh.thermalexpansion.util.crafting.PulverizerManager;
 import cofh.thermalexpansion.util.crafting.TransposerManager;
 import cofh.thermalfoundation.fluid.TFFluids;
@@ -13,8 +15,12 @@ import cofh.thermalfoundation.item.ItemMaterial;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -32,17 +38,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
 import static cofh.lib.util.helpers.ItemHelper.ShapedRecipe;
 
-public class BlockFrame extends Block implements IDismantleable, IInitializer {
+public class BlockFrame extends Block implements IDismantleable, IInitializer, IModelRegister {
 
 	public static final PropertyEnum<Type> TYPE = PropertyEnum.create("type", Type.class);
 	public static int renderPass = 0;
@@ -78,6 +86,24 @@ public class BlockFrame extends Block implements IDismantleable, IInitializer {
 	}
 
 	@Override
+	protected BlockStateContainer createBlockState() {
+
+		return new BlockStateContainer(this, new IProperty[] { TYPE });
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+
+		return super.getStateFromMeta(meta).withProperty(TYPE, Type.byMetadata(meta));
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+
+		return state.getValue(TYPE).getMetadata();
+	}
+
+	@Override
 	public float getBlockHardness(IBlockState state, World world, BlockPos pos) {
 
 		return state.getValue(TYPE).getHardness();
@@ -104,7 +130,7 @@ public class BlockFrame extends Block implements IDismantleable, IInitializer {
 	@Override
 	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
 
-		return layer == BlockRenderLayer.CUTOUT || layer == BlockRenderLayer.SOLID;
+		return layer == BlockRenderLayer.CUTOUT || layer == BlockRenderLayer.TRANSLUCENT;
 	}
 
 	@Override
@@ -117,111 +143,6 @@ public class BlockFrame extends Block implements IDismantleable, IInitializer {
 	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 
 		return true;
-	}
-
-	@Override
-	public IIcon getIcon(int side, int metadata) {
-
-		if (side == 6) {
-			return getInnerIcon(metadata);
-		} else if (side == 7) {
-			return getCenterIcon(metadata);
-		}
-		return getFrameIcon(side, metadata);
-	}
-
-	private IIcon getFrameIcon(int side, int metadata) {
-
-		switch (Types.values()[metadata]) {
-		case CELL_BASIC:
-			return IconRegistry.getIcon("FrameCellBasic");
-		case CELL_HARDENED:
-			return IconRegistry.getIcon("FrameCellHardened");
-		case CELL_REINFORCED_EMPTY:
-		case CELL_REINFORCED_FULL:
-			return IconRegistry.getIcon("FrameCellReinforced");
-		case CELL_RESONANT_EMPTY:
-		case CELL_RESONANT_FULL:
-			return IconRegistry.getIcon("FrameCellResonant");
-		case TESSERACT_EMPTY:
-		case TESSERACT_FULL:
-			return IconRegistry.getIcon("FrameTesseract");
-		case ILLUMINATOR:
-			return IconRegistry.getIcon("FrameIlluminator");
-		default:
-			if (side == 0) {
-				return IconRegistry.getIcon("FrameMachineBottom");
-			}
-			if (side == 1) {
-				return IconRegistry.getIcon("FrameMachineTop");
-			}
-			return IconRegistry.getIcon("FrameMachineSide");
-		}
-	}
-
-	private IIcon getInnerIcon(int metadata) {
-
-		switch (Types.values()[metadata]) {
-		case CELL_BASIC:
-			return IconRegistry.getIcon("FrameCellBasicInner");
-		case CELL_HARDENED:
-			return IconRegistry.getIcon("FrameCellHardenedInner");
-		case CELL_REINFORCED_EMPTY:
-		case CELL_REINFORCED_FULL:
-			return IconRegistry.getIcon("FrameCellReinforcedInner");
-		case CELL_RESONANT_EMPTY:
-		case CELL_RESONANT_FULL:
-			return IconRegistry.getIcon("FrameCellResonantInner");
-		case TESSERACT_EMPTY:
-		case TESSERACT_FULL:
-			return IconRegistry.getIcon("FrameTesseractInner");
-		case ILLUMINATOR:
-			return IconRegistry.getIcon("FrameIlluminatorInner");
-		default:
-			return IconRegistry.getIcon("FrameMachineInner");
-		}
-	}
-
-	private IIcon getCenterIcon(int metadata) {
-
-		return IconRegistry.getIcon("FrameCenter", metadata);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir) {
-
-		IconRegistry.addIcon("FrameMachineBottom", "thermalexpansion:machine/Machine_Frame_Bottom", ir);
-		IconRegistry.addIcon("FrameMachineTop", "thermalexpansion:machine/Machine_Frame_Top", ir);
-		IconRegistry.addIcon("FrameMachineSide", "thermalexpansion:machine/Machine_Frame_Side", ir);
-		IconRegistry.addIcon("FrameCellBasic", "thermalexpansion:cell/Cell_Basic", ir);
-		IconRegistry.addIcon("FrameCellHardened", "thermalexpansion:cell/Cell_Hardened", ir);
-		IconRegistry.addIcon("FrameCellReinforced", "thermalexpansion:cell/Cell_Reinforced", ir);
-		IconRegistry.addIcon("FrameCellResonant", "thermalexpansion:cell/Cell_Resonant", ir);
-		IconRegistry.addIcon("FrameTesseract", "thermalexpansion:tesseract/Tesseract", ir);
-		IconRegistry.addIcon("FrameIlluminator", "thermalexpansion:light/Illuminator_Frame", ir);
-
-		IconRegistry.addIcon("FrameMachineInner", "thermalexpansion:machine/Machine_Frame_Inner", ir);
-		IconRegistry.addIcon("FrameCellBasicInner", "thermalexpansion:cell/Cell_Basic_Inner", ir);
-		IconRegistry.addIcon("FrameCellHardenedInner", "thermalexpansion:cell/Cell_Hardened_Inner", ir);
-		IconRegistry.addIcon("FrameCellReinforcedInner", "thermalexpansion:cell/Cell_Reinforced_Inner", ir);
-		IconRegistry.addIcon("FrameCellResonantInner", "thermalexpansion:cell/Cell_Resonant_Inner", ir);
-		IconRegistry.addIcon("FrameTesseractInner", "thermalexpansion:tesseract/Tesseract_Inner", ir);
-		IconRegistry.addIcon("FrameIlluminatorInner", "thermalexpansion:config/Config_None", ir);
-
-		IconRegistry.addIcon("FrameCenter" + 0, "thermalfoundation:storage/Block_Tin", ir);
-		IconRegistry.addIcon("FrameCenter" + 1, "thermalfoundation:storage/Block_Electrum", ir);
-		IconRegistry.addIcon("FrameCenter" + 2, "thermalfoundation:storage/Block_Signalum", ir);
-		IconRegistry.addIcon("FrameCenter" + 3, "thermalfoundation:storage/Block_Enderium", ir);
-		IconRegistry.addIcon("FrameCenter" + 4, "thermalexpansion:cell/Cell_Center_Solid", ir);
-		IconRegistry.addIcon("FrameCenter" + 5, "thermalexpansion:cell/Cell_Center_Solid", ir);
-		IconRegistry.addIcon("FrameCenter" + 6, "thermalexpansion:config/Config_None", ir);
-		IconRegistry.addIcon("FrameCenter" + 7, "thermalfoundation:fluid/Fluid_Redstone_Still", ir);
-		IconRegistry.addIcon("FrameCenter" + 8, "thermalexpansion:config/Config_None", ir);
-		IconRegistry.addIcon("FrameCenter" + 9, "thermalfoundation:fluid/Fluid_Redstone_Still", ir);
-		IconRegistry.addIcon("FrameCenter" + 10, "thermalexpansion:config/Config_None", ir);
-		IconRegistry.addIcon("FrameCenter" + 11, "thermalfoundation:fluid/Fluid_Ender_Still", ir);
-		IconRegistry.addIcon("FrameCenter" + 12, "thermalexpansion:config/Config_None", ir);
 	}
 
 	/* IDismantleable */
@@ -253,6 +174,31 @@ public class BlockFrame extends Block implements IDismantleable, IInitializer {
 	public boolean canDismantle(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
 
 		return true;
+	}
+
+	/* IModelRegister */
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		StateMapperBase mapper = new StateMapperBase() {
+
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+
+				return new ModelResourceLocation(ModelFrame.BASE_MODEL_LOCATION.toString(),
+						"type=" + state.getValue(TYPE).getName());
+			}
+		};
+		ModelLoader.setCustomStateMapper(this, mapper);
+
+		for (Type type : Type.values()) {
+			ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(
+					ModelFrame.BASE_MODEL_LOCATION.toString(), "type=" + type.getName());
+			ModelLoader
+					.setCustomModelResourceLocation(Item.getItemFromBlock(this), type.getMetadata(), itemModelResourceLocation);
+		}
+
 	}
 
 	/* IInitializer */
@@ -388,7 +334,7 @@ public class BlockFrame extends Block implements IDismantleable, IInitializer {
 		@Override
 		public String getName() {
 
-			return name;
+			return name.toLowerCase();
 		}
 
 		public int getMetadata() {
@@ -420,6 +366,10 @@ public class BlockFrame extends Block implements IDismantleable, IInitializer {
 			}
 		}
 
+		public String getUnlocalizedName() {
+
+			return name;
+		}
 	}
 
 	public static boolean[] enable = new boolean[Type.values().length];

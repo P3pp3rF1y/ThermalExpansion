@@ -16,7 +16,7 @@ public class ItemBlockFrame extends ItemBlockCoFHBase {
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
 
-		return "tile.thermalexpansion.frame." + BlockFrame.Type.byMetadata(ItemHelper.getItemDamage(stack)).getName();
+		return "tile.thermalexpansion.frame." + BlockFrame.Type.byMetadata(ItemHelper.getItemDamage(stack)).getUnlocalizedName() + ".name";
 	}
 
 	@Override

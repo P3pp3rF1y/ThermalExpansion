@@ -6,6 +6,7 @@ import cofh.thermalexpansion.block.cell.BlockCell;
 import cofh.thermalexpansion.block.device.BlockDevice;
 import cofh.thermalexpansion.block.dynamo.BlockDynamo;
 import cofh.thermalexpansion.block.machine.BlockMachine;
+import cofh.thermalexpansion.block.simple.BlockFrame;
 
 import java.util.ArrayList;
 
@@ -19,16 +20,19 @@ public class TEBlocks {
 
 		blockMachine = new BlockMachine();
 		blockCell = new BlockCell();
+		blockFrame = new BlockFrame();
 		//blockDynamo = new BlockDynamo();
 		//blockDevice = new BlockDevice();
 
 		initList.add(blockMachine);
 		initList.add(blockCell);
+		initList.add(blockFrame);
 		//initList.add(blockDynamo);
 		//initList.add(blockDevice);
 
 		ThermalExpansion.proxy.addModelRegister(blockMachine);
 		ThermalExpansion.proxy.addModelRegister(blockCell);
+		ThermalExpansion.proxy.addModelRegister(blockFrame);
 
 		for (int i = 0; i < initList.size(); i++) {
 			initList.get(i).preInit();
@@ -54,6 +58,7 @@ public class TEBlocks {
 	/* REFERENCES */
 	public static BlockMachine blockMachine;
 	public static BlockCell blockCell;
+	public static BlockFrame blockFrame;
 	public static BlockDynamo blockDynamo;
 	public static BlockDevice blockDevice;
 

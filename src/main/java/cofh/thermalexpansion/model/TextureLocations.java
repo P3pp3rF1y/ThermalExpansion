@@ -5,6 +5,7 @@ import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.block.BlockTEBase;
 import cofh.thermalexpansion.block.cell.BlockCell;
 import cofh.thermalexpansion.block.machine.BlockMachine;
+import cofh.thermalfoundation.ThermalFoundation;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -15,6 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -55,6 +57,14 @@ public class TextureLocations {
 
 	public static class Machine {
 
+		public static final ResourceLocation FRAME_INNER = new ResourceLocation(ThermalExpansion.modId,
+				"blocks/machine/machine_frame_inner");
+		public static final ResourceLocation FRAME_SIDE = new ResourceLocation(ThermalExpansion.modId,
+				"blocks/machine/machine_frame_side");
+		public static final ResourceLocation FRAME_TOP = new ResourceLocation(ThermalExpansion.modId,
+				"blocks/machine/machine_frame_top");
+		public static final ResourceLocation FRAME_BOTTOM = new ResourceLocation(ThermalExpansion.modId,
+				"blocks/machine/machine_frame_bottom");
 		public static final ResourceLocation SIDE = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_side");
 		public static final ResourceLocation TOP = new ResourceLocation(ThermalExpansion.modId, "blocks/machine/machine_top");
 		public static final ResourceLocation BOTTOM = new ResourceLocation(ThermalExpansion.modId,
@@ -146,7 +156,8 @@ public class TextureLocations {
 				.put(BlockMachine.Type.PRECIPITATOR, PRECIPITATOR_ACTIVE).build();
 
 		public static final Set<ResourceLocation> ALL = ImmutableSet.<ResourceLocation>builder()
-				.addAll(SIDE_MAP.values()).addAll(FACE_MAP.values()).addAll(ACTIVE_FACE_MAP.values()).build();
+				.addAll(SIDE_MAP.values()).addAll(FACE_MAP.values()).addAll(ACTIVE_FACE_MAP.values())
+				.add(FRAME_BOTTOM, FRAME_INNER, FRAME_SIDE, FRAME_TOP).build();
 	}
 
 	public static class Cell {
@@ -217,12 +228,41 @@ public class TextureLocations {
 				.build();
 	}
 
+	public static class Illuminator {
+
+		public static final ResourceLocation FRAME = new ResourceLocation(ThermalExpansion.modId,
+				"blocks/light/illuminator_frame");
+	}
+
+	public static class Tesseract {
+
+		public static final ResourceLocation FRAME = new ResourceLocation(ThermalExpansion.modId,
+				"blocks/tesseract/tesseract");
+		public static final ResourceLocation FRAME_INNER = new ResourceLocation(ThermalExpansion.modId,
+				"blocks/tesseract/tesseract_inner");
+	}
+
+	public static class Block {
+
+		public static final ResourceLocation TIN = new ResourceLocation(ThermalFoundation.modId, "blocks/block_tin");
+		public static final ResourceLocation ELECTRUM = new ResourceLocation(ThermalFoundation.modId, "blocks/block_electrum");
+		public static final ResourceLocation SIGNALUM = new ResourceLocation(ThermalFoundation.modId, "blocks/block_signalum");
+		public static final ResourceLocation ENDERIUM = new ResourceLocation(ThermalFoundation.modId, "blocks/block_enderium");
+	}
+
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onTextureStitch(TextureStitchEvent.Pre event) {
 
 		TextureMap textureMap = event.getMap();
-		for (ResourceLocation rl : Cell.ALL) {
+		Set<ResourceLocation> toStitch = new HashSet<>();
+
+		toStitch.addAll(Cell.ALL);
+		toStitch.add(Tesseract.FRAME);
+		toStitch.add(Tesseract.FRAME_INNER);
+		toStitch.add(Illuminator.FRAME);
+
+		for (ResourceLocation rl : toStitch) {
 			textureMap.registerSprite(rl);
 		}
 	}

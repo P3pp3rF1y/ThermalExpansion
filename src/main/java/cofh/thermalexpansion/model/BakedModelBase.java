@@ -41,7 +41,7 @@ abstract class BakedModelBase extends BakedPerspectiveModelBase {
 			.put(EnumFacing.EAST, EAST_FACE)
 			.put(EnumFacing.WEST, WEST_FACE).build();
 
-	private VertexFormat format;
+	protected VertexFormat format;
 
 	BakedModelBase(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
 

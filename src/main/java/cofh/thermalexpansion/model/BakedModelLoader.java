@@ -12,7 +12,9 @@ public class BakedModelLoader implements ICustomModelLoader {
 	@Override
 	public boolean accepts(ResourceLocation modelLocation) {
 
-		return ModelMachine.MODEL_LOCATION.equals(modelLocation) || isSubModelOf(modelLocation, ModelCell.BASE_MODEL_LOCATION);
+		return ModelMachine.MODEL_LOCATION.equals(modelLocation)
+				|| isSubModelOf(modelLocation, ModelCell.BASE_MODEL_LOCATION)
+				|| isSubModelOf(modelLocation, ModelFrame.BASE_MODEL_LOCATION);
 	}
 
 	@Override
@@ -20,6 +22,9 @@ public class BakedModelLoader implements ICustomModelLoader {
 
 		if (isSubModelOf(modelLocation, ModelCell.BASE_MODEL_LOCATION)) {
 			return ModelCell.getModel(modelLocation);
+		}
+		if (isSubModelOf(modelLocation, ModelFrame.BASE_MODEL_LOCATION)) {
+			return ModelFrame.getModel(modelLocation);
 		}
 
 		return MACHINE_MODEL;

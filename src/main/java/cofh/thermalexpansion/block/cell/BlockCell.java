@@ -227,7 +227,7 @@ public class BlockCell extends BlockTEBase implements IModelRegister {
 	@SideOnly(Side.CLIENT)
 	public void registerModels() {
 
-		StateMapperBase ignoreState = new StateMapperBase() {
+		StateMapperBase mapper = new StateMapperBase() {
 
 			@Override
 			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
@@ -236,7 +236,7 @@ public class BlockCell extends BlockTEBase implements IModelRegister {
 						"type=" + state.getValue(TYPE).getName());
 			}
 		};
-		ModelLoader.setCustomStateMapper(this, ignoreState);
+		ModelLoader.setCustomStateMapper(this, mapper);
 
 		for (Type type : Type.values()) {
 			ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(
@@ -435,11 +435,6 @@ public class BlockCell extends BlockTEBase implements IModelRegister {
 					.get(category + StringHelper.titleCase(Type.byMetadata(i).getName()), "Recipe.Enable", true);
 		}
 	}
-
-	public static final String TEXTURE_DEFAULT = "CellConfig_";
-	public static final String TEXTURE_CB = "CellConfig_CB_";
-
-	public static String textureSelection = TEXTURE_DEFAULT;
 
 	public static ItemStack cellCreative;
 	public static ItemStack cellBasic;
