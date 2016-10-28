@@ -9,6 +9,7 @@ import cofh.lib.util.helpers.ItemHelper;
 import cofh.lib.util.helpers.StringHelper;
 import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.block.BlockTEBase;
+import cofh.thermalexpansion.block.simple.BlockFrame;
 import cofh.thermalexpansion.core.TEProps;
 
 import java.util.List;
@@ -16,6 +17,9 @@ import java.util.List;
 import cofh.thermalexpansion.item.ItemAugment;
 import cofh.thermalexpansion.model.ModelMachine;
 import cofh.thermalexpansion.util.ReconfigurableHelper;
+import cofh.thermalexpansion.util.crafting.RecipeMachine;
+import cofh.thermalexpansion.util.crafting.TECraftingHandler;
+import cofh.thermalfoundation.item.ItemMaterial;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
@@ -26,6 +30,8 @@ import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,6 +44,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -290,186 +297,182 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		String copperPart = "thermalexpansion:machineCopper";
 		String invarPart = "thermalexpansion:machineInvar";
 
-		//TODO REPLACE WITH JEI
+		//TODO consider readding wrapper implementation with JEI
+
 		// @formatter:off
-/*
-		if (enable[Types.FURNACE.ordinal()]) {
-			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(furnace, defaultAugments, new Object[] {
+		if (enable[Type.FURNACE.getMetadata()]) {
+			GameRegistry.addRecipe(new RecipeMachine(machineFurnace, defaultAugments, new Object[] {
 					" X ",
 					"YCY",
 					"IPI",
 					'C', machineFrame,
 					'I', copperPart,
-					'P', TEItems.powerCoilGold,
+					'P', ItemMaterial.powerCoilGold,
 					'X', "dustRedstone",
-					'Y', Blocks.brick_block
+					'Y', Blocks.BRICK_BLOCK
 			}));
 		}
-		if (enable[Types.PULVERIZER.ordinal()]) {
+		if (enable[Type.PULVERIZER.getMetadata()]) {
 			String category = "Machine.Pulverizer";
 			String comment = "If enabled, the Pulverizer will require Diamonds instead of Flint.";
-			Item component = ThermalExpansion.config.get(category, "RequireDiamonds", false, comment) ? Items.diamond : Items.flint;
-			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(pulverizer, defaultAugments, new Object[] {
+			Item component = ThermalExpansion.CONFIG.get(category, "RequireDiamonds", false, comment) ? Items.DIAMOND : Items.FLINT;
+			GameRegistry.addRecipe(new RecipeMachine(machinePulverizer, defaultAugments, new Object[] {
 					" X ",
 					"YCY",
 					"IPI",
 					'C', machineFrame,
 					'I', copperPart,
-					'P', TEItems.powerCoilGold,
-					'X', Blocks.piston,
+					'P', ItemMaterial.powerCoilGold,
+					'X', Blocks.PISTON,
 					'Y', component
 			}));
 		}
-		if (enable[Types.SAWMILL.ordinal()]) {
-			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(sawmill, defaultAugments, new Object[] {
+		if (enable[Type.SAWMILL.getMetadata()]) {
+			GameRegistry.addRecipe(new RecipeMachine(machineSawmill, defaultAugments, new Object[] {
 					" X ",
 					"YCY",
 					"IPI",
 					'C', machineFrame,
 					'I', copperPart,
-					'P', TEItems.powerCoilGold,
-					'X', Items.iron_axe,
+					'P', ItemMaterial.powerCoilGold,
+					'X', Items.IRON_AXE,
 					'Y', "plankWood"
 			}));
 		}
-		if (enable[Types.SMELTER.ordinal()]) {
-			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(smelter, defaultAugments, new Object[] {
+		if (enable[Type.SMELTER.getMetadata()]) {
+			GameRegistry.addRecipe(new RecipeMachine(machineSmelter, defaultAugments, new Object[] {
 					" X ",
 					"YCY",
 					"IPI",
 					'C', machineFrame,
 					'I', invarPart,
-					'P', TEItems.powerCoilGold,
-					'X', Items.bucket,
+					'P', ItemMaterial.powerCoilGold,
+					'X', Items.BUCKET,
 					'Y', "ingotInvar"
 			}));
 		}
-		if (enable[Types.CRUCIBLE.ordinal()]) {
-			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(crucible, defaultAugments, new Object[] {
+		if (enable[Type.CRUCIBLE.getMetadata()]) {
+			GameRegistry.addRecipe(new RecipeMachine(machineCrucible, defaultAugments, new Object[] {
 					" X ",
 					"YCY",
 					"IPI",
 					'C', machineFrame,
 					'I', invarPart,
-					'P', TEItems.powerCoilGold,
+					'P', ItemMaterial.powerCoilGold,
 					'X', BlockFrame.frameCellBasic,
-					'Y', Blocks.nether_brick
+					'Y', Blocks.NETHER_BRICK
 			}));
 		}
-		if (enable[Types.TRANSPOSER.ordinal()]) {
-			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(transposer, defaultAugments, new Object[] {
+		if (enable[Type.TRANSPOSER.getMetadata()]) {
+			GameRegistry.addRecipe(new RecipeMachine(machineTransposer, defaultAugments, new Object[] {
 					" X ",
 					"YCY",
 					"IPI",
 					'C', machineFrame,
 					'I', copperPart,
-					'P', TEItems.powerCoilGold,
-					'X', Items.bucket,
+					'P', ItemMaterial.powerCoilGold,
+					'X', Items.BUCKET,
 					'Y', "blockGlass"
 			}));
 		}
-		if (enable[Types.PRECIPITATOR.ordinal()]) {
-			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(precipitator, defaultAugments, new Object[] {
+		if (enable[Type.PRECIPITATOR.getMetadata()]) {
+			GameRegistry.addRecipe(new RecipeMachine(machinePrecipitator, defaultAugments, new Object[] {
 					" X ",
 					"YCY",
 					"IPI",
 					'C', machineFrame,
 					'I', copperPart,
-					'P', TEItems.powerCoilGold,
-					'X', Blocks.piston,
+					'P', ItemMaterial.powerCoilGold,
+					'X', Blocks.PISTON,
 					'Y', "ingotInvar"
 			}));
 		}
-		if (enable[Types.EXTRUDER.ordinal()]) {
-			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(extruder, defaultAugments, new Object[] {
+		if (enable[Type.EXTRUDER.getMetadata()]) {
+			GameRegistry.addRecipe(new RecipeMachine(machineExtruder, defaultAugments, new Object[] {
 					" X ",
 					"YCY",
 					"IPI",
 					'C', machineFrame,
 					'I', copperPart,
-					'P', TEItems.pneumaticServo,
-					'X', Blocks.piston,
+					'P', ItemMaterial.pneumaticServo,
+					'X', Blocks.PISTON,
 					'Y', "blockGlass"
 			}));
 		}
-		if (enable[Types.ACCUMULATOR.ordinal()]) {
-			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(accumulator, defaultAugments, new Object[] {
+		if (enable[Type.ACCUMULATOR.getMetadata()]) {
+			GameRegistry.addRecipe(new RecipeMachine(machineAccumulator, defaultAugments, new Object[] {
 					" X ",
 					"YCY",
 					"IPI",
 					'C', machineFrame,
 					'I', copperPart,
-					'P', TEItems.pneumaticServo,
-					'X', Items.bucket,
+					'P', ItemMaterial.pneumaticServo,
+					'X', Items.BUCKET,
 					'Y', "blockGlass"
 			}));
 		}
-		if (enable[Types.ASSEMBLER.ordinal()]) {
-			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(assembler, defaultAugments, new Object[] {
+		if (enable[Type.ASSEMBLER.getMetadata()]) {
+			GameRegistry.addRecipe(new RecipeMachine(machineAssembler, defaultAugments, new Object[] {
 					" X ",
 					"YCY",
 					"IPI",
 					'C', machineFrame,
 					'I', copperPart,
-					'P', TEItems.powerCoilGold,
-					'X', Blocks.chest,
+					'P', ItemMaterial.powerCoilGold,
+					'X', Blocks.CHEST,
 					'Y', "gearTin"
 			}));
 		}
-		if (enable[Types.CHARGER.ordinal()]) {
-			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(charger, defaultAugments, new Object[] {
+		if (enable[Type.CHARGER.getMetadata()]) {
+			GameRegistry.addRecipe(new RecipeMachine(machineCharger, defaultAugments, new Object[] {
 					" X ",
 					"YCY",
 					"IPI",
 					'C', machineFrame,
 					'I', copperPart,
-					'P', TEItems.powerCoilGold,
+					'P', ItemMaterial.powerCoilGold,
 					'X', BlockFrame.frameCellBasic,
-					'Y', TEItems.powerCoilSilver
+					'Y', ItemMaterial.powerCoilSilver
 			}));
 		}
-		if (enable[Types.INSOLATOR.ordinal()]) {
-			NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(insolator, defaultAugments, new Object[] {
+		if (enable[Type.INSOLATOR.getMetadata()]) {
+			GameRegistry.addRecipe(new RecipeMachine(machineInsolator, defaultAugments, new Object[] {
 					" X ",
 					"YCY",
 					"IPI",
 					'C', machineFrame,
 					'I', copperPart,
-					'P', TEItems.powerCoilGold,
+					'P', ItemMaterial.powerCoilGold,
 					'X', "gearLumium",
-					'Y', Blocks.dirt
+					'Y', Blocks.DIRT
 			}));
 		}
-*/
 		// @formatter:on
-//TODO READD WITH JEI
-/*
 		TECraftingHandler.addMachineUpgradeRecipes(machineFurnace);
 		TECraftingHandler.addMachineUpgradeRecipes(machinePulverizer);
-		TECraftingHandler.addMachineUpgradeRecipes(sawmill);
-		TECraftingHandler.addMachineUpgradeRecipes(smelter);
-		TECraftingHandler.addMachineUpgradeRecipes(crucible);
-		TECraftingHandler.addMachineUpgradeRecipes(transposer);
-		TECraftingHandler.addMachineUpgradeRecipes(precipitator);
-		TECraftingHandler.addMachineUpgradeRecipes(extruder);
-		TECraftingHandler.addMachineUpgradeRecipes(accumulator);
-		TECraftingHandler.addMachineUpgradeRecipes(assembler);
-		TECraftingHandler.addMachineUpgradeRecipes(charger);
-		TECraftingHandler.addMachineUpgradeRecipes(insolator);
+		TECraftingHandler.addMachineUpgradeRecipes(machineSawmill);
+		TECraftingHandler.addMachineUpgradeRecipes(machineSmelter);
+		TECraftingHandler.addMachineUpgradeRecipes(machineCrucible);
+		TECraftingHandler.addMachineUpgradeRecipes(machineTransposer);
+		TECraftingHandler.addMachineUpgradeRecipes(machinePrecipitator);
+		TECraftingHandler.addMachineUpgradeRecipes(machineExtruder);
+		TECraftingHandler.addMachineUpgradeRecipes(machineAccumulator);
+		TECraftingHandler.addMachineUpgradeRecipes(machineAssembler);
+		TECraftingHandler.addMachineUpgradeRecipes(machineCharger);
+		TECraftingHandler.addMachineUpgradeRecipes(machineInsolator);
 
-		TECraftingHandler.addSecureRecipe(furnace);
-		TECraftingHandler.addSecureRecipe(pulverizer);
-		TECraftingHandler.addSecureRecipe(sawmill);
-		TECraftingHandler.addSecureRecipe(smelter);
-		TECraftingHandler.addSecureRecipe(crucible);
-		TECraftingHandler.addSecureRecipe(transposer);
-		TECraftingHandler.addSecureRecipe(precipitator);
-		TECraftingHandler.addSecureRecipe(extruder);
-		TECraftingHandler.addSecureRecipe(accumulator);
-		TECraftingHandler.addSecureRecipe(assembler);
-		TECraftingHandler.addSecureRecipe(charger);
-		TECraftingHandler.addSecureRecipe(insolator);
-*/
+		TECraftingHandler.addSecureRecipe(machineFurnace);
+		TECraftingHandler.addSecureRecipe(machinePulverizer);
+		TECraftingHandler.addSecureRecipe(machineSawmill);
+		TECraftingHandler.addSecureRecipe(machineSmelter);
+		TECraftingHandler.addSecureRecipe(machineCrucible);
+		TECraftingHandler.addSecureRecipe(machineTransposer);
+		TECraftingHandler.addSecureRecipe(machinePrecipitator);
+		TECraftingHandler.addSecureRecipe(machineExtruder);
+		TECraftingHandler.addSecureRecipe(machineAccumulator);
+		TECraftingHandler.addSecureRecipe(machineAssembler);
+		TECraftingHandler.addSecureRecipe(machineCharger);
+		TECraftingHandler.addSecureRecipe(machineInsolator);
 
 		return true;
 	}

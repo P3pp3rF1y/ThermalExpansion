@@ -1,27 +1,28 @@
 package cofh.thermalexpansion.util.crafting;
 
+import cofh.core.util.crafting.RecipeSecure;
 import cofh.lib.util.helpers.ItemHelper;
 import cofh.lib.util.helpers.StringHelper;
 import cofh.thermalexpansion.block.machine.BlockMachine;
 import cofh.thermalexpansion.block.simple.BlockFrame;
 import cofh.thermalexpansion.core.TEAchievements;
 import cofh.thermalexpansion.core.TEProps;
+import cofh.thermalfoundation.item.TFItems;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static cofh.lib.util.helpers.ItemHelper.ShapelessRecipe;
 
 public class TECraftingHandler {
+
 	public static TECraftingHandler instance = new TECraftingHandler();
 
 	private TECraftingHandler() {
@@ -38,24 +39,24 @@ public class TECraftingHandler {
 	}
 
 	public static void addMachineUpgradeRecipes(ItemStack stack) {
-		//TODO REPLACE WITH JEI
-/*
-		NEIRecipeWrapper.addUpgradeRecipe(new RecipeMachineUpgrade(1, RecipeMachineUpgrade.getMachineLevel(stack, 1), new Object[] { "IGI", " X ", "I I", 'I',
-				"ingotInvar", 'G', "gearElectrum", 'X', RecipeMachineUpgrade.getMachineLevel(stack, 0) }));
-		NEIRecipeWrapper.addUpgradeRecipe(new RecipeMachineUpgrade(2, RecipeMachineUpgrade.getMachineLevel(stack, 2), new Object[] { "IGI", " X ", "I I", 'I',
-				"blockGlassHardened", 'G', "gearSignalum", 'X', RecipeMachineUpgrade.getMachineLevel(stack, 1) }));
-		NEIRecipeWrapper.addUpgradeRecipe(new RecipeMachineUpgrade(3, RecipeMachineUpgrade.getMachineLevel(stack, 3), new Object[] { "IGI", " X ", "I I", 'I',
-				"ingotSilver", 'G', "gearEnderium", 'X', RecipeMachineUpgrade.getMachineLevel(stack, 2) }));
-*/
+		//TODO READD JEI wrapper
+		GameRegistry.addRecipe(new RecipeMachineUpgrade(1, RecipeMachineUpgrade.getMachineLevel(stack, 1),
+				new Object[] { "IGI", " X ", "I I", 'I',
+						"ingotInvar", 'G', "gearElectrum", 'X', RecipeMachineUpgrade.getMachineLevel(stack, 0) }));
+		GameRegistry.addRecipe(new RecipeMachineUpgrade(2, RecipeMachineUpgrade.getMachineLevel(stack, 2),
+				new Object[] { "IGI", " X ", "I I", 'I',
+						"blockGlassHardened", 'G', "gearSignalum", 'X', RecipeMachineUpgrade.getMachineLevel(stack, 1) }));
+		GameRegistry.addRecipe(new RecipeMachineUpgrade(3, RecipeMachineUpgrade.getMachineLevel(stack, 3),
+				new Object[] { "IGI", " X ", "I I", 'I',
+						"ingotSilver", 'G', "gearEnderium", 'X', RecipeMachineUpgrade.getMachineLevel(stack, 2) }));
 	}
 
 	public static void addSecureRecipe(ItemStack stack) {
 
-		//TODO REPLACE WITH JEI
-/*
+		//TODO READD JEI wrapper
 
-		NEIRecipeWrapper.addSecureRecipe(new RecipeSecure(stack, new Object[] { " L ", "SXS", " S ", 'L', TEItems.lock, 'S', "nuggetSignalum", 'X', stack }));
-*/
+		GameRegistry.addRecipe(new RecipeSecure(stack,
+				new Object[] { " L ", "SXS", " S ", 'L', TFItems.itemSecurity, 'S', "nuggetSignalum", 'X', stack }));
 	}
 
 	@SubscribeEvent
@@ -89,17 +90,14 @@ public class TECraftingHandler {
 			player.addStat(TEAchievements.crucible, 1);
 		} else if (stack.isItemEqual(BlockMachine.machineTransposer)) {
 			player.addStat(TEAchievements.transposer, 1);
-			//TODO READD
-/*
-		} else if (stack.isItemEqual(BlockMachine.precipitator)) {
+		} else if (stack.isItemEqual(BlockMachine.machinePrecipitator)) {
 			player.addStat(TEAchievements.precipitator, 1);
-		} else if (stack.isItemEqual(BlockMachine.extruder)) {
+		} else if (stack.isItemEqual(BlockMachine.machineExtruder)) {
 			player.addStat(TEAchievements.extruder, 1);
 		} else if (stack.isItemEqual(BlockMachine.machineAccumulator)) {
 			player.addStat(TEAchievements.accumulator, 1);
-		} else if (stack.isItemEqual(BlockMachine.assembler)) {
+		} else if (stack.isItemEqual(BlockMachine.machineAssembler)) {
 			player.addStat(TEAchievements.assembler, 1);
-*/
 		} else if (stack.isItemEqual(BlockMachine.machineCharger)) {
 			player.addStat(TEAchievements.charger, 1);
 		} else if (stack.isItemEqual(BlockMachine.machineInsolator)) {

@@ -295,62 +295,61 @@ public class ItemAugment extends ItemCoFHBase implements IInitializer, IAugmentI
 	@Override
 	public boolean postInit() {
 
-		//TODO FIX RECIPES
-//			/* GENERAL */
-//		GameRegistry.addRecipe(ShapedRecipe(generalAutoOutput, " I ", "IXI", " I ", 'I', "nuggetTin", 'X', ItemMaterial.pneumaticServo));
-//		GameRegistry.addRecipe(ShapedRecipe(generalAutoInput, " I ", "IXI", " I ", 'I', "nuggetIron", 'X', ItemMaterial.pneumaticServo));
-//		GameRegistry.addRecipe(ShapedRecipe(generalReconfigSides, " I ", "IXI", " I ", 'I', "nuggetTin", 'X', "ingotGold"));
-//		GameRegistry.addRecipe(ShapedRecipe(generalRedstoneControl, " I ", "IXI", " I ", 'I', "nuggetTin", 'X', "dustRedstone"));
-//
-//			/* DYNAMO */
-//		GameRegistry.addRecipe(ShapedRecipe(dynamoCoilDuct, " I ", "IXI", " I ", 'I', "nuggetLead", 'X', "ingotCopper"));
-//		GameRegistry
-//				.addRecipe(ShapedRecipe(dynamoThrottle, " I ", "IXI", "YIY", 'I', "nuggetLead", 'X', "ingotElectrum", 'Y', "dustRedstone"));
-//
-//		GameRegistry.addRecipe(ShapedRecipe(dynamoEfficiency[0], " N ", "NXN", "YNY", 'N', "ingotLead", 'X', ItemMaterial.powerCoilSilver, 'Y', "ingotTin",
-//				'Y', "dustRedstone"));
-//		GameRegistry.addRecipe(ShapedRecipe(dynamoEfficiency[1], "ZIZ", "NXN", "YIY", 'N', "ingotLead", 'I', "ingotElectrum", 'X', ItemMaterial.powerCoilSilver,
-//				'Y', "dustGlowstone", 'Z', "dustRedstone"));
-//		GameRegistry.addRecipe(ShapedRecipe(dynamoEfficiency[2], "ZIZ", "IXI", "YIY", 'I', "ingotElectrum", 'X', ItemMaterial.powerCoilSilver,
-//				'Y', "dustCryotheum", 'Z', "dustGlowstone"));
-//
-//		GameRegistry.addRecipe(ShapedRecipe(dynamoOutput[0], " N ", "NXN", "YNY", 'N', "ingotCopper", 'X', ItemMaterial.powerCoilSilver, 'Y', "dustRedstone"));
-//		GameRegistry.addRecipe(ShapedRecipe(dynamoOutput[1], "ZIZ", "NXN", "YIY", 'N', "ingotCopper", 'I', "ingotSilver", 'X', ItemMaterial.powerCoilSilver,
-//				'Y', "dustGlowstone", 'Z', "dustRedstone"));
-//		GameRegistry.addRecipe(ShapedRecipe(dynamoOutput[2], "ZIZ", "IXI", "YIY", 'I', "ingotSilver", 'X', ItemMaterial.powerCoilSilver, 'Y', "dustCryotheum",
-//				'Z', "dustGlowstone"));
-//
-//			/* ENDER */
-//
-//			/* ENERGY */
-//
-//			/* MACHINE */
-//		GameRegistry
-//				.addRecipe(ShapedRecipe(machineSecondary[0], " N ", "NXN", "YNY", 'N', "ingotBronze", 'X', "blockCloth", 'Y', "blockCloth"));
-//		GameRegistry.addRecipe(ShapedRecipe(machineSecondary[1], "ZIZ", "NXN", "YIY", 'N', "ingotBronze", 'I', "blockGlassHardened", 'X', "blockClothRock",
-//				'Y', "dustGlowstone", 'Z', "blockCloth"));
-//		GameRegistry.addRecipe(ShapedRecipe(machineSecondary[2], "ZIZ", "IXI", "YIY", 'I', "blockGlassHardened", 'X', ItemMaterial.pneumaticServo,
-//				'Y', "dustCryotheum", 'Z', "dustGlowstone"));
-//
-//		GameRegistry.addRecipe(ShapedRecipe(machineSpeed[0], " N ", "NXN", "YNY", 'N', "ingotBronze", 'X', ItemMaterial.powerCoilGold, 'Y', "dustRedstone"));
-//		GameRegistry.addRecipe(ShapedRecipe(machineSpeed[1], "ZIZ", "NXN", "YIY", 'N', "ingotBronze", 'I', "ingotGold", 'X', ItemMaterial.powerCoilGold,
-//				'Y', "dustPyrotheum", 'Z', "dustRedstone"));
-//		GameRegistry.addRecipe(ShapedRecipe(machineSpeed[2], "ZIZ", "IXI", "YIY", 'I', "ingotGold", 'X', ItemMaterial.powerCoilGold, 'Y', Items.ENDER_PEARL,
-//				'Z', "dustPyrotheum"));
-//
-//		GameRegistry.addRecipe(ShapedRecipe(ItemAugment.machineNull, " I ", "NXN", "YIY", 'N', "ingotInvar", 'I', "ingotSilver", 'X', Items.LAVA_BUCKET,
-//				'Y', "dustRedstone"));
-//
-//			/* MACHINE SPECIFIC */
-//		GameRegistry.addRecipe(ShapedRecipe(ItemAugment.machineFurnaceFood, " I ", "NXN", "YIY", 'N', "dustRedstone", 'I', "ingotSilver",
-//				'X', ItemMaterial.powerCoilGold, 'Y', Blocks.BRICK_BLOCK));
-//
-//		GameRegistry.addRecipe(ShapedRecipe(machineExtruderBoost[0], " N ", "NXN", "YNY", 'N', "ingotBronze", 'X', ItemMaterial.pneumaticServo,
-//				'Y', Blocks.COBBLESTONE));
-//		GameRegistry.addRecipe(ShapedRecipe(machineExtruderBoost[1], "ZIZ", "NXN", "YIY", 'N', "ingotBronze", 'I', "ingotGold",
-//				'X', ItemMaterial.pneumaticServo, 'Y', Blocks.STONE, 'Z', Blocks.COBBLESTONE));
-//		GameRegistry.addRecipe(ShapedRecipe(machineExtruderBoost[2], "ZIZ", "IXI", "YIY", 'I', "ingotGold", 'X', ItemMaterial.pneumaticServo,
-//				'Y', Blocks.OBSIDIAN, 'Z', Blocks.STONE));
+			/* GENERAL */
+		GameRegistry.addRecipe(ShapedRecipe(generalAutoOutput, " I ", "IXI", " I ", 'I', "nuggetTin", 'X', ItemMaterial.pneumaticServo));
+		GameRegistry.addRecipe(ShapedRecipe(generalAutoInput, " I ", "IXI", " I ", 'I', "nuggetIron", 'X', ItemMaterial.pneumaticServo));
+		GameRegistry.addRecipe(ShapedRecipe(generalReconfigSides, " I ", "IXI", " I ", 'I', "nuggetTin", 'X', "ingotGold"));
+		GameRegistry.addRecipe(ShapedRecipe(generalRedstoneControl, " I ", "IXI", " I ", 'I', "nuggetTin", 'X', "dustRedstone"));
+
+			/* DYNAMO */
+		GameRegistry.addRecipe(ShapedRecipe(dynamoCoilDuct, " I ", "IXI", " I ", 'I', "nuggetLead", 'X', "ingotCopper"));
+		GameRegistry
+				.addRecipe(ShapedRecipe(dynamoThrottle, " I ", "IXI", "YIY", 'I', "nuggetLead", 'X', "ingotElectrum", 'Y', "dustRedstone"));
+
+		GameRegistry.addRecipe(ShapedRecipe(dynamoEfficiency[0], " N ", "NXN", "YNY", 'N', "ingotLead", 'X', ItemMaterial.powerCoilSilver, 'Y', "ingotTin",
+				'Y', "dustRedstone"));
+		GameRegistry.addRecipe(ShapedRecipe(dynamoEfficiency[1], "ZIZ", "NXN", "YIY", 'N', "ingotLead", 'I', "ingotElectrum", 'X', ItemMaterial.powerCoilSilver,
+				'Y', "dustGlowstone", 'Z', "dustRedstone"));
+		GameRegistry.addRecipe(ShapedRecipe(dynamoEfficiency[2], "ZIZ", "IXI", "YIY", 'I', "ingotElectrum", 'X', ItemMaterial.powerCoilSilver,
+				'Y', "dustCryotheum", 'Z', "dustGlowstone"));
+
+		GameRegistry.addRecipe(ShapedRecipe(dynamoOutput[0], " N ", "NXN", "YNY", 'N', "ingotCopper", 'X', ItemMaterial.powerCoilSilver, 'Y', "dustRedstone"));
+		GameRegistry.addRecipe(ShapedRecipe(dynamoOutput[1], "ZIZ", "NXN", "YIY", 'N', "ingotCopper", 'I', "ingotSilver", 'X', ItemMaterial.powerCoilSilver,
+				'Y', "dustGlowstone", 'Z', "dustRedstone"));
+		GameRegistry.addRecipe(ShapedRecipe(dynamoOutput[2], "ZIZ", "IXI", "YIY", 'I', "ingotSilver", 'X', ItemMaterial.powerCoilSilver, 'Y', "dustCryotheum",
+				'Z', "dustGlowstone"));
+
+			/* ENDER */
+
+			/* ENERGY */
+
+			/* MACHINE */
+		GameRegistry
+				.addRecipe(ShapedRecipe(machineSecondary[0], " N ", "NXN", "YNY", 'N', "ingotBronze", 'X', "blockCloth", 'Y', "blockCloth"));
+		GameRegistry.addRecipe(ShapedRecipe(machineSecondary[1], "ZIZ", "NXN", "YIY", 'N', "ingotBronze", 'I', "blockGlassHardened", 'X', "blockClothRock",
+				'Y', "dustGlowstone", 'Z', "blockCloth"));
+		GameRegistry.addRecipe(ShapedRecipe(machineSecondary[2], "ZIZ", "IXI", "YIY", 'I', "blockGlassHardened", 'X', ItemMaterial.pneumaticServo,
+				'Y', "dustCryotheum", 'Z', "dustGlowstone"));
+
+		GameRegistry.addRecipe(ShapedRecipe(machineSpeed[0], " N ", "NXN", "YNY", 'N', "ingotBronze", 'X', ItemMaterial.powerCoilGold, 'Y', "dustRedstone"));
+		GameRegistry.addRecipe(ShapedRecipe(machineSpeed[1], "ZIZ", "NXN", "YIY", 'N', "ingotBronze", 'I', "ingotGold", 'X', ItemMaterial.powerCoilGold,
+				'Y', "dustPyrotheum", 'Z', "dustRedstone"));
+		GameRegistry.addRecipe(ShapedRecipe(machineSpeed[2], "ZIZ", "IXI", "YIY", 'I', "ingotGold", 'X', ItemMaterial.powerCoilGold, 'Y', Items.ENDER_PEARL,
+				'Z', "dustPyrotheum"));
+
+		GameRegistry.addRecipe(ShapedRecipe(ItemAugment.machineNull, " I ", "NXN", "YIY", 'N', "ingotInvar", 'I', "ingotSilver", 'X', Items.LAVA_BUCKET,
+				'Y', "dustRedstone"));
+
+			/* MACHINE SPECIFIC */
+		GameRegistry.addRecipe(ShapedRecipe(ItemAugment.machineFurnaceFood, " I ", "NXN", "YIY", 'N', "dustRedstone", 'I', "ingotSilver",
+				'X', ItemMaterial.powerCoilGold, 'Y', Blocks.BRICK_BLOCK));
+
+		GameRegistry.addRecipe(ShapedRecipe(machineExtruderBoost[0], " N ", "NXN", "YNY", 'N', "ingotBronze", 'X', ItemMaterial.pneumaticServo,
+				'Y', Blocks.COBBLESTONE));
+		GameRegistry.addRecipe(ShapedRecipe(machineExtruderBoost[1], "ZIZ", "NXN", "YIY", 'N', "ingotBronze", 'I', "ingotGold",
+				'X', ItemMaterial.pneumaticServo, 'Y', Blocks.STONE, 'Z', Blocks.COBBLESTONE));
+		GameRegistry.addRecipe(ShapedRecipe(machineExtruderBoost[2], "ZIZ", "IXI", "YIY", 'I', "ingotGold", 'X', ItemMaterial.pneumaticServo,
+				'Y', Blocks.OBSIDIAN, 'Z', Blocks.STONE));
 
 		return true;
 	}
