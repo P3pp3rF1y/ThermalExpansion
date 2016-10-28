@@ -17,16 +17,24 @@ buildscript {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.10.2A0.0.1"
+repositories {
+    maven { url "http://dvs1.progwml6.com/files/maven" }
+}
+
+version = mod_version
 group = "thermalexpansion"
 archivesBaseName = "ThermalExpansion"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+dependencies {
+    deobfCompile "mezz.jei:jei_${minecraft_version}:${jei_version}"
+}
+
 minecraft {
-    mappings = "snapshot_20160912"
-    version = "1.10.2-12.18.1.2094"
+    mappings = mcp_mappings
+    version = minecraft_version + "-" + forge_version
     runDir = "run"
 }
 
