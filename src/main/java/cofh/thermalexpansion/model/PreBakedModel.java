@@ -87,8 +87,10 @@ public class PreBakedModel {
 		for (BaseElement element : dynamicElements) {
 
 			for (Face face : element.getFaces()) {
-				ret.add(createQuad(face.vectors[0], face.vectors[1], face.vectors[2], face.vectors[3], face.facing,
-						face.sprite, face.minU, face.maxU, face.minV, face.maxV, face.color));
+				if (face.visible) {
+					ret.add(createQuad(face.vectors[0], face.vectors[1], face.vectors[2], face.vectors[3], face.facing,
+							face.sprite, face.minU, face.maxU, face.minV, face.maxV, face.color));
+				}
 			}
 		}
 
@@ -146,6 +148,7 @@ public class PreBakedModel {
 		private float minV = 0;
 		private float maxV = 16;
 		private Color4f color = new Color4f(1.0f, 1.0f, 1.0f, 1.0f);
+		private boolean visible = true;
 
 		public void setUV(float minU, float maxU, float minV, float maxV) {
 
@@ -163,6 +166,11 @@ public class PreBakedModel {
 		public void setColor(Color4f color) {
 
 			this.color = color;
+		}
+
+		public void setVisible(boolean visible) {
+
+			this.visible = visible;
 		}
 	}
 
@@ -275,6 +283,15 @@ public class PreBakedModel {
 
 			return this;
 		}
+
+		public BaseElement setVisible(boolean visible) {
+
+			for (Face face : faces) {
+				face.setVisible(visible);
+			}
+
+			return this;
+		}
 	}
 
 	public static class CompositeElement extends BaseElement {
@@ -356,6 +373,17 @@ public class PreBakedModel {
 			}
 
 			super.inset(size);
+			return this;
+		}
+
+		@Override
+		public CompositeElement setVisible(boolean visible) {
+
+			for (BaseElement child : children) {
+				child.setVisible(visible);
+			}
+
+			super.setVisible(visible);
 			return this;
 		}
 	}

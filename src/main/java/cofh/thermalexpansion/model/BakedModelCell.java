@@ -23,23 +23,46 @@ import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
 import javax.annotation.Nullable;
+import javax.vecmath.Color4f;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BakedModelCell extends BakedModelBase {
 
 	private BlockCell.Type type;
+	private PreBakedModel frameModel;
+	private PreBakedModel centerModel;
+	private PreBakedModel overlayModel;
 
 	BakedModelCell(BlockCell.Type type, IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
 
 		super(state, format, bakedTextureGetter);
 		this.type = type;
+
+		initPreBakedModels();
 	}
 
 	BakedModelCell(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
 
 		this(null, state, format, bakedTextureGetter);
+	}
+
+	private void initPreBakedModels() {
+
+		frameModel = new PreBakedModel(format);
+		frameModel.addCube().setTexture(getFaceTexture());
+		frameModel.addCube().inset(0.8125).setTexture(getInnerTexture());
+		frameModel.preBake();
+
+		centerModel = new PreBakedModel(format);
+		centerModel.addCube(!(type == BlockCell.Type.BASIC || type == BlockCell.Type.HARDENED)).setSize(0.7, true)
+				.setTexture(getCenterTexture());
+		centerModel.preBake();
+
+		overlayModel = new PreBakedModel(format);
+		overlayModel.addCube(true);
+		overlayModel.addCube(true);
 	}
 
 	@Override
@@ -49,76 +72,83 @@ public class BakedModelCell extends BakedModelBase {
 		List<BakedQuad> quads = new ArrayList<>();
 		IExtendedBlockState exState = (IExtendedBlockState) state;
 
-		//TODO clean this so that it's more readable, get caching in place
 		if (layer == null || layer == BlockRenderLayer.CUTOUT) {
-			for (EnumFacing facing : EnumFacing.VALUES) {
-				quads.add(createInsetFullFaceQuad(facing, 0.8125, getInnerTexture()));
-				quads.add(createFullFaceQuad(facing, getFaceTexture()));
-
-				if (exState != null) {
-					if (facing == exState.getValue(TEProps.FACING)) {
-						if (type == BlockCell.Type.CREATIVE) {
-							quads.add(createFullFaceQuad(facing, getCreativeMeterTexture()));
-						} else {
-							quads.add(createFullFaceQuad(facing, getMeterTexture(exState.getValue(BlockCell.METER))));
-						}
-					} else {
-						quads.add(createFullFaceQuad(facing, getConfigTexture(exState.getValue(TEProps.SIDE_CONFIG[facing.ordinal()]))));
-					}
-				}
+			quads.addAll(frameModel.getBakedQuads());
+			if (type == BlockCell.Type.BASIC || type == BlockCell.Type.HARDENED) {
+				quads.addAll(centerModel.getBakedQuads());
 			}
 
-			if (type == BlockCell.Type.BASIC || type == BlockCell.Type.HARDENED) {
-				quads.addAll(createCenteredCube(0.7, getCenterTexture(), 1.0f, 1.0f));
+			if (exState != null) {
+				updateMeterAndConfigs(exState);
+				quads.addAll(overlayModel.getBakedQuads());
 			}
 		}
 
 		if ((layer == null || layer == BlockRenderLayer.TRANSLUCENT) &&
-				!(type == BlockCell.Type.BASIC || type == BlockCell.Type.HARDENED)) {
+				!(type == BlockCell.Type.BASIC || type == BlockCell.Type.HARDENED))
+
+		{
 			float red = 1.0f;
 
 			if (exState != null) {
 				red = (165f + (exState.getValue(BlockCell.METER) * 10)) / 255f;
 			}
-
-			quads.addAll(createCenteredCube(0.7, getCenterTexture(), layer == null ? 1.0f : 0.4f, red));
+			centerModel.getElement(0).setColor(new Color4f(red, 1.0f, 1.0f, 0.3f));
+			quads.addAll(centerModel.getBakedQuads());
 		}
 
 		return quads;
 	}
 
-	private TextureAtlasSprite getConfigTexture(BlockTEBase.EnumSideConfig config) {
+	private void updateMeterAndConfigs(IExtendedBlockState exState) {
 
-		return getSpriteFromLocation(TextureLocations.Cell.CONFIG_MAP.get(config));
+		PreBakedModel.CubeElement meterOverlayCube = (PreBakedModel.CubeElement) overlayModel.getElement(0);
+		PreBakedModel.CubeElement configOverlayCube = (PreBakedModel.CubeElement) overlayModel.getElement(1);
+		for (EnumFacing facing : EnumFacing.VALUES) {
+			PreBakedModel.BaseElement meterElement = meterOverlayCube.getChild(facing.ordinal());
+			PreBakedModel.BaseElement configElement = configOverlayCube.getChild(facing.ordinal());
+
+			if (facing == exState.getValue(TEProps.FACING)) {
+				meterElement.setVisible(true).setTexture(getMeterTexture(exState.getValue(BlockCell.METER)));
+			} else {
+				meterElement.setVisible(false);
+			}
+
+			BlockTEBase.EnumSideConfig config = exState.getValue(TEProps.SIDE_CONFIG[facing.ordinal()]);
+			if (config != BlockTEBase.EnumSideConfig.NONE) {
+				configElement.setVisible(true).setTexture(getConfigTexture(config));
+			} else {
+				configElement.setVisible(false);
+			}
+		}
 	}
 
-	private TextureAtlasSprite getMeterTexture(int meterTracker) {
+	private ResourceLocation getConfigTexture(BlockTEBase.EnumSideConfig config) {
 
-		return getSpriteFromLocation(TextureLocations.Cell.METER_MAP.get(meterTracker));
+		return TextureLocations.Cell.CONFIG_MAP.get(config);
 	}
 
-	private TextureAtlasSprite getCreativeMeterTexture() {
+	private ResourceLocation getMeterTexture(int meterTracker) {
 
-		return getSpriteFromLocation(TextureLocations.Cell.METER_CREATIVE);
+		return type == BlockCell.Type.CREATIVE ?
+				TextureLocations.Cell.METER_CREATIVE :
+				TextureLocations.Cell.METER_MAP.get(meterTracker);
 	}
 
-	private TextureAtlasSprite getCenterTexture() {
+	private ResourceLocation getCenterTexture() {
 
-		//TODO add caching
-		return getSpriteFromLocation(type == BlockCell.Type.BASIC || type == BlockCell.Type.HARDENED ?
-				TextureLocations.Cell.CENTER_SOLID : TFFluids.fluidRedstone.getStill());
+		return type == BlockCell.Type.BASIC || type == BlockCell.Type.HARDENED ?
+				TextureLocations.Cell.CENTER_SOLID : TFFluids.fluidRedstone.getStill();
 	}
 
-	private TextureAtlasSprite getInnerTexture() {
+	private ResourceLocation getInnerTexture() {
 
-		//TODO add caching
-		return getSpriteFromLocation(TextureLocations.Cell.INNER_MAP.get(type));
+		return TextureLocations.Cell.INNER_MAP.get(type);
 	}
 
-	private TextureAtlasSprite getFaceTexture() {
+	private ResourceLocation getFaceTexture() {
 
-		//TODO add caching
-		return getSpriteFromLocation(TextureLocations.Cell.FACE_MAP.get(type));
+		return TextureLocations.Cell.FACE_MAP.get(type);
 	}
 
 	@Override
@@ -136,7 +166,7 @@ public class BakedModelCell extends BakedModelBase {
 	@Override
 	public TextureAtlasSprite getParticleTexture() {
 
-		return getFaceTexture();
+		return RenderHelper.getSpriteFromLocation(getFaceTexture());
 	}
 
 	@Override
