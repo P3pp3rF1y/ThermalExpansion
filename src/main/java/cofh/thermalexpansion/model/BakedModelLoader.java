@@ -7,12 +7,10 @@ import net.minecraftforge.client.model.IModel;
 
 public class BakedModelLoader implements ICustomModelLoader {
 
-	public static final ModelMachine MACHINE_MODEL = new ModelMachine();
-
 	@Override
 	public boolean accepts(ResourceLocation modelLocation) {
 
-		return ModelMachine.MODEL_LOCATION.equals(modelLocation)
+		return isSubModelOf(modelLocation, ModelMachine.BASE_MODEL_LOCATION)
 				|| isSubModelOf(modelLocation, ModelCell.BASE_MODEL_LOCATION)
 				|| isSubModelOf(modelLocation, ModelFrame.BASE_MODEL_LOCATION);
 	}
@@ -27,7 +25,7 @@ public class BakedModelLoader implements ICustomModelLoader {
 			return ModelFrame.getModel(modelLocation);
 		}
 
-		return MACHINE_MODEL;
+		return ModelMachine.getModel(modelLocation);
 	}
 
 	@Override

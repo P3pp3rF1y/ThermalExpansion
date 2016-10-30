@@ -158,11 +158,6 @@ public class BakedModelFrame extends BakedModelBase {
 		return null;
 	}
 
-	BakedModelFrame(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-
-		this(null, state, format, bakedTextureGetter);
-	}
-
 	@Override
 	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
 
@@ -184,7 +179,7 @@ public class BakedModelFrame extends BakedModelBase {
 			return centerModel.getBakedQuads();
 		}
 
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 
 	private boolean hasTranslucentCenter() {
@@ -200,27 +195,8 @@ public class BakedModelFrame extends BakedModelBase {
 	}
 
 	@Override
-	public boolean isGui3d() {
-
-		return true;
-	}
-
-	@Override
 	public TextureAtlasSprite getParticleTexture() {
 
 		return RenderHelper.getSpriteFromLocation(getFrameTexture());
 	}
-
-	@Override
-	public boolean isAmbientOcclusion() {
-
-		return true;
-	}
-
-	@Override
-	public ItemOverrideList getOverrides() {
-
-		return ItemOverrideList.NONE;
-	}
-
 }

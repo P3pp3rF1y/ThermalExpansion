@@ -11,9 +11,6 @@ import cofh.thermalexpansion.ThermalExpansion;
 import cofh.thermalexpansion.block.BlockTEBase;
 import cofh.thermalexpansion.block.simple.BlockFrame;
 import cofh.thermalexpansion.core.TEProps;
-
-import java.util.List;
-
 import cofh.thermalexpansion.item.ItemAugment;
 import cofh.thermalexpansion.model.ModelMachine;
 import cofh.thermalexpansion.util.ReconfigurableHelper;
@@ -48,6 +45,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
+
 public class BlockMachine extends BlockTEBase implements IInitializer, IModelRegister {
 
 	public static final PropertyEnum<BlockMachine.Type> TYPE = PropertyEnum.create("type", BlockMachine.Type.class);
@@ -66,10 +65,11 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	protected BlockStateContainer createBlockState() {
 
 		return new ExtendedBlockState(this,
-				new IProperty[] {TYPE},
-				new IUnlistedProperty[] {TEProps.ACTIVE, TEProps.FACING, TEProps.SIDE_CONFIG[0], TEProps.SIDE_CONFIG[1],
-					TEProps.SIDE_CONFIG[2], TEProps.SIDE_CONFIG[3], TEProps.SIDE_CONFIG[4], TEProps.SIDE_CONFIG[5], TEProps.FLUID}
-				);
+				new IProperty[] { TYPE },
+				new IUnlistedProperty[] { TEProps.ACTIVE, TEProps.FACING, TEProps.SIDE_CONFIG[0], TEProps.SIDE_CONFIG[1],
+						TEProps.SIDE_CONFIG[2], TEProps.SIDE_CONFIG[3], TEProps.SIDE_CONFIG[4], TEProps.SIDE_CONFIG[5],
+						TEProps.FLUID }
+		);
 	}
 
 	@Override
@@ -118,7 +118,9 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand,
+			ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+
 		TileEntity tile = world.getTileEntity(pos);
 
 		//TODO change to fluid caps (or just warp that inside the fluid helper
@@ -145,6 +147,7 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 
 	@Override
 	public BlockRenderLayer getBlockLayer() {
+
 		return BlockRenderLayer.CUTOUT_MIPPED;
 	}
 
@@ -170,35 +173,34 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	public TileEntity createTileEntity(World world, IBlockState state) {
 
 		switch (state.getValue(TYPE)) {
-			case FURNACE:
-				return new TileFurnace();
-			case PULVERIZER:
-				return new TilePulverizer();
-			case SAWMILL:
-				return new TileSawmill();
-			case SMELTER:
-				return new TileSmelter();
-			case INSOLATOR:
-				return new TileInsolator();
-			case CHARGER:
-				return new TileCharger();
-			case CRUCIBLE:
-				return new TileCrucible();
-			case TRANSPOSER:
-				return new TileTransposer();
-			case ACCUMULATOR:
-				return new TileAccumulator();
-			case ASSEMBLER:
-				return new TileAssembler();
-			case EXTRUDER:
-				return new TileExtruder();
-			case PRECIPITATOR:
-				return new TilePrecipitator();
-			default:
-				return null;
+		case FURNACE:
+			return new TileFurnace();
+		case PULVERIZER:
+			return new TilePulverizer();
+		case SAWMILL:
+			return new TileSawmill();
+		case SMELTER:
+			return new TileSmelter();
+		case INSOLATOR:
+			return new TileInsolator();
+		case CHARGER:
+			return new TileCharger();
+		case CRUCIBLE:
+			return new TileCrucible();
+		case TRANSPOSER:
+			return new TileTransposer();
+		case ACCUMULATOR:
+			return new TileAccumulator();
+		case ASSEMBLER:
+			return new TileAssembler();
+		case EXTRUDER:
+			return new TileExtruder();
+		case PRECIPITATOR:
+			return new TilePrecipitator();
+		default:
+			return null;
 		}
 	}
-
 
 	@Override
 	public NBTTagCompound getItemStackTag(IBlockAccess world, BlockPos pos) {
@@ -222,17 +224,29 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 	@SideOnly(Side.CLIENT)
 	public void registerModels() {
 
-		StateMapperBase ignoreState = new StateMapperBase() {
+		StateMapperBase mapper = new StateMapperBase() {
+
 			@Override
-			protected ModelResourceLocation getModelResourceLocation(IBlockState iBlockState) {
-				return new ModelResourceLocation(ModelMachine.MODEL_LOCATION, "normal");
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+
+				return new ModelResourceLocation(ModelMachine.BASE_MODEL_LOCATION.toString(),
+						"type=" + state.getValue(TYPE).getName());
 			}
 		};
-		ModelLoader.setCustomStateMapper(this, ignoreState);
+		ModelLoader.setCustomStateMapper(this, mapper);
 
-		for (int i = 0; i < Type.values().length; i++) {
-			ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(new ResourceLocation(ThermalExpansion.modId, "machine_" + Type.byMetadata(i).getName()), "inventory" );
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), i, itemModelResourceLocation);
+		for (BlockMachine.Type type : BlockMachine.Type.values()) {
+			ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(
+					ModelMachine.BASE_MODEL_LOCATION.toString(), "type=" + type.getName());
+			ModelLoader
+					.setCustomModelResourceLocation(Item.getItemFromBlock(this), type.getMetadata(), itemModelResourceLocation);
+		}
+
+		for (Type type : Type.values()) {
+			ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(
+					ModelMachine.BASE_MODEL_LOCATION.toString(), "type=" + type.getName());
+			ModelLoader
+					.setCustomModelResourceLocation(Item.getItemFromBlock(this), type.getMetadata(), itemModelResourceLocation);
 		}
 
 	}
@@ -493,7 +507,6 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		machinePrecipitator = ItemBlockMachine.setDefaultTag(machinePrecipitator);
 	}
 
-
 	/* TYPE */
 	public static enum Type implements IStringSerializable {
 
@@ -588,7 +601,8 @@ public class BlockMachine extends BlockTEBase implements IInitializer, IModelReg
 		String category = "Machine.";
 
 		for (int i = 0; i < Type.values().length; i++) {
-			enable[i] = ThermalExpansion.CONFIG.get(category + StringHelper.titleCase(Type.byMetadata(i).getName()), "Recipe.Enable", true);
+			enable[i] = ThermalExpansion.CONFIG
+					.get(category + StringHelper.titleCase(Type.byMetadata(i).getName()), "Recipe.Enable", true);
 		}
 		category = "Machine.All";
 

@@ -257,6 +257,8 @@ public class TextureLocations {
 		TextureMap textureMap = event.getMap();
 		Set<ResourceLocation> toStitch = new HashSet<>();
 
+		toStitch.addAll(Config.ALL);
+		toStitch.addAll(Machine.ALL);
 		toStitch.addAll(Cell.ALL);
 		toStitch.add(Tesseract.FRAME);
 		toStitch.add(Tesseract.FRAME_INNER);

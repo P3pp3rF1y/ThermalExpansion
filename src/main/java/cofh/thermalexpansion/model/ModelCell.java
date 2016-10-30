@@ -50,10 +50,6 @@ public class ModelCell implements IModel {
 	public IBakedModel bake(IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
 
-		if (type == null) {
-			return new BakedModelCell(state, format, bakedTextureGetter);
-		}
-
 		BakedModelCell bakedModel = new BakedModelCell(type, state, format, bakedTextureGetter);
 		bakedModels.put(type, bakedModel);
 

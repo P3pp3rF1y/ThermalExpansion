@@ -5,7 +5,6 @@ import cofh.thermalexpansion.block.machine.BlockMachine;
 import cofh.thermalexpansion.core.TEProps;
 import com.google.common.base.Function;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -15,35 +14,48 @@ import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class BakedModelMachine extends BakedModelBase {
 
-	private static Map<EnumFacing, TextureAtlasSprite> sideSprites;
-	private static Map<BlockMachine.Type, TextureAtlasSprite> faceSprites;
-	private static Map<BlockMachine.Type, TextureAtlasSprite> activeFaceSprites;
-	private static Map<BlockTEBase.EnumSideConfig, TextureAtlasSprite> configSprites;
+	private BlockMachine.Type type;
+	private PreBakedModel modelFrame;
+	private PreBakedModel itemOverlay;
+	private PreBakedModel modelOverlay;
+	private PreBakedModel fluidOverlay;
 
-	public BakedModelMachine(IModelState state, VertexFormat format,
+	public BakedModelMachine(BlockMachine.Type type, IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
 
 		super(state, format, bakedTextureGetter);
+		this.type = type;
 
-		sideSprites = new HashMap<>();
-		for (EnumFacing facing : EnumFacing.VALUES) {
-			sideSprites.put(facing, bakedTextureGetter.apply(TextureLocations.Machine.SIDE_MAP.get(facing)));
-		}
+		initPreBakedModels();
+	}
 
-		faceSprites = new HashMap<>();
-		activeFaceSprites = new HashMap<>();
-		for (BlockMachine.Type type : TextureLocations.Machine.FACE_MAP.keySet()) {
-			faceSprites.put(type, bakedTextureGetter.apply(TextureLocations.Machine.FACE_MAP.get(type)));
-			activeFaceSprites.put(type, bakedTextureGetter.apply(TextureLocations.Machine.ACTIVE_FACE_MAP.get(type)));
-		}
+	private void initPreBakedModels() {
 
-		configSprites = new HashMap<>();
-		for (BlockTEBase.EnumSideConfig config : TextureLocations.Config.CONFIG_MAP.keySet()) {
-			configSprites.put(config, bakedTextureGetter.apply(TextureLocations.Config.CONFIG_MAP.get(config)));
+		modelFrame = new PreBakedModel(format);
+		PreBakedModel.CubeElement cube = modelFrame.addCube();
+		cube.setTexture(TextureLocations.Machine.SIDE);
+		cube.getChild(EnumFacing.UP.ordinal()).setTexture(TextureLocations.Machine.TOP);
+		cube.getChild(EnumFacing.DOWN.ordinal()).setTexture(TextureLocations.Machine.BOTTOM);
+		modelFrame.preBake();
+
+		modelOverlay = new PreBakedModel(format);
+		modelOverlay.addCube(true);
+		modelOverlay.preBake();
+
+		itemOverlay = new PreBakedModel(format);
+		itemOverlay.addFace(EnumFacing.NORTH).setTexture(TextureLocations.Machine.FACE_MAP.get(type));
+		itemOverlay.preBake();
+
+		if (type == BlockMachine.Type.CRUCIBLE || type == BlockMachine.Type.TRANSPOSER) {
+			fluidOverlay = new PreBakedModel(format);
+			fluidOverlay.addCube(true);
+			fluidOverlay.preBake();
 		}
 	}
 
@@ -56,58 +68,69 @@ public class BakedModelMachine extends BakedModelBase {
 
 		List<BakedQuad> quads = new ArrayList<>();
 
-		IExtendedBlockState extState = (IExtendedBlockState) state;
-		BlockMachine.Type type = extState.getValue(BlockMachine.TYPE);
-		EnumFacing frontFacing = extState.getValue(TEProps.FACING);
-		boolean active = extState.getValue(TEProps.ACTIVE);
-		String fluidName = extState.getValue(TEProps.FLUID);
+		quads.addAll(modelFrame.getBakedQuads());
 
-		BlockTEBase.EnumSideConfig[] configs = new BlockTEBase.EnumSideConfig[6];
-		for (EnumFacing confFacing : EnumFacing.VALUES) {
-			configs[confFacing.getIndex()] = extState.getValue(TEProps.SIDE_CONFIG[confFacing.getIndex()]);
-		}
+		if (state == null) {
+			quads.addAll(itemOverlay.getBakedQuads());
+		} else {
+			IExtendedBlockState extState = (IExtendedBlockState) state;
+			EnumFacing frontFacing = extState.getValue(TEProps.FACING);
+			boolean active = extState.getValue(TEProps.ACTIVE);
+			String fluidName = extState.getValue(TEProps.FLUID);
 
-		for (EnumFacing facing : EnumFacing.VALUES) {
-			if (frontFacing == facing) {
-				if (active && fluidName != null && !fluidName.isEmpty()) {
-					quads.add(createFullFaceQuad(facing, getFluidTexture(fluidName)));
-				}
-				quads.add(createFullFaceQuad(facing, getFaceTexture(type, active)));
-			} else {
-				quads.add(createFullFaceQuad(facing, getSideTexture(facing)));
-				if (configs[facing.getIndex()] != BlockTEBase.EnumSideConfig.NONE) {
-					quads.add(createFullFaceQuad(facing, getConfigTexture(configs[facing.getIndex()])));
+			BlockTEBase.EnumSideConfig[] configs = new BlockTEBase.EnumSideConfig[6];
+			for (EnumFacing confFacing : EnumFacing.VALUES) {
+				configs[confFacing.getIndex()] = extState.getValue(TEProps.SIDE_CONFIG[confFacing.getIndex()]);
+			}
+
+			PreBakedModel.CompositeElement overlayCube = ((PreBakedModel.CompositeElement) modelOverlay.getElement(0));
+			for (EnumFacing facing : EnumFacing.VALUES) {
+				PreBakedModel.BaseElement face = overlayCube.getChild(facing.ordinal());
+				if (frontFacing == facing) {
+					if (active && fluidName != null && !fluidName.isEmpty()) {
+						updateFluidOverlay(fluidName, facing);
+						quads.addAll(fluidOverlay.getBakedQuads());
+					}
+					face.setVisible(true);
+					face.setTexture(getFaceTexture(active));
+				} else {
+					if (configs[facing.getIndex()] != BlockTEBase.EnumSideConfig.NONE) {
+						face.setVisible(true);
+						face.setTexture(getConfigTexture(configs[facing.getIndex()]));
+					} else {
+						face.setVisible(false);
+					}
 				}
 			}
+			quads.addAll(modelOverlay.getBakedQuads());
 		}
 
 		return quads;
 	}
 
-	private TextureAtlasSprite getFluidTexture(String fluidName) {
+	private void updateFluidOverlay(String fluidName, EnumFacing facing) {
 
-		return getSpriteFromTextureName(fluidName);
+		PreBakedModel.CompositeElement fluidCube = ((PreBakedModel.CompositeElement) fluidOverlay.getElement(0));
+		fluidCube.setVisible(false);
+		PreBakedModel.BaseElement fluidFace = fluidCube.getChild(facing.ordinal());
+		fluidFace.setVisible(true);
+		fluidFace.setTexture(fluidName);
 	}
 
-	private TextureAtlasSprite getConfigTexture(BlockTEBase.EnumSideConfig config) {
+	private ResourceLocation getConfigTexture(BlockTEBase.EnumSideConfig config) {
 
-		return configSprites.get(config);
+		return TextureLocations.Config.CONFIG_MAP.get(config);
 	}
 
-	private TextureAtlasSprite getSideTexture(EnumFacing facing) {
+	private ResourceLocation getFaceTexture(boolean active) {
 
-		return sideSprites.get(facing);
-	}
-
-	private TextureAtlasSprite getFaceTexture(BlockMachine.Type type, boolean active) {
-
-		return active ? activeFaceSprites.get(type) : faceSprites.get(type);
+		return active ? TextureLocations.Machine.ACTIVE_FACE_MAP.get(type) : TextureLocations.Machine.FACE_MAP.get(type);
 	}
 
 	@Override
 	public TextureAtlasSprite getParticleTexture() {
 
-		return sideSprites.get(EnumFacing.UP);
+		return RenderHelper.getSpriteFromLocation(TextureLocations.Machine.SIDE_MAP.get(EnumFacing.UP));
 	}
 
 }

@@ -33,8 +33,6 @@ public class ModelFrame implements IModel {
 		MODELS = builder.build();
 	}
 
-	static Map<BlockFrame.Type, BakedModelFrame> bakedModels = new HashMap<>();
-
 	private BlockFrame.Type type;
 
 	private ModelFrame(BlockFrame.Type type) {
@@ -58,14 +56,7 @@ public class ModelFrame implements IModel {
 	public IBakedModel bake(IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
 
-		if (type == null) {
-			return new BakedModelFrame(state, format, bakedTextureGetter);
-		}
-
-		BakedModelFrame bakedModel = new BakedModelFrame(type, state, format, bakedTextureGetter);
-		bakedModels.put(type, bakedModel);
-
-		return bakedModel;
+		return new BakedModelFrame(type, state, format, bakedTextureGetter);
 	}
 
 	@Override

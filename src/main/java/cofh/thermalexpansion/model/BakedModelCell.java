@@ -25,6 +25,7 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import javax.annotation.Nullable;
 import javax.vecmath.Color4f;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BakedModelCell extends BakedModelBase {
@@ -41,11 +42,6 @@ public class BakedModelCell extends BakedModelBase {
 		this.type = type;
 
 		initPreBakedModels();
-	}
-
-	BakedModelCell(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-
-		this(null, state, format, bakedTextureGetter);
 	}
 
 	private void initPreBakedModels() {
@@ -149,18 +145,6 @@ public class BakedModelCell extends BakedModelBase {
 	private ResourceLocation getFaceTexture() {
 
 		return TextureLocations.Cell.FACE_MAP.get(type);
-	}
-
-	@Override
-	public boolean isGui3d() {
-
-		return true;
-	}
-
-	@Override
-	public boolean isAmbientOcclusion() {
-
-		return true;
 	}
 
 	@Override
